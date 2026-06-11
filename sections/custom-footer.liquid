@@ -1,0 +1,858 @@
+{% comment %}
+  Custom Footer Section for Shopify
+  File: sections/custom-footer.liquid
+  Updated with working mobile accordion functionality
+{% endcomment %}
+
+<footer class="custom-footer" data-section-id="{{ section.id }}">
+  <!-- Main Footer Content -->
+  <div class="footer-main">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Logo Block -->
+        {% if section.settings.show_logo %}
+          <div class="footer-column footer-logo">
+            {% if section.settings.logo %}
+              <img
+                src="{{ section.settings.logo | img_url: '200x' }}"
+                alt="{{ shop.name }}"
+                class="footer-logo-img"
+                width="120"
+                height="auto"
+              >
+            {% else %}
+              <h3 class="footer-logo-text">{{ shop.name }}</h3>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <!-- Dynamic Menu Blocks -->
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'menu_column' %}
+              <div class="footer-column footer-accordion-item" {{ block.shopify_attributes }}>
+                {% if block.settings.heading != blank %}
+                  <div class="footer-accordion-header">
+                    <h4 class="footer-heading">{{ block.settings.heading }}</h4>
+                    <span class="footer-accordion-arrow">›</span>
+                  </div>
+                {% endif %}
+
+                {% if block.settings.menu != blank %}
+                  <div class="footer-accordion-content">
+                    <ul class="footer-menu">
+                      {% for link in linklists[block.settings.menu].links %}
+                        <li class="footer-menu-item">
+                          <a href="{{ link.url }}" class="footer-menu-link">
+                            {{ link.title }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+              </div>
+
+            {% when 'newsletter' %}
+              <div class="footer-column footer-newsletter footer-accordion-item" {{ block.shopify_attributes }}>
+                {% if block.settings.heading != blank %}
+                  <div class="footer-accordion-header">
+                    <h4 class="footer-heading">{{ block.settings.heading }}</h4>
+                    <span class="footer-accordion-arrow">›</span>
+                  </div>
+                {% endif %}
+
+                <div class="footer-accordion-content">
+                  {% if block.settings.description != blank %}
+                    <p class="newsletter-description">{{ block.settings.description }}</p>
+                  {% endif %}
+
+                  {% form 'customer', class: 'newsletter-form' %}
+                    {% if form.posted_successfully? %}
+                      <div class="newsletter-success" id="newsletter-success-{{ block.id }}">
+                        <p>{{ 'general.newsletter_form.confirmation' | t }}</p>
+                      </div>
+                    {% endif %}
+
+                    <div
+                      class="newsletter-input-wrapper"
+                      id="newsletter-form-{{ block.id }}"
+                      {% if form.posted_successfully? %}
+                        style="display: none;"
+                      {% endif %}
+                    >
+                      <input
+                        type="email"
+                        name="contact[email]"
+                        placeholder="{{ block.settings.placeholder | default: 'Enter email address' }}"
+                        class="newsletter-input"
+                        required
+                        autocomplete="email"
+                      >
+                      <button type="submit" class="newsletter-submit" aria-label="Subscribe">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <input type="hidden" name="contact[tags]" value="newsletter">
+
+                    {% if block.settings.show_privacy_text %}
+                      <p
+                        class="newsletter-privacy"
+                        id="newsletter-privacy-{{ block.id }}"
+                        {% if form.posted_successfully? %}
+                          style="display: none;"
+                        {% endif %}
+                      >
+                        {% if block.settings.privacy_text != blank %}
+                          {{ block.settings.privacy_text }}
+                        {% else %}
+                          I have read and understand Casablanca's Privacy Policy and I agree to receive the newsletter
+                          and other marketing communications.
+                        {% endif %}
+                      </p>
+                    {% endif %}
+
+                    {% if form.posted_successfully? %}
+                      <script>
+                        setTimeout(function () {
+                          const successElement = document.getElementById('newsletter-success-{{ block.id }}');
+                          const formElement = document.getElementById('newsletter-form-{{ block.id }}');
+                          const privacyElement = document.getElementById('newsletter-privacy-{{ block.id }}');
+
+                          if (successElement) successElement.style.display = 'none';
+                          if (formElement) formElement.style.display = 'flex';
+                          if (privacyElement) privacyElement.style.display = 'block';
+                        }, 5000);
+                      </script>
+                    {% endif %}
+
+                    {% if form.errors %}
+                      <div class="newsletter-error">
+                        {{ form.errors | default_errors }}
+                      </div>
+                    {% endif %}
+                  {% endform %}
+                </div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+    <div>
+    <div style="text-align: center">
+      <img
+        src="https://cdn.shopify.com/s/files/1/1494/6308/files/image.png?v=1761722361"
+        alt="Shopify image"
+        style="width: 80px; height: auto; display: inline-block"
+      >
+    </div>
+
+    <div
+      class="footer-payments"
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      "
+    >
+      <ul class="-mx-1 -mb-2 lg:text-center">
+        <li class="inline-block mx-1 mb-2 w-7">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 25">
+            <g clip-path="url(#a)">
+              <path
+                stroke="#fff"
+                d="M3.158.5h33.684C38.266.5 39.5 1.646 39.5 3.125v18.75c0 1.49-1.14 2.625-2.658 2.625H3.158C1.734 24.5.5 23.354.5 21.875V3.125C.5 1.635 1.64.5 3.158.5Z"
+                opacity=".4"
+              ></path>
+              <path
+                fill="#fff"
+                d="m9.444 10.697.814 1.954H8.635l.809-1.954Zm16.92.08h-3.133v.862h3.083v1.29h-3.077v.961h3.134v.77l2.186-2.338-2.186-2.438-.006.894ZM11.562 8.34h4.206l.933 2.016.866-2.022h10.916l1.134 1.24 1.174-1.24h5.014l-3.705 4.013 3.667 3.987h-5.089l-1.134-1.24-1.185 1.24h-17.8l-.52-1.24h-1.19l-.52 1.24H4.21l3.459-8h3.61l.282.006Zm9.12 1.123h-2.357l-1.58 3.684-1.71-3.684h-2.339v5.01l-2.168-5.01H8.429L5.92 15.205h1.637l.52-1.24h2.733l.52 1.24h2.863v-4.1l1.843 4.106h1.253l1.832-4.093v4.094h1.534l.026-5.75-.002.001Zm9.831 2.884 2.664-2.884h-1.918l-1.685 1.798-1.63-1.798H21.74v5.748h6.116l1.7-1.81 1.629 1.81h1.973l-2.644-2.864h-.001Z"
+              ></path>
+            </g>
+            <defs>
+              <clipPath id="a">
+                <path fill="#fff" d="M0 0h40v25H0z"></path>
+              </clipPath>
+            </defs>
+          </svg>
+        </li>
+
+        <li class="inline-block mx-1 mb-2 w-7">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 25">
+            <g clip-path="url(#a)">
+              <path
+                stroke="#fff"
+                d="M38.389 24.7a2.362 2.362 0 0 0 1.269-1.725 4.81 4.81 0 0 0 .065-.734c.003-.113.005-.225.005-.337.002-.134.002-.268.002-.401V3.497c0-.133 0-.267-.002-.4l-.005-.338-.5.014c.003.108.005.217.006.326V21.9c0 .11-.002.218-.005.326a4.33 4.33 0 0 1-.058.657v.002a1.86 1.86 0 0 1-1.001 1.366m.224.447-.224-.447m.224.447-.225-.446m.225.446c-.223.111-.46.19-.706.23a5.055 5.055 0 0 1-.742.065m1.223-.742a2.015 2.015 0 0 1-.564.185h-.003c-.209.037-.43.05-.668.057m0-23.988c-.11-.003-.221-.004-.332-.005L36.196.5H3.802l33.126.006Zm0 0c.238.006.459.02.667.057h.004c.197.034.387.096.565.185.352.177.637.46.816.807L36.928.506Zm0 23.988.012.5m-.012-.5c-.111.003-.221.004-.331.005H3.4c-.112 0-.222-.002-.332-.005m33.861 0h-.001l.013.5m0 0a18.57 18.57 0 0 1-.34.005H3.396c-.114 0-.227-.002-.341-.005m.012-.5h.001l-.013.5m.012-.5a4.554 4.554 0 0 1-.667-.057m.667.057-.012.5m0 0a5.037 5.037 0 0 1-.742-.064 2.515 2.515 0 0 1-.706-.23 2.353 2.353 0 0 1-1.037-1.027m1.83.764a2.014 2.014 0 0 1-.568-.184 1.855 1.855 0 0 1-.474-.34v-.001a1.835 1.835 0 0 1-.343-.467m1.385.992-.087.493.087-.493Zm-1.83-.764.445-.227m-.445.227.445-.228m-.445.228a2.45 2.45 0 0 1-.232-.698 4.832 4.832 0 0 1-.066-.734 15.935 15.935 0 0 1-.005-.337m.748 1.541a1.95 1.95 0 0 1-.184-.555l-.001-.005a4.346 4.346 0 0 1-.058-.658 15.456 15.456 0 0 1-.005-.326m0 0-.5.003m.5-.003V3.497v18.404Zm-.5.003V3.097l.5 18.803-.5.004ZM3.07.506c-.24.006-.46.02-.668.057h-.004a2.024 2.024 0 0 0-.565.185 1.856 1.856 0 0 0-1 1.362l-.001.005a4.32 4.32 0 0 0-.058.658L3.07.506Zm0 0C3.178.503 3.287.502 3.4.5l-.33.005Zm36.589 1.52A2.358 2.358 0 0 0 38.388.3a2.527 2.527 0 0 0-.705-.23 4.996 4.996 0 0 0-.742-.065l2.717 2.02Z"
+                opacity=".4"
+              ></path>
+              <path
+                fill="#fff"
+                d="M10.643 8.439c.334-.414.561-.97.501-1.539-.49.024-1.087.32-1.433.735-.31.354-.586.934-.514 1.478.55.047 1.1-.272 1.446-.674ZM11.137 9.219c-.798-.047-1.477.448-1.858.448s-.965-.424-1.597-.413a2.358 2.358 0 0 0-2.001 1.203c-.858 1.463-.227 3.634.608 4.825.405.59.893 1.239 1.536 1.215.608-.023.846-.389 1.585-.389.738 0 .953.39 1.596.378.667-.012 1.085-.59 1.49-1.18.464-.672.654-1.321.666-1.357-.012-.011-1.286-.495-1.298-1.946-.012-1.215 1-1.793 1.049-1.829-.572-.837-1.466-.931-1.776-.955M19.1 7.575c1.736 0 2.944 1.184 2.944 2.907 0 1.73-1.233 2.92-2.987 2.92h-1.92v3.023h-1.389v-8.85h3.353Zm-1.964 4.673h1.593c1.208 0 1.896-.644 1.896-1.76s-.688-1.754-1.89-1.754h-1.599v3.514ZM22.385 14.59c0-1.134.873-1.784 2.485-1.882l1.729-.104v-.491c0-.717-.477-1.11-1.326-1.11-.7 0-1.21.356-1.314.902h-1.252c.037-1.147 1.128-1.981 2.603-1.981 1.586 0 2.621.822 2.621 2.097v4.403h-1.283v-1.06h-.03c-.366.692-1.172 1.128-2.046 1.128-1.289 0-2.187-.76-2.187-1.901Zm4.214-.57v-.496l-1.543.098c-.868.055-1.32.374-1.32.932 0 .54.47.89 1.208.89.942 0 1.655-.596 1.655-1.424ZM29.115 18.792v-1.06c.087.011.298.023.41.023.613 0 .96-.257 1.17-.92l.125-.392-2.35-6.44h1.45l1.637 5.226h.03l1.637-5.225h1.413l-2.436 6.764c-.558 1.552-1.196 2.06-2.547 2.06-.105 0-.446-.011-.539-.036Z"
+              ></path>
+            </g>
+            <defs>
+              <clipPath id="a">
+                <path fill="#fff" d="M0 0h40v25H0z"></path>
+              </clipPath>
+            </defs>
+          </svg>
+        </li>
+
+        <li class="inline-block mx-1 mb-2 w-7">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 25">
+            <g clip-path="url(#a)">
+              <path
+                stroke="#fff"
+                d="M3.158.5h33.684C38.266.5 39.5 1.646 39.5 3.125v18.75c0 1.49-1.14 2.625-2.658 2.625H3.158C1.734 24.5.5 23.354.5 21.875V3.125C.5 1.635 1.64.5 3.158.5Z"
+                opacity=".4"
+              ></path>
+              <path
+                fill="#D1D1D1"
+                d="M15.79 19.793c4.07 0 7.369-3.265 7.369-7.292 0-4.027-3.3-7.292-7.369-7.292-4.07 0-7.368 3.265-7.368 7.292 0 4.027 3.299 7.292 7.368 7.292Z"
+              ></path>
+              <path
+                fill="#fff"
+                d="M24.21 19.793c4.07 0 7.369-3.265 7.369-7.292 0-4.027-3.3-7.292-7.369-7.292-4.07 0-7.368 3.265-7.368 7.292 0 4.027 3.299 7.292 7.368 7.292Z"
+              ></path>
+              <path
+                fill="#D1D1D1"
+                d="M23.158 12.5c0-2.5-1.264-4.687-3.158-5.938-1.895 1.355-3.158 3.542-3.158 5.938s1.263 4.688 3.158 5.938c1.895-1.25 3.158-3.438 3.158-5.938Z"
+              ></path>
+            </g>
+            <defs>
+              <clipPath id="a">
+                <path fill="#fff" d="M0 0h40v25H0z"></path>
+              </clipPath>
+            </defs>
+          </svg>
+        </li>
+
+        <li class="inline-block mx-1 mb-2 w-7">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 25">
+            <g clip-path="url(#a)">
+              <path
+                stroke="#fff"
+                d="M3.158.5h33.684C38.266.5 39.5 1.646 39.5 3.125v18.75c0 1.49-1.14 2.625-2.658 2.625H3.158C1.734 24.5.5 23.354.5 21.875V3.125C.5 1.635 1.64.5 3.158.5Z"
+                opacity=".4"
+              ></path>
+              <path
+                fill="#fff"
+                d="M29.79 10.521h-.316c-.42 1.042-.737 1.563-1.052 3.125h2c-.316-1.562-.316-2.291-.632-3.125Zm3.053 6.146h-1.79c-.105 0-.105 0-.21-.104l-.21-.937-.106-.209H28c-.105 0-.21 0-.21.209l-.316.937c0 .104-.105.104-.105.104h-2.21l.21-.52 3.053-7.084c0-.52.315-.729.842-.729h1.579c.105 0 .21 0 .21.208l1.474 6.771c.105.417.21.73.21 1.146.106.104.106.104.106.208Zm-14.106-.312.421-1.875c.106 0 .21.104.21.104.738.313 1.475.52 2.212.417.21 0 .526-.104.736-.209.527-.208.527-.729.106-1.146-.211-.208-.527-.312-.843-.52-.42-.209-.842-.417-1.157-.73-1.264-1.041-.843-2.5-.106-3.229.632-.416.948-.833 1.79-.833 1.263 0 2.631 0 3.263.208h.105c-.105.625-.21 1.146-.42 1.771-.527-.208-1.053-.417-1.58-.417-.316 0-.631 0-.947.105-.21 0-.316.104-.421.208a.5.5 0 0 0 0 .73l.526.416c.421.208.842.416 1.158.625.526.312 1.053.833 1.158 1.458.21.938-.105 1.771-.948 2.396-.526.417-.736.625-1.473.625-1.474 0-2.632.104-3.58-.208-.104.208-.104.208-.21.104Zm-3.684.312c.105-.729.105-.729.21-1.041.527-2.292 1.053-4.688 1.474-6.98.106-.208.106-.312.316-.312h1.895a31.015 31.015 0 0 1-.737 3.333c-.316 1.563-.631 3.125-1.053 4.688 0 .208-.105.208-.315.208l-1.79.104Zm-9.79-8.125c0-.104.211-.208.316-.208h3.58c.526 0 .947.312 1.052.833l.947 4.584c0 .104 0 .104.106.208 0-.104.105-.104.105-.104l2.21-5.313c-.105-.104 0-.208.106-.208h2.21c0 .104 0 .104-.105.208l-3.263 7.604c-.105.209-.105.313-.21.417-.106.104-.316 0-.527 0h-1.579c-.105 0-.21 0-.21-.208L8.316 9.896c-.21-.208-.526-.52-.947-.625-.632-.312-1.79-.52-2-.52l-.105-.209Z"
+              ></path>
+            </g>
+            <defs>
+              <clipPath id="a">
+                <path fill="#fff" d="M0 0h40v25H0z"></path>
+              </clipPath>
+            </defs>
+          </svg>
+        </li>
+
+        <li class="inline-block mx-1 mb-2 w-7">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 25">
+            <g clip-path="url(#a)">
+              <path
+                stroke="#fff"
+                d="M3.158.5h33.684C38.266.5 39.5 1.646 39.5 3.125v18.75c0 1.49-1.14 2.625-2.658 2.625H3.158C1.734 24.5.5 23.354.5 21.875V3.125C.5 1.635 1.64.5 3.158.5Z"
+                opacity=".4"
+              ></path>
+              <path
+                fill="#474747"
+                d="M25.157 8.647c.211-1.042 0-1.771-.631-2.396-.632-.73-1.79-1.042-3.263-1.042h-4.316c-.316 0-.526.208-.632.52l-1.579 10.522c0 .208.106.416.316.416h2.842l.421-3.541 1.895-2.292 4.947-2.187Z"
+              ></path>
+              <path
+                fill="#fff"
+                d="m25.159 8.646-.21.209c-.527 2.916-2.316 3.958-4.843 3.958h-1.158c-.316 0-.526.208-.631.521l-.632 4.063-.21 1.041c0 .209.105.417.315.417h2.211c.316 0 .526-.208.526-.417v-.104l.421-2.5v-.104c0-.208.316-.417.527-.417h.315c2.211 0 3.895-.833 4.316-3.333.21-1.042.105-1.875-.42-2.5-.106-.521-.317-.73-.527-.834Z"
+              ></path>
+              <path
+                fill="#D1D1D1"
+                d="M24.525 8.438c-.105-.105-.21-.105-.316-.105-.105 0-.21 0-.316-.104-.315-.104-.736-.104-1.157-.104h-3.158c-.106 0-.21 0-.21.104-.211.104-.317.209-.317.417l-.736 4.583v.104c0-.312.315-.52.631-.52h1.368c2.632 0 4.316-1.042 4.843-3.959v-.208a.808.808 0 0 0-.527-.209h-.105Z"
+              ></path>
+            </g>
+            <defs>
+              <clipPath id="a">
+                <path fill="#fff" d="M0 0h40v25H0z"></path>
+              </clipPath>
+            </defs>
+          </svg>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="footer-bottom-content">
+        <!-- Copyright -->
+        <div class="footer-copyright">
+          <p>
+            &copy;{{ 'now' | date: '%Y' }}
+            {{ section.settings.copyright_text | default: shop.name }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .custom-footer {
+    background-color: rgb(0, 56, 47);
+    color: #ffffff;
+  }
+
+  #shopify-section-custom-footer input.newsletter-input {
+    width: 50% !important;
+  }
+
+  .container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .footer-main {
+    padding: 60px 0 40px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px 60px;
+    align-items: start;
+  }
+
+  .footer-column {
+    min-width: 0;
+  }
+
+  .footer-logo-img {
+    max-width: 120px;
+    height: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  .footer-logo-text {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 0;
+    color: #ffffff;
+  }
+
+  .footer-heading {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+    color: white;
+    text-transform: None;
+    letter-spacing: 0.5px;
+  }
+
+  .footer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-menu-item {
+    margin-bottom: 12px;
+  }
+
+  .footer-menu-link {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 300;
+    transition: color 0.3s ease;
+  }
+
+  .footer-menu-link:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .footer-newsletter {
+    max-width: 350px;
+  }
+
+  .newsletter-description {
+    color: White;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+  }
+
+  .newsletter-form {
+    margin-bottom: 15px;
+  }
+
+  .newsletter-input-wrapper {
+    position: relative;
+    display: flex;
+    margin-bottom: 15px;
+  }
+
+  .newsletter-input {
+    flex: 1;
+    padding: 12px 50px 12px 15px;
+    border: 1px solid #f4fffb;
+    border-radius: 50px !important;
+    background-color: rgb(255 255 255 / 0%);
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .newsletter-input::placeholder {
+    color: white;
+    opacity: 0.8;
+  }
+
+  .newsletter-input:focus {
+    border-color: #4a7c59;
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .newsletter-submit {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #b8d4c8;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+  }
+
+  .newsletter-submit:hover {
+    color: #ffffff;
+  }
+
+  .newsletter-privacy {
+    font-size: 12px;
+    color: white;
+    line-height: 1.4;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .newsletter-success,
+  .newsletter-error {
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .newsletter-success {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+  }
+
+  .newsletter-error {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid #2d5a4a;
+    padding: 14px 0;
+  }
+
+  .footer-bottom-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-copyright {
+    text-align: center;
+    flex: 1;
+  }
+
+  .footer-copyright p {
+    margin: 0;
+    font-size: 12px;
+    color: white;
+    opacity: 0.8;
+  }
+
+  /* Desktop Styles - Accordion headers not clickable */
+  .footer-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    background: none;
+    border: none;
+    width: 100%;
+  }
+
+  .footer-accordion-arrow {
+    font-size: 18px;
+    color: white;
+    transition: transform 0.3s ease;
+    display: none;
+  }
+
+  .footer-accordion-content {
+    display: block;
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .footer-main {
+      padding: 40px 0 30px;
+    }
+
+    .footer-copyright p {
+      font-size: 12px !important;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+      text-align: left;
+    }
+
+    .footer-newsletter {
+      max-width: 100%;
+    }
+
+    .footer-bottom-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 15px;
+    }
+
+    /* Accordion Mobile Styles */
+    .footer-accordion-item {
+      border-bottom: 1px solid #2d5a4a;
+      padding: 16px 0;
+    }
+
+    .footer-accordion-header {
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      user-select: none;
+    }
+
+    .footer-accordion-arrow {
+      display: block;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .footer-accordion-content {
+      display: none;
+      padding-top: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .footer-accordion-item.active .footer-accordion-content {
+      display: block;
+    }
+
+    .footer-accordion-item.active .footer-accordion-arrow {
+      transform: rotate(90deg);
+    }
+
+    .footer-logo {
+      border-bottom: 1px solid #2d5a4a;
+      padding-bottom: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .footer-logo .footer-accordion-header {
+      cursor: default;
+      justify-content: center;
+    }
+
+    .footer-logo .footer-accordion-arrow {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 0 15px;
+    }
+
+    .footer-main {
+      padding: 30px 0 20px;
+    }
+
+    .footer-heading {
+      font-size: 14px;
+    }
+
+    .footer-menu-link {
+      font-size: 13px;
+    }
+
+    .newsletter-input {
+      padding: 10px 45px 10px 12px;
+      font-size: 13px;
+    }
+
+    .newsletter-privacy {
+      font-size: 10px;
+    }
+
+    .footer-accordion-item {
+      padding: 12px 0;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+  .footer-column.footer-logo {
+    margin-bottom: 0px !important;
+}
+</style>
+
+<script>
+  (function () {
+    // Wait for DOM to be fully loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFooterAccordion);
+    } else {
+      initFooterAccordion();
+    }
+
+    function initFooterAccordion() {
+      const accordionItems = document.querySelectorAll('.footer-accordion-item');
+
+      // Only initialize accordion on mobile
+      function setupAccordion() {
+        if (window.innerWidth <= 768) {
+          accordionItems.forEach((item) => {
+            // Skip logo section
+            if (item.classList.contains('footer-logo')) return;
+
+            const header = item.querySelector('.footer-accordion-header');
+            const content = item.querySelector('.footer-accordion-content');
+
+            if (header && content) {
+              // Remove any existing event listeners
+              header.replaceWith(header.cloneNode(true));
+              const newHeader = item.querySelector('.footer-accordion-header');
+
+              newHeader.addEventListener('click', function () {
+                // Close other open items
+                accordionItems.forEach((otherItem) => {
+                  if (otherItem !== item && otherItem.classList.contains('active')) {
+                    otherItem.classList.remove('active');
+                  }
+                });
+
+                // Toggle current item
+                item.classList.toggle('active');
+              });
+            }
+          });
+        } else {
+          // On desktop, remove active classes and event listeners
+          accordionItems.forEach((item) => {
+            item.classList.remove('active');
+            const header = item.querySelector('.footer-accordion-header');
+            if (header) {
+              header.replaceWith(header.cloneNode(true));
+            }
+          });
+        }
+      }
+
+      // Initial setup
+      setupAccordion();
+
+      // Re-setup on window resize
+      let resizeTimeout;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(setupAccordion, 250);
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_logo",
+      "label": "Show logo",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer logo"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "header",
+      "content": "Footer Bottom"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "Casablanca"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_column",
+      "name": "Menu Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Quick Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "info": "Select a menu to display"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Casablanca Members Club"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Sign up to join the Casablanca Members Club for exclusive content, events, promotions and more"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Email placeholder text",
+          "default": "Enter email address"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_privacy_text",
+          "label": "Show privacy policy text",
+          "default": true
+        },
+        {
+          "type": "textarea",
+          "id": "privacy_text",
+          "label": "Privacy policy text",
+          "default": "I have read and understood Casablanca's Privacy Policy and I agree to receive the newsletter and other marketing communications."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Footer",
+      "blocks": [
+        {
+          "type": "menu_column",
+          "settings": {
+            "heading": "Do you need assistance?",
+            "menu": "footer"
+          }
+        },
+        {
+          "type": "menu_column",
+          "settings": {
+            "heading": "Support",
+            "menu": "footer"
+          }
+        },
+        {
+          "type": "menu_column",
+          "settings": {
+            "heading": "Company",
+            "menu": "footer"
+          }
+        },
+        {
+          "type": "menu_column",
+          "settings": {
+            "heading": "Legal",
+            "menu": "footer"
+          }
+        },
+        {
+          "type": "newsletter"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

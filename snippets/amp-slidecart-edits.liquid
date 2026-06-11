@@ -1,0 +1,54 @@
+<!-- Slide Cart Edits - Start -->
+<style>
+  #slidecarthq .rewards .rewards-tiers-container-with-icons:not(:last-child) {
+    transform: translateX(-20px);
+  }
+</style>
+<script>
+  function scConvertRewardThresholds () {
+    // convert reward threshold amounts to detected currency
+    const shopifyCurrencyRate = window.Shopify.currency.rate;
+
+    window.SLIDECART_STATE().settings.rewards_tiers.forEach(reward => {
+      reward.amount = reward.amount * shopifyCurrencyRate;
+    });
+  }
+
+  function scSyncCartCounts (count) {
+    // update theme header cart count
+    const themeHeaderCartCounts = document.querySelectorAll('a[href*="/cart"] span[x-text="$store.cartCount.count"]');
+
+    themeHeaderCartCounts.forEach(headerCount => {
+      if (count > 0) {
+        headerCount.textContent = count;
+        headerCount.style.display = 'block';
+      } else {
+        headerCount.textContent = count;
+        headerCount.style.display = 'none';
+      }
+    });
+
+    // update slide cart header count
+    const scHeaderCount = document.querySelector('#slidecarthq header.header .cart-count');
+
+    if (scHeaderCount) {
+      if (count > 0) {
+        scHeaderCount.textContent = count;
+      } else {
+        scHeaderCount.textContent = '';
+      }
+    }
+  }
+
+  window.SLIDECART_LOADED = cart => {
+    if (window.SLIDECART_STATE().settings.rewards) {
+      scConvertRewardThresholds();
+      window.SLIDECART_UPDATE();
+    }
+  }
+
+  window.SLIDECART_UPDATED = cart => {
+    scSyncCartCounts(cart.item_count);
+  }
+</script>
+<!-- Slide Cart Edits - End -->

@@ -1,0 +1,246 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow_TVELG9": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_m94ayY": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/affiliatesinsta1web_f73333f6-72d9-4e11-ae79-be061c4400b5.jpg",
+            "image_mobile": "shopify://shop_images/affiliatesinsta1web_f73333f6-72d9-4e11-ae79-be061c4400b5.jpg",
+            "indent_image": false,
+            "title": "",
+            "text": "",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2/3",
+            "text_color": "primary",
+            "cta_link": "",
+            "cta_text": "",
+            "cta_style": "link"
+          }
+        },
+        "slide_HFgqVQ": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/affiliates13-web_ef608a97-3bdb-4f3c-b2b1-98565845a726.jpg",
+            "image_mobile": "shopify://shop_images/affiliates13-web_ef608a97-3bdb-4f3c-b2b1-98565845a726.jpg",
+            "indent_image": false,
+            "title": "",
+            "text": "",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2/3",
+            "text_color": "primary",
+            "cta_link": "",
+            "cta_text": "",
+            "cta_style": "link"
+          }
+        },
+        "slide_taD6HF": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/image1234copy.jpg",
+            "image_mobile": "shopify://shop_images/image1234copy.jpg",
+            "indent_image": false,
+            "title": "",
+            "text": "",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2/3",
+            "text_color": "primary",
+            "cta_link": "",
+            "cta_text": "",
+            "cta_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "slide_m94ayY",
+        "slide_HFgqVQ",
+        "slide_taD6HF"
+      ],
+      "name": "Slideshow",
+      "settings": {
+        "color_scheme": "primary",
+        "height": "natural",
+        "heading_size": "text-2xl lg:text-5xl",
+        "auto_rotate": false,
+        "slide_speed": "5000"
+      }
+    },
+    "featured_collection_pGfXnY": {
+      "type": "featured-collection",
+      "custom_css": [
+        "li.col-span-1.lg\\:col-span-2.bg-scheme-background.text-scheme-text {border: 0px solid; border-radius: 20px; margin: 10px;}",
+        ".w-full.h-full.border-b-grid.border-grid-color.pb-0.lg\\:pb {border: 1px solid #00382f; border-radius: 20px;}",
+        "ul.grid.grid-cols-2.lg\\:grid-cols-10.gap-gutter.bg-border {/* border: 2px solid; */ background-color: white;}",
+        ".lg\\:flex {display: inline-block; text-align: center;}",
+        ".lg\\:w-3\\/5 {width: 100%;}",
+        ".lg\\:w-2\\/5 {width: 100%; text-align: center;}"
+      ],
+      "settings": {
+        "title": "",
+        "collection": "tops",
+        "grid": 5,
+        "rows": 5,
+        "grid_mobile": "2",
+        "show_view_all": false,
+        "show_badge": true,
+        "show_all_badges": false,
+        "default_badge_text": "Badge",
+        "color_scheme": "primary"
+      }
+    },
+    "slideshow_WtKjMH": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_ceQXem": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/omahlay_jaffary.jpg",
+            "image_mobile": "shopify://shop_images/omahlay_jaffary.jpg",
+            "indent_image": false,
+            "title": "",
+            "text": "",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2/3",
+            "text_color": "primary",
+            "cta_link": "",
+            "cta_text": "",
+            "cta_style": "link"
+          }
+        },
+        "slide_RDRYqB": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/dj_bluss_dubai-jaffary.jpg",
+            "image_mobile": "shopify://shop_images/dj_bluss_dubai-jaffary.jpg",
+            "indent_image": false,
+            "title": "",
+            "text": "",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2/3",
+            "text_color": "primary",
+            "cta_link": "",
+            "cta_text": "",
+            "cta_style": "link"
+          }
+        },
+        "slide_XJad6t": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/camavinga_jaffary.jpg",
+            "image_mobile": "shopify://shop_images/camavinga_jaffary_e4495ab5-c8a4-40c9-bf8a-ffab42c78f91.jpg",
+            "indent_image": false,
+            "title": "",
+            "text": "",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2/3",
+            "text_color": "white",
+            "cta_link": "",
+            "cta_text": "",
+            "cta_style": "link"
+          }
+        },
+        "slide_jB4zPB": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/wizkid_jaffary.jpg",
+            "image_mobile": "shopify://shop_images/wizkid_jaffary.jpg",
+            "indent_image": false,
+            "title": "",
+            "text": "",
+            "content_position": "justify-center items-center text-center",
+            "content_width_desktop": "lg:w-2/3",
+            "text_color": "primary",
+            "cta_link": "",
+            "cta_text": "",
+            "cta_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "slide_ceQXem",
+        "slide_RDRYqB",
+        "slide_XJad6t",
+        "slide_jB4zPB"
+      ],
+      "custom_css": [
+        "section.relative.bg-scheme-background.text-scheme-text.pb-theme {padding-bottom: 0px !important;}"
+      ],
+      "settings": {
+        "color_scheme": "primary",
+        "height": "natural",
+        "heading_size": "text-2xl lg:text-5xl",
+        "auto_rotate": false,
+        "slide_speed": "5000"
+      }
+    },
+    "testimonials_BqYPqF": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_hHNDBp": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>\" These are one of the hardest jeans I ever put on\"</p>",
+            "source": "Real Madrid : Camavinga"
+          }
+        },
+        "testimonial_pyNDRY": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>\" I need all colorways\"</p>",
+            "source": "Artist: Omah Lay"
+          }
+        },
+        "testimonial_yt6EzM": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>\" I F*ck with this brand\"</p>",
+            "source": "FC Barcelona : Ansu Fati"
+          }
+        },
+        "testimonial_rzRAHW": {
+          "type": "testimonial",
+          "disabled": true,
+          "settings": {
+            "quote": "<p>A quote from a customer or staff member can help show of your products' unique selling points.</p>",
+            "source": "Source"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_hHNDBp",
+        "testimonial_pyNDRY",
+        "testimonial_yt6EzM",
+        "testimonial_rzRAHW"
+      ],
+      "custom_css": [
+        ".bg-scheme-background.text-scheme-text.section-x-padding.pt-theme-double.pb-theme.border-b-grid.border-grid-color.text-center {border: none !important;}",
+        "section.border-t-grid.border-grid-color.bg-border {border: none !important;}",
+        ".bg-scheme-background.text-scheme-text.section-x-padding.pt-theme-double.pb-theme.border-b-grid.border-grid-color.text-center {padding: 0px;}"
+      ],
+      "settings": {
+        "heading": "Testimonials",
+        "text_style": "heading",
+        "text_size": "text-base",
+        "text_align": "text-center",
+        "color_scheme": "primary"
+      }
+    }
+  },
+  "order": [
+    "slideshow_TVELG9",
+    "featured_collection_pGfXnY",
+    "slideshow_WtKjMH",
+    "testimonials_BqYPqF"
+  ]
+}

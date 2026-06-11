@@ -1,0 +1,397 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": "lg:w-full",
+        "content_position": "lg:justify-start",
+        "color_scheme": "primary",
+        "override_header_footer_color_scheme": false
+      }
+    },
+    "custom_banner_hs_U38YCa": {
+      "type": "custom-banner-hs",
+      "blocks": {
+        "slide_yYwXLB": {
+          "type": "slide",
+          "settings": {
+            "desktop_media_type": "image",
+            "desktop_image": "shopify://shop_images/19.png",
+            "desktop_video": "",
+            "mobile_media_type": "image",
+            "mobile_image": "shopify://shop_images/8.png",
+            "mobile_video": "",
+            "content_position": "middle_center",
+            "text_color": "#ffffff",
+            "title": "SPRING COLLECTION",
+            "subtitle": "<p>EXCLUSIVE LIMITED RELEASE<br/>Only a few will have it.<br/></p>",
+            "button_title": "Join Waitlist",
+            "button_url": "",
+            "countdown_date": "2026-04-31T23:59:59"
+          }
+        },
+        "slide_WJgxRQ": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "desktop_media_type": "image",
+            "desktop_image": "shopify://shop_images/banner.png",
+            "desktop_video": "",
+            "mobile_media_type": "image",
+            "mobile_image": "shopify://shop_images/affiliates13-web_ef608a97-3bdb-4f3c-b2b1-98565845a726.jpg",
+            "mobile_video": "",
+            "content_position": "middle_center",
+            "text_color": "#ffffff",
+            "title": "Kill Your Distractions®",
+            "subtitle": "<p>Wear the mindset. New arrivals dropping now.</p>",
+            "button_title": "Join Waitlist",
+            "button_url": "",
+            "countdown_date": "2026-04-21T23:59:59"
+          }
+        }
+      },
+      "block_order": [
+        "slide_yYwXLB",
+        "slide_WJgxRQ"
+      ],
+      "name": "Hero Banner Slider",
+      "settings": {
+        "height_type": "viewport",
+        "header_height": 102,
+        "fixed_height": 640,
+        "fixed_height_mobile": 420,
+        "autoplay_delay": 2,
+        "bg_color": "#000000",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_mobile": 0
+      }
+    },
+    "collection_grid_hs_C4TwJi": {
+      "type": "collection-grid-hs",
+      "blocks": {
+        "grid_WybmMd": {
+          "type": "grid",
+          "settings": {
+            "show_mbl": true,
+            "enable_clickable_slide": false,
+            "media_type": "image",
+            "img": "shopify://shop_images/pricesreduced.jpg",
+            "overlay": 100,
+            "overlay_m": 100,
+            "image_size_mobile": "towbythree",
+            "title": "",
+            "des": "",
+            "btn": "",
+            "btn_url": ""
+          }
+        },
+        "grid_37cq7y": {
+          "type": "grid",
+          "settings": {
+            "show_mbl": true,
+            "enable_clickable_slide": false,
+            "media_type": "image",
+            "img": "shopify://shop_images/Jaffary_02-74_1_copy.jpg",
+            "overlay": 100,
+            "overlay_m": 100,
+            "image_size_mobile": "towbythree",
+            "title": "",
+            "des": "",
+            "btn": "",
+            "btn_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "grid_WybmMd",
+        "grid_37cq7y"
+      ],
+      "disabled": true,
+      "name": "New Collection Grid",
+      "settings": {
+        "full_width": true,
+        "id_nav": "",
+        "show_bg": false,
+        "alignment": "middle_center",
+        "mobile_alignment": "middle_center",
+        "content_alignment": "center",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "margin_top_m": 0,
+        "margin_bottom_m": 0,
+        "padding_top_m": 0,
+        "padding_bottom_m": 0
+      }
+    },
+    "custom_banner_hs_eiYpKa": {
+      "type": "custom-banner-hs",
+      "blocks": {
+        "slide_HpDGcY": {
+          "type": "slide",
+          "settings": {
+            "desktop_media_type": "image",
+            "desktop_image": "shopify://shop_images/Jaffary_studios_shoot4.jpg",
+            "desktop_video": "",
+            "mobile_media_type": "image",
+            "mobile_video": "",
+            "content_position": "middle_center",
+            "text_color": "#ffffff",
+            "title": "",
+            "subtitle": "",
+            "button_title": "",
+            "button_url": "",
+            "countdown_date": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_HpDGcY"
+      ],
+      "name": "Hero Banner Slider",
+      "settings": {
+        "height_type": "fixed",
+        "header_height": 0,
+        "fixed_height": 610,
+        "fixed_height_mobile": 420,
+        "autoplay_delay": 2,
+        "bg_color": "#000000",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_mobile": 0
+      }
+    },
+    "grid_image_hs_4et7gF": {
+      "type": "grid-image-hs",
+      "blocks": {
+        "third_column_EmEj7e": {
+          "type": "third_column",
+          "settings": {
+            "image": "shopify://shop_images/20.png",
+            "link": ""
+          }
+        },
+        "second_column_Dpz3hb": {
+          "type": "second_column",
+          "settings": {
+            "image": "shopify://shop_images/19.png",
+            "link": ""
+          }
+        },
+        "second_column_HPQmgp": {
+          "type": "second_column",
+          "settings": {
+            "image": "shopify://shop_images/11.png",
+            "link": ""
+          }
+        },
+        "first_column_xDEn6m": {
+          "type": "first_column",
+          "settings": {
+            "image": "shopify://shop_images/8.png",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "third_column_EmEj7e",
+        "second_column_Dpz3hb",
+        "second_column_HPQmgp",
+        "first_column_xDEn6m"
+      ],
+      "name": "Grid Image",
+      "settings": {
+        "full_width": false,
+        "max_height": 900,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "margin_top_m": 0,
+        "margin_bottom_m": 0,
+        "padding_top_m": 0,
+        "padding_bottom_m": 0
+      }
+    },
+    "collection_grid_hs_eU7qP3": {
+      "type": "collection-grid-hs",
+      "blocks": {
+        "grid_9kVb46": {
+          "type": "grid",
+          "settings": {
+            "show_mbl": true,
+            "enable_clickable_slide": false,
+            "media_type": "image",
+            "img": "shopify://shop_images/Jaffary_studios_shoot3.jpg",
+            "overlay": 100,
+            "overlay_m": 100,
+            "image_size_mobile": "towbythree",
+            "title": "",
+            "des": "",
+            "btn": "",
+            "btn_url": ""
+          }
+        },
+        "grid_RB6TpH": {
+          "type": "grid",
+          "settings": {
+            "show_mbl": true,
+            "enable_clickable_slide": false,
+            "media_type": "image",
+            "img": "shopify://shop_images/Jaffary_studios_shoot1.jpg",
+            "overlay": 100,
+            "overlay_m": 100,
+            "image_size_mobile": "towbythree",
+            "title": "",
+            "des": "",
+            "btn": "",
+            "btn_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "grid_9kVb46",
+        "grid_RB6TpH"
+      ],
+      "name": "New Collection Grid",
+      "settings": {
+        "full_width": true,
+        "id_nav": "",
+        "show_bg": false,
+        "alignment": "middle_center",
+        "mobile_alignment": "middle_center",
+        "content_alignment": "center",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "margin_top_m": 0,
+        "margin_bottom_m": 0,
+        "padding_top_m": 0,
+        "padding_bottom_m": 0
+      }
+    },
+    "grid_image_hs_UGkRCN": {
+      "type": "grid-image-hs",
+      "blocks": {
+        "third_column_ceBibm": {
+          "type": "third_column",
+          "settings": {
+            "image": "shopify://shop_images/20.png",
+            "link": ""
+          }
+        },
+        "second_column_eLqXYn": {
+          "type": "second_column",
+          "settings": {
+            "image": "shopify://shop_images/11.png",
+            "link": ""
+          }
+        },
+        "second_column_aW7wFp": {
+          "type": "second_column",
+          "settings": {
+            "image": "shopify://shop_images/13.png",
+            "link": ""
+          }
+        },
+        "second_column_ncP6nm": {
+          "type": "second_column",
+          "settings": {
+            "image": "shopify://shop_images/11.png",
+            "link": ""
+          }
+        },
+        "first_column_9qPQFz": {
+          "type": "first_column",
+          "settings": {
+            "image": "shopify://shop_images/JAffary_2.png",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "third_column_ceBibm",
+        "second_column_eLqXYn",
+        "second_column_aW7wFp",
+        "second_column_ncP6nm",
+        "first_column_9qPQFz"
+      ],
+      "name": "Grid Image",
+      "settings": {
+        "full_width": false,
+        "max_height": 900,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "margin_top_m": 0,
+        "margin_bottom_m": 0,
+        "padding_top_m": 0,
+        "padding_bottom_m": 0
+      }
+    },
+    "custom_banner_hs_iBiE7d": {
+      "type": "custom-banner-hs",
+      "blocks": {
+        "slide_n9D7hh": {
+          "type": "slide",
+          "settings": {
+            "desktop_media_type": "image",
+            "desktop_image": "shopify://shop_images/Jaffary_studios_shoot1.jpg",
+            "desktop_video": "",
+            "mobile_media_type": "image",
+            "mobile_video": "",
+            "content_position": "middle_center",
+            "text_color": "#ffffff",
+            "title": "",
+            "subtitle": "",
+            "button_title": "",
+            "button_url": "",
+            "countdown_date": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_n9D7hh"
+      ],
+      "name": "Hero Banner Slider",
+      "settings": {
+        "height_type": "fixed",
+        "header_height": 0,
+        "fixed_height": 510,
+        "fixed_height_mobile": 420,
+        "autoplay_delay": 2,
+        "bg_color": "#000000",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_mobile": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "custom_banner_hs_U38YCa",
+    "collection_grid_hs_C4TwJi",
+    "custom_banner_hs_eiYpKa",
+    "grid_image_hs_4et7gF",
+    "collection_grid_hs_eU7qP3",
+    "grid_image_hs_UGkRCN",
+    "custom_banner_hs_iBiE7d"
+  ]
+}

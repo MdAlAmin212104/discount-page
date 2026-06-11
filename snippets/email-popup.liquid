@@ -1,0 +1,684 @@
+{% comment %} <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Jaffary Newsletter Popup</title>
+  </head>
+  <body>
+    <!-- Shopify Newsletter Popup Section -->
+    <style>
+      /* Overlay */
+      .jaffary-popup-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.7);
+          display: none;
+          align-items: center;
+          justify-content: center;
+          z-index: 99999;
+          opacity: 0;
+          transition: opacity 0.3s ease-out;
+      }
+
+      .jaffary-popup-overlay.show {
+          display: flex;
+          opacity: 1;
+      }
+
+      /* Popup Container */
+      .jaffary-popup-container {
+          background: #00382f !important;
+          border-radius: 16px;
+          overflow: hidden;
+          width: 90%;
+          max-width: 800px;
+          height: auto;
+          max-height: 90vh;
+          display: flex;
+          position: relative;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          transform: scale(0.9);
+          transition: transform 0.4s ease-out;
+      }
+
+      .jaffary-popup-overlay.show .jaffary-popup-container {
+          transform: scale(1);
+      }
+
+      /* Left Image Section */
+      .jaffary-popup-image {
+          flex: 1;
+          background-image: url('https://cdn.shopify.com/s/files/1/1494/6308/files/Jaffary_02-10_1.jpg?v=1699695915');
+          min-height: 400px;
+          position: relative;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+      }
+
+      /* Right Content Section */
+      .jaffary-popup-content {
+          flex: 1;
+          background: #00382f !important;
+          color: white;
+          padding: 40px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          position: relative;
+      }
+
+      /* Close Button */
+      .jaffary-close-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: none;
+          border: none;
+          color: white;
+          font-size: 24px;
+          cursor: pointer;
+          z-index: 10;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: background-color 0.2s;
+      }
+
+      .jaffary-close-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+      }
+
+      .jaffary-close-btn::before {
+          content: '×';
+          font-weight: 300;
+      }
+
+      /* Typography */
+      .jaffary-popup-title {
+          font-size: 42px;
+          font-weight: 300;
+          letter-spacing: 3px;
+          margin-bottom: 8px;
+          text-transform: uppercase;
+          text-align: center;
+          font-family: inherit;
+      }
+
+      .jaffary-popup-subtitle {
+          font-size: 38px;
+          font-weight: 300;
+          letter-spacing: 2px;
+          margin-bottom: 24px;
+          text-transform: uppercase;
+          text-align: center;
+          font-family: inherit;
+      }
+
+      .jaffary-popup-description {
+          font-size: 14px;
+          line-height: 1.6;
+          margin-bottom: 32px;
+          opacity: 0.9;
+          text-align: center;
+          font-family: inherit;
+      }
+
+      /* Form Styles */
+      .jaffary-popup-form {
+          display: flex;
+          flex-direction: column;
+      }
+
+      .jaffary-form-label {
+          font-size: 14px;
+          margin-bottom: 8px;
+          opacity: 0.9;
+          font-family: inherit;
+      }
+
+      .jaffary-newsletter-input-wrapper {
+          position: relative;
+          display: flex;
+          margin-bottom: 24px;
+      }
+
+      .jaffary-newsletter-input {
+          flex: 1;
+          padding: 16px 60px 16px 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50px;
+          background: transparent;
+          color: white;
+          font-size: 16px;
+          transition: border-color 0.3s;
+          font-family: inherit;
+          outline: none;
+      }
+
+      .jaffary-newsletter-input::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+      }
+
+      .jaffary-newsletter-input:focus {
+          border-color: rgba(255, 255, 255, 0.6);
+      }
+
+      .jaffary-newsletter-submit {
+          position: absolute;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: white;
+          border: none;
+          color: #00382f;
+          cursor: pointer;
+          padding: 10px 16px;
+          border-radius: 50px;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.3s;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-family: inherit;
+      }
+
+      .jaffary-newsletter-submit:hover {
+          background: #f0f0f0;
+          transform: translateY(-50%) scale(1.05);
+      }
+
+      .jaffary-newsletter-submit:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: translateY(-50%);
+      }
+
+      /* Newsletter Messages */
+      .jaffary-newsletter-success,
+      .jaffary-newsletter-error {
+          padding: 15px;
+          border-radius: 8px;
+          font-size: 14px;
+          margin-bottom: 15px;
+          text-align: center;
+          display: none;
+      }
+
+      .jaffary-newsletter-success {
+          background-color: rgba(76, 175, 80, 0.2);
+          color: #4caf50;
+          border: 1px solid rgba(76, 175, 80, 0.3);
+      }
+
+      .jaffary-newsletter-error {
+          background-color: rgba(244, 67, 54, 0.2);
+          color: #f44336;
+          border: 1px solid rgba(244, 67, 54, 0.3);
+      }
+
+      .jaffary-newsletter-success.show,
+      .jaffary-newsletter-error.show {
+          display: block;
+      }
+
+      /* Privacy Text */
+      .jaffary-newsletter-privacy {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.8);
+          line-height: 1.4;
+          margin-top: 15px;
+          text-align: center;
+      }
+
+      /* Thank You State */
+      .jaffary-popup-content.thank-you .jaffary-popup-title {
+          font-size: 36px;
+      }
+
+      .jaffary-popup-content.thank-you .jaffary-popup-subtitle {
+          font-size: 32px;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+          .jaffary-popup-container {
+              flex-direction: column;
+              width: 95%;
+              height: auto;
+              max-height: 95vh;
+          }
+
+          .jaffary-popup-image {
+              min-height: 200px;
+              flex: none;
+          }
+
+          .jaffary-popup-content {
+              padding: 30px 24px;
+          }
+
+          .jaffary-popup-title {
+              font-size: 32px;
+          }
+
+          .jaffary-popup-subtitle {
+              font-size: 28px;
+          }
+
+          .jaffary-popup-description {
+              font-size: 13px;
+          }
+
+          .jaffary-newsletter-input {
+              padding: 14px 55px 14px 18px;
+              font-size: 15px;
+          }
+
+          .jaffary-newsletter-submit {
+              padding: 8px 12px;
+              font-size: 12px;
+          }
+      }
+
+      @media (max-width: 480px) {
+          .jaffary-popup-content {
+              padding: 24px 20px;
+          }
+
+          .jaffary-popup-title {
+              font-size: 28px;
+              letter-spacing: 2px;
+          }
+
+          .jaffary-popup-subtitle {
+              font-size: 24px;
+              letter-spacing: 1px;
+          }
+
+          .jaffary-popup-container {
+              width: 100%;
+          }
+
+          .jaffary-newsletter-input {
+              padding: 12px 50px 12px 16px;
+              font-size: 14px;
+          }
+
+          .jaffary-newsletter-submit {
+              padding: 6px 10px;
+              font-size: 11px;
+          }
+      }
+
+      /* Demo button for testing */
+      .test-popup-btn {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #00382f;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 25px;
+          cursor: pointer;
+          z-index: 1000;
+          font-size: 12px;
+      }
+
+      .reset-btn {
+          position: fixed;
+          top: 60px;
+          right: 20px;
+          background: #dc3545;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 25px;
+          cursor: pointer;
+          z-index: 1000;
+          font-size: 12px;
+      }
+    </style>
+
+    <!-- Test Buttons for Demo -->
+    <!--
+      <button class="test-popup-btn" onclick="JaffaryPopup.show()">Test Popup</button>
+      <button class="reset-btn" onclick="JaffaryPopup.resetDismissed()">Reset Daily Limit</button>
+    -->
+
+    <!-- Popup HTML Structure -->
+    <div class="jaffary-popup-overlay" id="jaffaryPopupOverlay">
+      <div class="jaffary-popup-container">
+        <!-- Left Image Section -->
+        <div class="jaffary-popup-image"></div>
+
+        <!-- Right Content Section -->
+        <div class="jaffary-popup-content">
+          <button class="jaffary-close-btn" onclick="JaffaryPopup.close()"></button>
+
+          <h1 class="jaffary-popup-title">Subscribe</h1>
+          <h2 class="jaffary-popup-subtitle">For Updates</h2>
+
+          <p class="jaffary-popup-description">
+            Sign-up to join the <strong>Jaffary Studios</strong> Members Club for access to new collection launches,
+            exclusive products, runway shows, private sales and more.
+          </p>
+
+          <!-- Newsletter Success Message -->
+          <div class="jaffary-newsletter-success" id="jaffaryNewsletterSuccess">
+            <p>Thank you for subscribing! You'll receive our newsletter updates soon.</p>
+          </div>
+
+          <!-- Newsletter Error Message -->
+          <div class="jaffary-newsletter-error" id="jaffaryNewsletterError">
+            <p>There was an error subscribing. Please try again.</p>
+          </div>
+
+          <!-- Newsletter Form -->
+          <form class="jaffary-popup-form" id="jaffaryNewsletterForm">
+            <label class="jaffary-form-label" for="jaffaryEmailInput">Email address*</label>
+
+            <div class="jaffary-newsletter-input-wrapper">
+              <input
+                type="email"
+                name="email"
+                class="jaffary-newsletter-input"
+                placeholder="Enter email address"
+                required
+                autocomplete="email"
+                id="jaffaryEmailInput"
+              >
+              <button type="submit" class="jaffary-newsletter-submit" aria-label="Subscribe" id="jaffarySubmitBtn">
+                Get access
+              </button>
+            </div>
+
+            <p class="jaffary-newsletter-privacy">
+              I have read and understood Jaffary Studios' Privacy Policy and I agree to receive the newsletter and other
+              marketing communications.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Namespace everything to avoid conflicts
+      window.JaffaryPopup = (function () {
+        const POPUP_DELAY = 3000; // 3 seconds delay
+        const STORAGE_KEY = 'jaffary_popup_dismissed';
+        const SUBSCRIBED_KEY = 'jaffary_popup_subscribed';
+        let popupElement = null;
+
+        // Admin control - this will be replaced with Shopify setting
+        const POPUP_ENABLED = true; // In Shopify: {{ settings.newsletter_popup_enabled }}
+
+        // Initialize popup
+        function init() {
+          // Check if popup is enabled by admin
+          if (!POPUP_ENABLED) {
+            console.log('Jaffary Popup: Disabled by admin settings');
+            return;
+          }
+
+          popupElement = document.getElementById('jaffaryPopupOverlay');
+          if (!popupElement) {
+            console.warn('Jaffary Popup: Popup element not found');
+            return;
+          }
+
+          // Set up event listeners
+          setupEventListeners();
+
+          // Check if user has already dismissed popup today or is subscribed
+          if (!hasUserDismissedPopupToday() && !hasUserSubscribedToday()) {
+            // Auto-show popup after delay
+            setTimeout(show, POPUP_DELAY);
+          }
+        }
+
+        // Check if user has dismissed popup today
+        function hasUserDismissedPopupToday() {
+          try {
+            const dismissedDate = localStorage.getItem(STORAGE_KEY);
+            if (!dismissedDate) return false;
+
+            const today = new Date().toDateString();
+            return dismissedDate === today;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        // Check if user has subscribed today
+        function hasUserSubscribedToday() {
+          try {
+            const subscribedDate = localStorage.getItem(SUBSCRIBED_KEY);
+            if (!subscribedDate) return false;
+
+            const today = new Date().toDateString();
+            return subscribedDate === today;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        // Mark popup as dismissed for today
+        function markPopupAsDismissedToday() {
+          try {
+            const today = new Date().toDateString();
+            localStorage.setItem(STORAGE_KEY, today);
+          } catch (e) {
+            // localStorage not available, ignore
+          }
+        }
+
+        // Mark user as subscribed for today
+        function markUserAsSubscribedToday() {
+          try {
+            const today = new Date().toDateString();
+            localStorage.setItem(SUBSCRIBED_KEY, today);
+          } catch (e) {
+            // localStorage not available, ignore
+          }
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+          // Close on overlay click
+          popupElement.addEventListener('click', function (e) {
+            if (e.target === popupElement) {
+              close();
+            }
+          });
+
+          // Close on escape key
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && popupElement.classList.contains('show')) {
+              close();
+            }
+          });
+
+          // Handle form submission
+          const form = document.getElementById('jaffaryNewsletterForm');
+          if (form) {
+            form.addEventListener('submit', handleFormSubmit);
+          }
+        }
+
+        // Show popup
+        function show() {
+          if (!popupElement) return;
+
+          popupElement.classList.add('show');
+          document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        // Close popup
+        function close() {
+          if (!popupElement) return;
+
+          popupElement.classList.remove('show');
+          document.body.style.overflow = ''; // Restore scroll
+          markPopupAsDismissedToday(); // Remember user dismissed popup for today
+        }
+
+        // Handle form submission
+        function handleFormSubmit(e) {
+          e.preventDefault(); // Prevent default form submission
+
+          const emailInput = document.getElementById('jaffaryEmailInput');
+          const submitBtn = document.getElementById('jaffarySubmitBtn');
+          const form = document.getElementById('jaffaryNewsletterForm');
+
+          const email = emailInput.value.trim();
+
+          if (!email || !isValidEmail(email)) {
+            showError('Please enter a valid email address.');
+            return;
+          }
+
+          // Show loading state
+          submitBtn.disabled = true;
+          const originalText = submitBtn.textContent;
+          submitBtn.textContent = 'Subscribing...';
+
+          // Hide any existing messages
+          hideMessages();
+
+          // Simulate API call (replace with actual Shopify integration)
+          setTimeout(function () {
+            // Simulate successful subscription
+            showThankYou();
+            markUserAsSubscribedToday();
+
+            // Close popup after showing thank you for 3 seconds
+            setTimeout(function () {
+              close();
+              resetPopupState();
+            }, 5000);
+          }, 1000);
+        }
+
+        // Email validation
+        function isValidEmail(email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+        }
+
+        // Show thank you message
+        function showThankYou() {
+          const content = document.querySelector('.jaffary-popup-content');
+          const title = document.querySelector('.jaffary-popup-title');
+          const subtitle = document.querySelector('.jaffary-popup-subtitle');
+          const description = document.querySelector('.jaffary-popup-description');
+          const form = document.getElementById('jaffaryNewsletterForm');
+          const successMessage = document.getElementById('jaffaryNewsletterSuccess');
+
+          // Hide form and update content
+          form.style.display = 'none';
+          content.classList.add('thank-you');
+
+          // Update text
+          title.textContent = 'Thank You!';
+          subtitle.textContent = 'Welcome to Jaffary Studios';
+          description.innerHTML =
+            "You have successfully subscribed to our newsletter. You'll receive updates about new collections, exclusive products, and special events.";
+
+          // Show success message
+          successMessage.classList.add('show');
+        }
+
+        // Reset popup to original state
+        function resetPopupState() {
+          const content = document.querySelector('.jaffary-popup-content');
+          const title = document.querySelector('.jaffary-popup-title');
+          const subtitle = document.querySelector('.jaffary-popup-subtitle');
+          const description = document.querySelector('.jaffary-popup-description');
+          const form = document.getElementById('jaffaryNewsletterForm');
+          const submitBtn = document.getElementById('jaffarySubmitBtn');
+          const emailInput = document.getElementById('jaffaryEmailInput');
+
+          // Reset form
+          form.style.display = 'flex';
+          form.reset();
+          content.classList.remove('thank-you');
+
+          // Reset text
+          title.textContent = 'Subscribe';
+          subtitle.textContent = 'For Updates';
+          description.innerHTML =
+            'Sign-up to join the <strong>Jaffary Studios</strong> Members Club for access to new collection launches, exclusive products, runway shows, private sales and more.';
+
+          // Reset button
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Get access';
+
+          // Hide messages
+          hideMessages();
+        }
+
+        // Hide all messages
+        function hideMessages() {
+          const successMessage = document.getElementById('jaffaryNewsletterSuccess');
+          const errorMessage = document.getElementById('jaffaryNewsletterError');
+          successMessage.classList.remove('show');
+          errorMessage.classList.remove('show');
+        }
+
+        // Show error message
+        function showError(message) {
+          const errorMessage = document.getElementById('jaffaryNewsletterError');
+          const submitBtn = document.getElementById('jaffarySubmitBtn');
+
+          errorMessage.querySelector('p').textContent = message;
+          errorMessage.classList.add('show');
+
+          // Reset button
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Get access';
+
+          setTimeout(function () {
+            errorMessage.classList.remove('show');
+          }, 5000);
+        }
+
+        // Reset dismissed status (for testing)
+        function resetDismissed() {
+          try {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(SUBSCRIBED_KEY);
+            resetPopupState();
+            alert('Daily limit reset! The popup will show again.');
+          } catch (e) {
+            alert('Could not reset daily limit.');
+          }
+        }
+
+        // Public API
+        return {
+          init: init,
+          show: show,
+          close: close,
+          resetDismissed: resetDismissed,
+        };
+      })();
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+          JaffaryPopup.init();
+        });
+      } else {
+        JaffaryPopup.init();
+      }
+    </script>
+  </body>
+</html> {% endcomment %}

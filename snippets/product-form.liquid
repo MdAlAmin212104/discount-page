@@ -1,0 +1,1416 @@
+{%- assign product_form_id = 'product-form-' | append: section.id -%}
+{%- assign tab_counter = 0 -%}
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when '@app' -%}
+      <div class="mt-8">
+      {%- render block -%}
+      </div>
+
+
+      
+
+  {%- when 'title' -%}
+
+        <div>
+      <div class="custom-review-text">
+        <div class="info-item">
+          <div class="stars">
+            <!-- Full Stars -->
+            <svg
+              width="14"
+              height="15"
+              viewBox="0 0 14 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z"
+                fill="#00B67A"
+              />
+              <path
+                d="M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z"
+                fill="white"
+              />
+            </svg>
+
+            <svg
+              width="14"
+              height="15"
+              viewBox="0 0 14 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z"
+                fill="#00B67A"
+              />
+              <path
+                d="M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z"
+                fill="white"
+              />
+            </svg>
+
+            <svg
+              width="14"
+              height="15"
+              viewBox="0 0 14 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z"
+                fill="#00B67A"
+              />
+              <path
+                d="M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z"
+                fill="white"
+              />
+            </svg>
+
+            <svg
+              width="14"
+              height="15"
+              viewBox="0 0 14 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z"
+                fill="#00B67A"
+              />
+              <path
+                d="M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z"
+                fill="white"
+              />
+            </svg>
+
+            <svg
+              width="14"
+              height="15"
+              viewBox="0 0 14 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z"
+                fill="#00B67A"
+              />
+              <path
+                d="M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+
+          <span class="customers">4.8 / 5</span>
+        </div>
+
+        <div class="info-item">
+          <span class="returns">100,000+ customers</span>
+        </div>
+      </div>
+
+      <style>
+{% comment %} collapsable code css {% endcomment %}
+ .product-content-container.bg-scheme-background.text-scheme-text.section-x-padding.lg\:col-span-6
+  button.font-heading.cursor-pointer.flex.justify-between.items-center.w-full {
+    font-size: 14px !important;
+    font-family: 'Amiri' !important;
+}
+
+        .custom-review-text {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 6px;
+          margin: 16px auto;
+          padding: 12px;
+          background: #fff;
+          box-shadow: none !important;
+          border-bottom: 1px solid #efefef !important;
+          padding: 12px 0px !important;
+        }
+
+        .info-item {
+          display: flex;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px;
+          font-weight: 500;
+          font-size: 12px;
+          color: #222;
+        }
+
+        .stars {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+        }
+
+        .stars svg {
+          width: 15px;
+          height: 15px;
+          display: block;
+        }
+      </style>
+    </div>
+  <div class="">
+    <h1 {{ block.shopify_attributes }} 
+        class="product-title-block mt-4 break-words font-heading {{ settings.template_heading_size }}" 
+        style="color: black; font-weight: 700;">
+      {%- if feature_product_section -%}<a href="{{ product.url }}" style="color: black; text-decoration: none;">{%- endif -%}
+      {{ product.title }}
+      {%- if feature_product_section -%}
+      </a>
+      {%- endif -%}
+    </h1>
+
+{%- when 'price' -%}
+    {%- liquid
+      if settings.template_heading_size contains "lg:"
+        assign price_text_size = 'text-base lg:text-2xl'
+      else
+        assign price_text_size = 'text-base'
+      endif
+    -%}
+
+    <div {{ block.shopify_attributes }} 
+         data-price-wrapper 
+         class="product-price-block mt-8 {{ price_text_size }}" 
+         :class="{ 'invisible': !current_variant }" 
+         style="color: black;">
+      <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+      <span data-product-price 
+            x-html="formatMoney(current_price)" 
+            :class="{ 'text-scheme-accent': current_variant && product.compare_at_price_max && current_variant.compare_at_price > current_variant.price, 'invisible': !current_variant }"
+            style="color: black;">
+        {{ current_variant.price | money }}
+      </span>
+
+      {% if product.compare_at_price_max > product.price %}
+      <template x-if="current_variant && product.compare_at_price_max && current_variant.compare_at_price > current_variant.price">
+        <span>
+          <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+          <s data-compare-price 
+             x-html="formatMoney(current_variant.compare_at_price)"
+             style="color: black;">
+            {% if current_variant.compare_at_price > current_variant.price %}
+              {{ current_variant.compare_at_price | money }}
+            {% endif %}
+          </s>
+        </span>
+      </template>
+      {% endif %}
+
+      <template x-if="current_variant && current_variant.unit_price">
+        <div class="text-sm" data-unit-price-wrapper style="color: black;">
+          <span class="visually-hidden">
+            {{- 'products.product.unit_price_label' | t -}}
+          </span>
+          <span x-html="formatMoney(current_variant.unit_price)" style="color: black;">
+            {{- current_variant.unit_price | money -}}
+          </span>
+          <span aria-hidden="true">/</span>
+          <span class="visually-hidden">
+            {{- 'general.accessibility.unit_price_separator' | t -}}
+          </span>
+          <span x-html="current_variant.unit_price_measurement.reference_value != 1? current_variant.unit_price_measurement.reference_value :''" style="color: black;">
+            {%- if current_variant.unit_price_measurement.reference_value != 1 -%}
+              {{- current_variant.unit_price_measurement.reference_value -}}
+            {%- endif -%}
+          </span><!--
+          --><span x-html="current_variant.unit_price_measurement.reference_unit" style="color: black;">
+            {{- current_variant.unit_price_measurement.reference_unit -}}
+          </span>
+        </div>
+      </template>
+    </div>
+  </div>
+
+      {%- when 'vendor' -%}
+      {%- liquid
+        assign use_collection_vendor_link = false
+        for collection in product.collections
+        if collection.title == product.vendor
+          assign use_collection_vendor_link = true
+          assign vendor_collection = collection
+          break
+        endif
+        endfor
+      -%}
+      {%- if use_collection_vendor_link -%}
+      <p {{ block.shopify_attributes }} class="relative z-10 product-vendor-block"><a class="text-base mt-4 text-scheme-meta" href="{{ vendor_collection.url }}">{{ vendor_collection.title }}</a></p>
+      {%- else -%}
+      <p {{ block.shopify_attributes }} class="relative z-10 product-vendor-block text-base mt-4 text-scheme-meta">{{ product.vendor | link_to_vendor }}</p>
+      {%- endif -%}
+    
+    {%- when 'variant_picker' -%}
+      {%- assign option_style = block.settings.option_style -%}
+      {% unless product.has_only_default_variant %}
+        {% for option in product.options_with_values %}
+          {% liquid
+            if settings.enable_color_swatches
+              assign is_color = false
+              assign swatch_trigger = 'products.product.color_swatch_trigger' | t | downcase
+              assign option_downcase = option.name | downcase
+              if option_downcase contains swatch_trigger
+                assign is_color = true
+              elsif swatch_trigger == 'color' and option_downcase contains 'colour'
+                assign is_color = true
+              endif
+            endif
+          %}
+          {% assign option_array_index = forloop.index0 %}
+          {%- assign label_class = 'block' -%}
+          {%- if block.settings.hide_option_labels -%}
+            {%- assign label_class = 'visually-hidden' -%}
+          {%- endif -%}
+
+          <fieldset class="product-variant-picker-block js-enabled mt-4">
+            {%- if option_style == 'drop_down' -%}
+              <label class="{{ label_class }}" for="Option{{ option.position }}">
+                {{ option.name }}:
+              </label>
+            {%- else -%}
+              <legend class="{{ label_class }} ukmd">
+ <style>
+
+  a#more-payment-options-link {
+    margin: 12px 0px !important;
+}
+
+        /* Size Button Styles */
+        .size-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0px;
+            padding: 0px;
+            background-color: #fff;
+            border: 0px solid #ddd;
+            border-radius: 0px;
+            cursor: pointer;
+            font-size: 11px;
+            color:#00382f;
+            text-decoration: underline;
+            transition: all 0.2s ease;
+            margin: 0px 0;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .close-button:hover {
+            background-color: #f5f5f5;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* Size Chart Table */
+        .size-chart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .size-chart-table th,
+        .size-chart-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .size-chart-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .size-chart-table td {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .size-chart-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .size-chart-table tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Measurement Guide */
+        .measurement-guide {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .measurement-guide h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .measurement-item {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .measurement-item strong {
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+
+            .modal-header,
+            .modal-body {
+                padding: 16px;
+            }
+
+            .size-chart-table {
+                font-size: 12px;
+            }
+
+            .size-chart-table th,
+            .size-chart-table td {
+                padding: 8px 4px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Demo container for preview */
+        .demo-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+    </style>
+    <div class="demo-container">
+        <!-- Size Button -->
+        <button class="size-button" onclick="openSizeChart()">
+            Size
+        </button>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="sizeChartModal" onclick="closeSizeChart(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">Size Chart</h2>
+                <button class="close-button" onclick="closeSizeChart()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Size Chart Table -->
+                <table class="size-chart-table">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Chest (in)</th>
+                            <th>Waist (in)</th>
+                            <th>Hips (in)</th>
+                            <th>Length (in)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>XS</strong></td>
+                            <td>30-32</td>
+                            <td>24-26</td>
+                            <td>32-34</td>
+                            <td>26</td>
+                        </tr>
+                        <tr>
+                            <td><strong>S</strong></td>
+                            <td>32-34</td>
+                            <td>26-28</td>
+                            <td>34-36</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <td><strong>M</strong></td>
+                            <td>34-36</td>
+                            <td>28-30</td>
+                            <td>36-38</td>
+                            <td>28</td>
+                        </tr>
+                        <tr>
+                            <td><strong>L</strong></td>
+                            <td>36-38</td>
+                            <td>30-32</td>
+                            <td>38-40</td>
+                            <td>29</td>
+                        </tr>
+                        <tr>
+                            <td><strong>XL</strong></td>
+                            <td>38-40</td>
+                            <td>32-34</td>
+                            <td>40-42</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td><strong>XXL</strong></td>
+                            <td>40-42</td>
+                            <td>34-36</td>
+                            <td>42-44</td>
+                            <td>31</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openSizeChart() {
+            const modal = document.getElementById('sizeChartModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeSizeChart(event) {
+            // Only close if clicking the overlay or close button
+            if (!event || event.target.classList.contains('modal-overlay') || event.target.classList.contains('close-button')) {
+                const modal = document.getElementById('sizeChartModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeSizeChart();
+            }
+        });
+
+        // Prevent modal from closing when clicking inside the modal content
+        document.querySelector('.modal-content').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    </script>
+                 {% if is_color %}<span x-text="options[{{ forloop.index0 }}]"> </span>{% endif %}
+                            <div class="model-size">
+          <p>Model wears size M, is 183cm and weighs 73kg.</p>
+        </div>
+              </legend>
+            {%- endif -%}
+            {%- case option_style -%}
+              {%- when 'radio' -%}
+                <div class="mt-2">
+                  {% for value in option.values %}
+                    {% assign variant_label_state = true %}
+                    {% if product.options.size == 1 %}
+                      {% unless product.variants[forloop.index0].available %}
+                        {% assign variant_label_state = false %}
+                      {% endunless %}
+                    {% endif %}
+                    <div class="block relative variant-input">
+                      <input class="custom-input cursor-pointer absolute top-0 left-0 w-full h-full opacity-0" @change="optionChange()" type="radio" id="Option{{ option.position }}-{{ value | escape }}" name="options[{{ option.name }}]" value="{{ value | escape }}" data-handle="{{ value | handleize }}" {% if option.selected_value == value %} checked{% endif %} data-single-option-selector>
+                      <label class="flex items-center py-1  {% unless variant_label_state %}text-scheme-meta line-through{% else %}cursor-pointer{% endunless %}" for="Option{{ option.position }}-{{ value | escape }}">
+                        <template x-if="optionHandles[{{ option_array_index }}] === '{{ value | handleize }}'">
+                          <span class="w-2 h-2 mr-1 inline-block rounded-full bg-scheme-text border-checkbox border-scheme-text"></span>
+                        </template>
+                        <template x-if="optionHandles[{{ option_array_index }}] !== '{{ value | handleize }}'">
+                          <span class="w-2 h-2 mr-1 inline-block rounded-full bg-transparent border-checkbox border-scheme-text"></span>
+                        </template>
+                        <span>{{ value }}</span>
+                      </label>
+                    </div>
+                  {% endfor %}
+                </div>
+              {%- when 'text_underline' -%}
+                <div class="mt-2 flex flex-wrap items-center justify-start -mx-1">
+                  {% for value in option.values %}
+                    {% assign variant_label_state = true %}
+                    {% if product.options.size == 1 %}
+                      {% unless product.variants[forloop.index0].available %}
+                        {% assign variant_label_state = false %}
+                      {% endunless %}
+                    {% endif %}
+                    <div class="relative variant-input">
+                      <input class="custom-input cursor-pointer absolute top-0 left-0 w-full h-full opacity-0" @change="optionChange()" type="radio" id="Option{{ option.position }}-{{ value | escape }}" name="options[{{ option.name }}]" value="{{ value | escape }}" data-handle="{{ value | handleize }}" {% if option.selected_value == value %} checked{% endif %} data-single-option-selector>
+                      <label class="block p-1 {% unless variant_label_state %}text-scheme-meta line-through{% else %}cursor-pointer{% endunless %}" for="Option{{ option.position }}-{{ value | escape }}">
+                        <span :class="{ 'border-b-text border-scheme-text': optionHandles[{{ option_array_index }}] === '{{ value | handleize }}' }">{{ value }}</span>
+                      </label>
+                    </div>
+                  {% endfor %}
+                </div>
+              {%- when 'buttons' -%}
+                <div class="mt-2 flex flex-wrap items-center justify-start -mx-1">
+                  {% for value in option.values %}
+                    {% assign variant_label_state = true %}
+                    {% if product.options.size == 1 %}
+                      {% unless product.variants[forloop.index0].available %}
+                        {% assign variant_label_state = false %}
+                      {% endunless %}
+                    {% endif %}
+                    {% liquid
+                      assign color_image = value | handle | append: '.' | append: 'png' | file_img_url: '50x' | prepend: 'https:'
+                      assign color_swatch_fallback = value | split: ' ' | last | handle
+                    %}
+                    <div class="relative variant-input {% unless variant_label_state %}line-through-cbh{% endunless %}" >
+                      <input class="custom-input cursor-pointer absolute top-0 left-0 w-full h-full opacity-0" @change="optionChange()" type="radio" id="Section-{{ section.id }}-Option{{ option.position }}-{{ value | escape }}" name="options[{{ option.name }}]" value="{{ value | escape }}" data-handle="{{ value | handleize }}" {% if option.selected_value == value %} checked{% endif %} data-single-option-selector>
+                      <label
+                        :class="{ 'border-scheme-text': optionHandles[{{ option_array_index }}] === '{{ value | handleize }}', 'border-transparent': optionHandles[{{ option_array_index }}] !== '{{ value | handleize }}' }"
+                        class="relative block h-full w-full flex justify-center align-items {% unless is_color %}p-2 min-w-4{% else %}p-0.5{% endunless %} {% render 'button-style', section_color: section_color %} border-text text-center cursor-pointer   {% if is_color %}cursor-pointer{% endif %}" for="Section-{{ section.id }}-Option{{ option.position }}-{{ value | escape }}"
+                        title="{{ option.value }}"
+                        style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        "
+                        >
+                        {%- if is_color %}
+                        {%- unless variant_label_state -%}
+                          <span class="absolute top-0 left-0 bottom-0 z-10 h-0.5 w-full bg-scheme-text transform top-1/2 -translate-y-1/2 -rotate-45  flex justify-center align-items w-full h-full"></span>
+                        {%- endunless -%}
+                        <span class="block w-10 h-10 {% render 'button-style', section_color: section_color %}" style="background-image: url({{ color_image }}); background-color: {{ color_swatch_fallback }};"></span>
+                        {%- endif -%}
+                        <span {% if is_color %}class="visually-hidden flex justify-center align-items w-full h-full"{% endif %}>{{ value }}</span>
+                      </label>
+                    </div>
+                  {% endfor %}
+                </div>
+              {%- when 'drop_down' -%}
+                <select
+                  id="Option{{ option.position }}"
+                  @change="optionChange()"
+                  name="options[{{ option.name | escape }}]"
+                  class="mt-2  appearance-none rounded-none bg-scheme-background text-scheme-text border-b-text py-1 border-scheme-text text-scheme-text pr-6"
+                  data-single-option-selector>
+                  {% for value in option.values %}
+                    <option
+                      class="text-initial"
+                      value="{{ value | escape }}"
+                      data-handle="{{ value | handleize }}"
+                      {% if option.selected_value == value %}selected="selected"{% endif %}>
+                        {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+            {% endcase %}
+          </fieldset>
+        {% endfor %}
+      {% endunless %}
+    {%- when 'inventory_status' -%}
+    
+      <div {{ block.shopify_attributes }} class="product-inventory-status-block mt-8"{% if feature_product_section %} data-url="{{ product.url }}"{% endif %}>
+        <div class="stock-warning">
+    <span class="dot1"></span>
+ Low stock — only a few left
+  </div>
+ <style>
+@media (max-width: 768px) {
+  .stock-warning {
+    margin-left: 5px !important;
+}
+  
+}
+.aus-pilot {
+    display: none ! IMPORTANT;
+}
+    .stock-warning {
+    align-items: center;
+    color: black;
+    font-size: 12px;
+    font-weight: 400;
+    background-color: white;
+    padding: 0px 0px;
+    border-radius: 8px;
+}
+
+   .stock-warning {
+     
+    margin-top: 0px;
+}
+    .stock-warning .dot1 {
+      height: 10px;
+      width: 10px;
+      background-color: #f29c1f;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 15px;
+    }
+   .dot1 {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+  position: relative;
+  animation: blink 1.5s infinite;
+}
+   /* Pulse animation using pseudo-element */
+.dot1::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 0, 0, 0.5);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+  z-index: -1;
+}
+
+/* Blinking animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Pulsing animation */
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+}
+
+li.flex.items-center.justify-start {
+    font-size: 12px !important;
+}
+  </style>
+
+        {% assign current_variant = product.selected_or_first_available_variant %}
+        {% if current_variant.available %}
+          {% if current_variant.inventory_quantity > block.settings.threshold %}
+            
+          {% elsif current_variant.inventory_quantity > 0 %}
+            <div class="text-scheme-accent">
+              {{ 'products.product.inventory_low_stock_html' | t: count: current_variant.inventory_quantity }}
+            </div>
+          {% endif %}
+        {% else %}
+          <div>
+            {% comment %} {{ 'products.product.sold_out' | t }} {% endcomment %}
+          </div>
+        {% endif %}
+    <div class="product-page-popup-link  mt-8 " x-data="ThemeComponent_PopUp()" x-init="mounted()" data-color-scheme="primary">
+  <div class="js-enabled">
+    <button @click="open = true" x-ref="trigger" aria-haspopup="dialog" class="cursor-pointer  text-scheme-text group hover:text-scheme-accent ">
+      
+      <span class="border-b-text border-scheme-text group-hover:border-scheme-accent  py-1 ">Shipping info</span>
+    </button>
+  </div>
+  <div x-show="open" x-ref="modal" class="product-popup-modal fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center p-8 lg:p-24 z-100" style="display: none;">
+    <div @click.away.prevent="open = false" class="section-x-padding py-theme border-grid border-grid-color bg-scheme-background text-scheme-text w-full max-w-2xl relative max-h-full overflow-auto" role="dialog" aria-label="" aria-modal="true" tabindex="-1">
+      <button x-ref="close" @click="open = false" type="button" class="block p-1 w-8 ml-auto absolute top-2 right-2" autofocus="">
+        <span class="visually-hidden">Close</span>
+        <span class="inline-block w-5 h-5"><svg aria-hidden="true" focusable="false" role="presentation" class="icon fill-current icon-close" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M18.364 4.222l1.414 1.414L13.414 12l6.364 6.364-1.414 1.414L12 13.414l-6.364 6.364-1.414-1.414L10.586 12 4.222 5.636l1.414-1.414L12 10.586z"></path></svg></span>
+      </button>
+      <div class="product-popup-modal__content-info">
+        <h2 class="font-heading text-base">Shipping info</h2>
+        <div class="rte mt-8"><div class="product-popup-modal__content-info">
+          <p><b>Shipping</b></p>
+<div class="table-wrapper"><table width="100%">
+<tbody>
+<tr>
+<td><strong>Country</strong></td>
+<td><strong>Standard shipping</strong></td>
+<td><strong>Transit time</strong></td>
+</tr>
+<tr>
+<td>
+<strong>&nbsp;</strong>Netherlands</td>
+<td>Free&nbsp;shipping</td>
+<td>1 working day</td>
+</tr>
+<tr>
+<td>Germany/Belgium</td>
+<td>Free&nbsp;shipping</td>
+<td>1-2 working days</td>
+</tr>
+<tr>
+<td>
+<div><meta charset="utf-8"></div>
+Switzerland/Austria</td>
+<td>
+<div><meta charset="utf-8"></div>
+<span>Free above $150.-</span>
+</td>
+<td>2-4 working days</td>
+</tr>
+<tr>
+<td>Europe</td>
+<td>Free above $150.-</td>
+<td>3-5 working days</td>
+</tr>
+<tr>
+<td>US/Canada</td>
+<td>Free above $150.-</td>
+<td>5-10 working days</td>
+</tr>
+<tr>
+<td>Middle East</td>
+<td>Free above $150.-</td>
+<td>20-30 working days*</td>
+</tr>
+<tr>
+<td>Rest of world</td>
+<td>Free above $150.-</td>
+<td>5-15 working days</td>
+</tr>
+</tbody>
+</table></div>
+<br><p>*For Middle East orders we recommend to use&nbsp;the UPS Express shipping&nbsp;method to avoid delays.</p>
+<br><div class="table-wrapper"><table width="100%">
+<tbody>
+<tr>
+<td>&nbsp;Worldwide UPS  Express shipping</td>
+<td>Get your order faster — we cover half the express shipping. You only pay $20.-</td>
+<td>2-4 working days globally and 1 working day in Europe</td>
+</tr>
+</tbody>
+</table></div>
+<p>&nbsp;</p>
+<p><strong>Returns</strong><br>Easy returns within 31 days. </strong></a></p>
+<p><br><br></p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <div x-show="open" class="bg-scheme-text fixed top-0 left-0 right-0 bottom-0 z-99 opacity-40" style="display: none;"></div>
+  <noscript>
+    <a href="/pages/shipping-information" class="">
+      
+      <span class="border-b-text border-scheme-text group-hover:border-scheme-accent  py-1 ">Shipping info</span>
+    </a>
+  </noscript>
+</div>
+      </div>
+    {%- when 'quantity_selector' -%}
+      <div {{ block.shopify_attributes }} class="product-quantity-block mt-8">
+        <label class="{{ label_class }}" for="Quantity">{{ 'products.product.quantity' | t }}:</label>
+        <div class="mt-2 flex items-center -mx-2">
+          <button type="button" class="fill-current p-2 w-7 h-7" @click="if(quantity>0){quantity--}"
+                aria-label="'{ 'general.accessibility.decrement_one' | t }}">{% render 'icon-minus' %}</button>
+          <input form="{{ product_form_id }}" class="appearance-none bg-transparent w-10 text-center border-b-text border-scheme-text p-2" type="number" id="Quantity" name="quantity" value="1" min="1" x-model="quantity" >
+          <button type="button" class="fill-current p-2 w-7 h-7"  @click="quantity++"
+                aria-label="{{ 'general.accessibility.increment_one' | t }}">{% render 'icon-plus' %}</button>
+        </div>
+      </div>
+    {%- when 'buy_buttons' -%}
+      {%- liquid
+        assign gift_card_recipient_feature_active = false
+
+        if block.settings.show_gift_card_recipient and product.gift_card?
+          assign gift_card_recipient_feature_active = true
+        endif
+      -%}
+      {% form 'product', product, id: product_form_id, data-product-form: '', data-product-handle: product.handle, data-enable-history-state: 'true', data-product-form: '', x-ref: 'productForm' %}
+        {{ form | payment_terms }}
+
+        <div class="no-js hidden">
+          <label class="block mt-theme" for="variant_{{ section.id }}">Variant</label>
+          <select x-ref="singleVariantSelector" name="id" id="variant_{{ section.id }}" class="mt-2 appearance-none rounded-none bg-scheme-background text-scheme-text border-b-grid py-1 border-scheme-text text-scheme-text pr-6">
+            {% for variant in product.variants %}
+              <option
+                {% if variant == current_variant %}selected="selected"{% endif %}
+                {% unless variant.available %}disabled="disabled"{% endunless %}
+                x-bind:selected="currentVariantId === {{ variant.id }}"
+                value="{{ variant.id }}">
+                  {{ variant.title }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+<style>
+  .product-page-popup-link.mt-8 {
+    margin: 0px !important;
+    margin-bottom: 15px !important;
+  }
+  .gravity-button {
+    border-radius: 0px !important;
+  }
+
+  button#addToCartButton {
+    border-radius: 99px !important;
+  }
+
+  div.py-4.rte p{ 
+font-size: 12px !important;
+
+}
+</style>
+
+        {%- if gift_card_recipient_feature_active -%}
+          <div class="mt-8 lg:w-3/4">
+            {% render 'gift-card-recipient-form',
+              product: product,
+              form: form,
+              section: section
+            %}
+          </div>
+        {%- endif -%}
+
+        {%- if settings.ajax_cart_method == 'page' or settings.show_cart_on_add == false -%}
+          <div  class="mt-4 mb-8"
+                x-show="addedToCart"
+                x-cloak
+                x-transition:enter="transition ease duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease duration-300"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0">
+            <p>{{ 'cart.popup.added_to_cart' | t }}!</p>
+            <p class="accent-links-scheme">{{ 'products.product.add_to_cart_confirm_html' | t: cart_url: routes.cart_url, link_url: routes.all_products_collection_url }}.</p>
+          </div>
+        {%- endif -%}
+
+        <div
+          class="mt-4 mb-8"
+          x-show="addErrorMessage !== ''"
+          style="display: none;"
+          x-transition:enter="transition ease duration-300"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition ease duration-300"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+        >
+          <p class="text-scheme-accent" x-text="addErrorMessage"></p>
+        </div>
+
+<div class="add-to-cart-container mt-8 lg:w-3/4">
+  {%- if block.settings.enable_payment_button and gift_card_recipient_feature_active == false -%}
+    {%- capture cta_button_class -%}{% render 'button-style' %} bg-transparent text-scheme-text border-text border-scheme-text hover:border-scheme-accent hover:text-scheme-accent{%- endcapture -%}
+  {%- else -%}
+    {%- capture cta_button_class -%}{% render 'button-style' %} {% render 'button-color', section_color: section_color %}{%- endcapture -%}
+  {%- endif -%}
+
+  <button
+      id="addToCartButton"
+      @click="$store.drawer.cartOpener = $event.currentTarget"
+      class="add-to-cart px-1 py-2 w-full {% if settings.button_uppercase %}uppercase{% endif %} {{ cta_button_class }}"
+      type="submit"
+      :class="{ 'opacity-50 cursor-not-allowed': !currentVariantAvailable }"
+      :disabled="!currentVariantAvailable || loading"
+      {% unless current_variant.available %}disabled="disabled"{% endunless %}>
+      <span class="no-js">
+        {% if current_variant.available %}
+          {{ 'products.product.add_to_cart' | t }}{% if settings.buttons_show_arrow %} →{% endif %}
+        {% else %}
+          {{ 'products.product.sold_out' | t }}
+        {% endif %}
+      </span>
+      <template x-if="current_variant">
+        <div>
+          <template x-if="currentVariantAvailable">
+            <span>{{ 'products.product.add_to_cart' | t }}{% if settings.buttons_show_arrow %} →{% endif %}</span>
+          </template>
+          <template x-if="!currentVariantAvailable">
+            <span>{{ 'products.product.sold_out' | t }}</span>
+          </template>
+        </div>
+      </template>
+      <template x-if="!current_variant">
+        <span>{{ 'products.product.unavailable' | t }}</span>
+      </template>
+  </button>
+
+  {% unless current_variant.available %}
+    <button
+        id="notifyMeButton"
+        onclick="openNotifyPopup()"
+        class="mt-4 px-1 py-2 w-full {% if settings.button_uppercase %}uppercase{% endif %} {{ cta_button_class }}"
+        type="button">
+        <span>{{ 'products.product.notify_me' | t | default: 'Notify me when available' }}</span>
+    </button>
+  {% endunless %}
+
+
+
+
+  <!-- Notify Me Popup -->
+  <div id="notifyPopup" class="notify-popup">
+    <div class="popup-content">
+      <h2>Notify Me When Available</h2>
+      <form id="notifyForm">
+        <label for="notifyEmail">Email:</label>
+        <input
+          type="email"
+          id="notifyEmail"
+          name="notifyEmail"
+          placeholder="your@email.com"
+        />
+        <div>
+          <button type="button" onclick="closeNotifyPopup()">Cancel</button>
+          <button type="submit" onclick="submitNotifyForm(event)">Notify Me</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- End Notify Me Popup -->
+
+
+
+  {%- if block.settings.enable_payment_button and gift_card_recipient_feature_active == false -%}
+    {%- assign button_color = settings.button_color -%}
+    {%- if button_color == 'transparent_background_text_border' -%}
+      {%- assign button_color = 'text_background' -%}
+    {%- endif -%}
+    <div class="mt-2 payment-button-wrapper {% render 'button-style' %} color-scheme style-{{ button_color }}">{{ form | payment_button }}</div>
+  {%- endif -%}
+</div>
+
+
+    <div
+  id="container-card"
+  class="trustBarContainer animate__fadeIn animate__animated"
+  style="
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 5px 0px;
+  "
+>
+
+
+  <div class="badgesContainer" style="display: block; text-align: center; justify-content: center;">
+    <!-- VISA -->
+    <div
+      class="badgeContainer"
+      style="
+        height: 30px;
+        width: 30px;
+        display: inline-block;
+        position: relative;
+      "
+    >
+      <img
+        src="https://trust.conversionbear.com/../static/badges/visa_1_color.svg"
+        class="imageContainer"
+        style="
+          height: 80%;
+          width: 80%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          right: -50%;
+          transform: translate(-50%, -50%);
+          filter: grayscale(100%);
+        "
+      />
+    </div>
+
+    <!-- MASTERCARD -->
+    <div
+      class="badgeContainer"
+      style="
+        height: 30px;
+        width: 30px;
+        display: inline-block;
+        position: relative;
+      "
+    >
+      <img
+        src="https://trust.conversionbear.com/../static/badges/mastercard_color.svg"
+        class="imageContainer"
+        style="
+          height: 80%;
+          width: 80%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          right: -50%;
+          transform: translate(-50%, -50%);
+          filter: grayscale(100%);
+        "
+      />
+    </div>
+
+    <!-- APPLE PAY -->
+    <div
+      class="badgeContainer"
+      style="
+        height: 34px;
+        width: 34px;
+        display: inline-block;
+        position: relative;
+      "
+    >
+      <img
+        src="https://trust.conversionbear.com/../static/badges/applepay_color.svg"
+        class="imageContainer"
+        style="
+          height: 80%;
+          width: 80%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          right: -50%;
+          transform: translate(-50%, -50%);
+          filter: grayscale(100%);
+        "
+      />
+    </div>
+
+    <!-- IDEAL -->
+    <div
+      class="badgeContainer"
+      style="
+        height: 34px;
+        width: 34px;
+        display: inline-block;
+        position: relative;
+        margin-left: -6px !important;
+        margin-right: -6px !important;
+      "
+    >
+      <img
+        src="https://trust.conversionbear.com/../static/badges/ideal_color.svg"
+        class="imageContainer"
+        style="
+          height: 80%;
+          width: 80%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          right: -50%;
+          transform: translate(-50%, -50%);
+          filter: grayscale(100%);
+        "
+      />
+    </div>
+
+    <!-- KLARNA -->
+    <div
+      class="badgeContainer"
+      style="
+        height: 34px;
+        width: 34px;
+        display: inline-block;
+        position: relative;
+      "
+    >
+      <img
+        src="https://trust.conversionbear.com/../static/badges/klarna_color.svg"
+        class="imageContainer"
+        style="
+          height: 80%;
+          width: 80%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          right: -50%;
+          transform: translate(-50%, -50%);
+          filter: grayscale(100%);
+        "
+      />
+    </div>
+
+    <!-- PAYPAL -->
+    <div
+      class="badgeContainer"
+      style="
+        height: 34px;
+        width: 34px;
+        display: inline-block;
+        position: relative;
+      "
+    >
+      <img
+        src="https://trust.conversionbear.com/../static/badges/paypal_1_color.svg"
+        class="imageContainer"
+        style="
+          height: 80%;
+          width: 80%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          right: -50%;
+          transform: translate(-50%, -50%);
+          filter: grayscale(100%);
+        "
+      />
+    </div>
+  </div>
+</div>
+
+
+      {% endform %}
+      {% if block.settings.show_pickup_availability %}
+        <template x-if="currentVariantAvailability && currentVariantAvailable && $store.availability.current_variant.available">
+          <div class="mt-4 lg:w-3/4 flex items-start" :class="{'opacity-50': $store.availability.loading}" :aria-busy="$store.availability.loading">
+            <div class="w-3 mr-3 pt-1">
+              <template x-if="currentVariantAvailability.available">
+                {% render 'icon-in-stock' %}
+              </template>
+              <template x-if="!currentVariantAvailability.available">
+                {% render 'icon-out-of-stock' %}
+              </template>
+            </div>
+            <div class="flex-auto">
+              <h2 x-html="currentVariantAvailability.pickup_text"></h2>
+              <small class="block mt-2" x-html="currentVariantAvailability.pickup_time"></small>
+              <button type="button" @click="$store.drawer.availabilityOpener = $event.currentTarget; $store.drawer.availabilityDrawerOpen = !$store.drawer.availabilityDrawerOpen" aria-haspopup="dialog" class="mt-2 hover:text-scheme-accent text-sm items-center justify-center {% if settings.links_show_underline %}border-b-text border-scheme-text hover:border-scheme-accent pb-1{% endif %}">
+                <span class="{% if settings.links_uppercase %}uppercase{% endif %}" x-text="currentVariantAvailability.modal_text"></span>
+                {% if settings.links_show_arrow %}&nbsp;&rarr;{% endif %}
+              </button>
+            </div>
+          </div>
+        </template>
+        <div class=""
+            data-product-title="{{ product.title | escape }}"
+            data-has-only-default-variant="{{ product.has_only_default_variant }}"
+            data-base-url="{{ shop.url }}{{ routes.root_url }}"
+            data-section-color="{{ section_color }}"
+            data-store-availability>
+        </div>
+      {% endif %}
+    {%- when 'description' -%}
+      {%- liquid
+        assign enable_collapsible_tabs = block.settings.enable_collapsible_tabs
+        assign truncate_description = block.settings.truncate_description
+      -%}
+      {% render 'product-block-description',
+        enable_collapsible_tabs: enable_collapsible_tabs,
+        truncate_description: truncate_description,
+        section_color: section_color,
+        product: product
+      %}
+    {%- when 'text' -%}
+      {% render 'product-block-text', block: block %}
+    {%- when 'richtext' -%}
+      {% render 'product-block-richtext', block: block %}
+    {%- when 'custom_liquid' -%}
+  {% render 'product-block-custom-liquid', block: block %}
+
+    {%- when 'collapsible_tab' -%}
+      {% render 'product-block-collapsible-tab',
+        block: block,
+        tab_counter: tab_counter
+      %}
+      {%- assign tab_counter = tab_counter | plus: 1 -%}
+    {%- when 'icon_list' -%}
+      {% render 'product-block-icon-list',
+        block: block,
+        section_color: section_color
+      %}
+    {%- when 'popup' -%}
+      {% render 'product-block-popup',
+        block: block,
+        section_color: section_color
+      %}
+    {%- when 'share_buttons' -%}
+      <div class="mt-8" {{ block.shopify_attributes }}>
+      {% render 'social-sharing', tag: 'h2', share_title: product.title, share_permalink: product.url, share_image: product, section_color: section_color %}
+      </div>
+    {%- when 'complementary' -%}
+      {% render 'product-block-complementary',
+        block: block,
+        product: product,
+        section: section,
+        section_color: section_color
+      %}
+  {%- endcase -%}
+{%- endfor -%}
+<style>
+  .product-inventory-status-block.mt-8 {
+    display: flex!important;
+    justify-content: space-between!important;
+}
+  .notify-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  .notify-popup.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 400px;
+    width: 90%;
+  }
+  .popup-content h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .popup-content label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .popup-content input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .popup-content div {
+    text-align: right;
+  }
+  .popup-content button {
+    padding: 8px 16px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .popup-content button[type="button"] {
+    background: #ccc;
+  }
+  .popup-content button[type="submit"] {
+    background: #0066cc;
+    color: white;
+  }
+
+
+
+  {% comment %} extra {% endcomment %}
+
+  .py-2.border-theme-color.border-b-grid {
+  padding: 12px !important;
+  }
+
+  .relative.variant-input {
+    height: 50px !important;
+    width: 50px !important;
+}
+
+.product-page-popup-link.mt-8 {
+    display: none !important;
+}
+
+h1.product-title-block.mt-4.break-words.font-heading.text-lg {
+    font-weight: 500 !important;
+}
+
+
+</style>
+
+<script>
+  console.log('Notify script loaded');
+  function openNotifyPopup() {
+    console.log('Opening popup');
+    var popup = document.getElementById('notifyPopup');
+    if (popup) {
+      popup.classList.add('active');
+    } else {
+      console.error('Popup element not found');
+    }
+  }
+
+  function closeNotifyPopup() {
+    console.log('Closing popup');
+    var popup = document.getElementById('notifyPopup');
+    if (popup) {
+      popup.classList.remove('active');
+    }
+  }
+
+  function submitNotifyForm(event) {
+    event.preventDefault();
+    console.log('Form submitted');
+    var email = document.getElementById('notifyEmail').value.trim();
+    if (!email) {
+      console.log('Email field is empty, stopping');
+      return; // Do nothing if email is empty
+    }
+    console.log('Email:', email);
+    alert('Thank you! We will notify you when this product is available.');
+    closeNotifyPopup();
+    document.getElementById('notifyForm').reset();
+  }
+</script>

@@ -1,0 +1,165 @@
+{%- liquid
+  assign counter = 0
+  assign tabs_count = 0
+  for block in section.blocks
+    if block.settings.question != blank and block.settings.answer != blank
+      assign tabs_count = tabs_count | plus: 1
+    endif
+  endfor
+-%}
+
+<section
+  x-data="ThemeSection_{{ section.id | handleize | replace: '-', '_' | replace: '__', '_' }}()"
+  class="text-scheme-text gap-gutter overflow-hidden border-t-grid border-grid-color bg-border"
+  data-section-type="collapsible"
+  data-section-id="{{ section.id }}"
+  data-alpine-id="{{ section.id | handleize | replace: '-', '_' | replace: '__', '_' }}"
+  data-tabs-count="{{ tabs_count }}"
+  data-single-tab-a-time="false"
+  data-first-tab-opened="false"
+  data-color-scheme="{{ section.settings.color_scheme }}">
+  <div class="bg-scheme-background">
+    {%- if section.settings.title != blank -%}
+      {%- render 'section-title',
+        title: section.settings.title,
+        section_color: section.settings.color_scheme
+      -%}
+    {%- endif -%}
+
+    <div class="mx-auto max-w-2xl lg:py-6{% if section.settings.two_columns_desktop %} xl:max-w-4xl{% endif %}">
+      <div class="{% if section.settings.two_columns_desktop %}lg:grid lg:grid-cols-2 lg:gap-6{% else %}border-grid-color lg:border-b-grid{% endif %}">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.question != blank and block.settings.answer != blank -%}
+            <div class="section-x-padding py-2{% if section.settings.two_columns_desktop %} lg:p-0 lg:border-t-0{% endif %}{% unless forloop.first %} border-grid-color border-t-grid{% endunless %}">
+              <div class="border-grid-color{% if section.settings.two_columns_desktop %} lg:border-b-grid lg:pb-2{% endif %}">
+                <button
+                  class="text-left cursor-pointer flex justify-between items-center w-full{% if section.settings.heading_text_style == 'heading' %} font-heading text-base md:text-lg{% else %} font-body{% endif %}"
+                  aria-controls="answer-{{ block.id }}"
+                  @click="openTab({{ counter }})"
+                  :aria-expanded="tabOpen.tab{{ counter }} ? true : 'false'"
+                >
+                  {{ block.settings.question }}
+                  <span class="flex flex-shrink-0">
+                  <span class="inline-block w-5 h-5 js-enabled" x-show="!tabOpen.tab{{ counter }}">{%- render 'icon-plus' %}</span>
+                  <span class="inline-block w-5 h-5 js-enabled" x-show="tabOpen.tab{{ counter }}" style="display: none;">{%- render 'icon-minus' %}</span>
+                </span>
+                </button>
+                <div class="pt-2.5 no-js-undo-cloak rte text-sm md:text-base" x-show="tabOpen.tab{{ counter }}" id="answer-{{ block.id }}" x-cloak>{{ block.settings.answer }}</div>
+              </div>
+            </div>
+            {% assign counter = counter | plus: 1 %}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "disabled_on": {
+    "groups": ["header", "footer", "aside"]
+  },
+  "settings": [
+    {
+      "type":      "text",
+      "id":        "title",
+      "label":     "Heading",
+      "default":   "FAQs"
+    },
+    {
+      "type": "header",
+      "content": "Tabs"
+    },
+    {
+      "type": "checkbox",
+      "id": "two_columns_desktop",
+      "default": true,
+      "label": "Two columns on desktop"
+    },
+    {
+      "type": "select",
+      "id": "heading_text_style",
+      "label": "Heading text style",
+      "options": [
+        {
+          "value": "heading",
+          "label": "Heading"
+        },
+        {
+          "value": "body",
+          "label": "Body"
+        }
+      ],
+      "default": "heading"
+    },
+    {
+      "type":      "header",
+      "content":   "Color"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "primary", "label": "Primary"},
+        { "value": "secondary", "label": "Secondary"},
+        { "value": "tertiary", "label": "Tertiary"}
+      ],
+      "default":   "primary"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Question",
+      "type": "question",
+      "settings": [
+        {
+          "type":      "text",
+          "id":        "question",
+          "label":     "Question",
+          "default":   "Frequently asked question"
+        },
+        {
+          "type":      "richtext",
+          "id":        "answer",
+          "label":     "Answer",
+          "default":   "<p>Use this text to share the answer to the question with your customers.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

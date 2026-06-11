@@ -1,0 +1,266 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "custom_liquid_X7T9E3": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<div class=\"custom-review-text\">\n      <div class=\"info-item\">\n        <div class=\"stars\">\n          <!-- Full Stars -->\n          <svg\n            width=\"14\"\n            height=\"15\"\n            viewBox=\"0 0 14 15\"\n            fill=\"none\"\n            xmlns=\"http://www.w3.org/2000/svg\"\n          >\n            <path\n              d=\"M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z\"\n              fill=\"#00B67A\"\n            />\n            <path\n              d=\"M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z\"\n              fill=\"white\"\n            />\n          </svg>\n\n          <svg\n            width=\"14\"\n            height=\"15\"\n            viewBox=\"0 0 14 15\"\n            fill=\"none\"\n            xmlns=\"http://www.w3.org/2000/svg\"\n          >\n            <path\n              d=\"M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z\"\n              fill=\"#00B67A\"\n            />\n            <path\n              d=\"M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z\"\n              fill=\"white\"\n            />\n          </svg>\n\n          <svg\n            width=\"14\"\n            height=\"15\"\n            viewBox=\"0 0 14 15\"\n            fill=\"none\"\n            xmlns=\"http://www.w3.org/2000/svg\"\n          >\n            <path\n              d=\"M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z\"\n              fill=\"#00B67A\"\n            />\n            <path\n              d=\"M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z\"\n              fill=\"white\"\n            />\n          </svg>\n\n          <svg\n            width=\"14\"\n            height=\"15\"\n            viewBox=\"0 0 14 15\"\n            fill=\"none\"\n            xmlns=\"http://www.w3.org/2000/svg\"\n          >\n            <path\n              d=\"M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z\"\n              fill=\"#00B67A\"\n            />\n            <path\n              d=\"M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z\"\n              fill=\"white\"\n            />\n          </svg>\n\n          <!-- Half Star -->\n          <svg\n            width=\"14\"\n            height=\"15\"\n            viewBox=\"0 0 13 15\"\n            fill=\"none\"\n            xmlns=\"http://www.w3.org/2000/svg\"\n          >\n            <path\n              d=\"M12.9342 0.499023H0.449219V14.3272H12.9342V0.499023Z\"\n              fill=\"#DCDCE6\"\n            />\n            <path\n              d=\"M0.449219 0.499023H6.69164V14.1842H0.449219V0.499023Z\"\n              fill=\"#00B67A\"\n            />\n            <path\n              d=\"M6.69249 9.72332L8.6442 9.14576L9.42386 11.885L6.69249 9.72332ZM10.9833 6.26351H7.60135L6.55839 2.80371L5.64963 6.26351H2.26758L4.99907 8.42521L3.95611 11.885L6.68748 9.72332L8.37601 8.42521L10.9833 6.26351Z\"\n              fill=\"white\"\n            />\n          </svg>\n        </div>\n\n        <span class=\"customers\">4.7 / 5</span>\n      </div>\n\n      <div class=\"info-item\">\n        <span class=\"returns\">100,000+ Happy Customers</span>\n      </div>\n    </div>\n\n    <style>\n      .custom-review-text {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        gap: 8px;\n        min-height: 29px;\n        margin: 16px auto;\n        padding: 6px;\n        background: #fff;\n        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);\n      }\n\n      .info-item {\n        display: flex;\n        align-items: center;\n        gap: 6px;\n        font-weight: 500;\n        font-size: 12px;\n        color: #222;\n      }\n\n      .stars {\n        display: flex;\n        align-items: center;\n        gap: 2px;\n      }\n\n      .stars svg {\n        width: 14px;\n        height: 15px;\n        display: block;\n      }\n    </style>"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "text_K9e64z": {
+          "type": "text",
+          "settings": {
+            "text": "Last sizes - no restocking",
+            "font": "body",
+            "text_size": "text-base",
+            "icon": "none"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "option_style": "buttons",
+            "hide_option_labels": false
+          }
+        },
+        "inventory_status_QDQHj3": {
+          "type": "inventory_status",
+          "settings": {
+            "threshold": 0
+          }
+        },
+        "icon_list_yqFYGm": {
+          "type": "icon_list",
+          "settings": {
+            "heading": "",
+            "text_color": "secondary",
+            "text_1": "{{ product.metafields.custom.size.value }}",
+            "icon_1": "person",
+            "text_2": "Fits true to size — take your usual size",
+            "icon_2": "ruler",
+            "text_3": "",
+            "icon_3": "globe",
+            "text_4": "",
+            "icon_4": "washing",
+            "text_5": "",
+            "icon_5": "truck"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "disabled": true,
+          "settings": {}
+        },
+        "popup_PPA7BR": {
+          "type": "popup",
+          "disabled": true,
+          "settings": {
+            "icon": "none",
+            "text": "Shipping information",
+            "page": "shipping-information",
+            "text_color": "text"
+          }
+        },
+        "custom_liquid_KCURmj": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<div style=\"width: 100%; max-width: 800px;\">\n  <div\n    style=\"\n      font-size: 14px;\n      font-weight: 600;\n      letter-spacing: 1px;\n      margin-bottom: 8px;\n      color: #000;\n    \"\n  >\n    FIT\n  </div>\n\n  <div\n    style=\"\n      position: relative;\n      width: 100%;\n      height: 8px;\n      background: #e6e6e6;\n    \"\n  >\n    <div\n      style=\"\n        position: absolute;\n        top: 0;\n        left: 50%;\n        transform: translateX(-50%);\n        width: 160px;\n        height: 8px;\n        background: #000;\n      \"\n    ></div>\n  </div>\n\n  <div\n    style=\"\n      display: flex;\n      justify-content: space-between;\n      margin-top: 12px;\n      font-size: 14px;\n      color: #000;\n    \"\n  >\n    <span style=\"white-space: nowrap;\">Small</span>\n    <span style=\"white-space: nowrap;\">True to size</span>\n    <span style=\"white-space: nowrap;\">Large</span>\n  </div>\n</div>"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "enable_payment_button": true,
+            "trust_text": "<p>Guaranteed safe & secure checkout</p>",
+            "show_pickup_availability": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "icon_list_dJJWWb": {
+          "type": "icon_list",
+          "settings": {
+            "heading": "",
+            "text_color": "text",
+            "text_1": "Premium materials — built to last",
+            "icon_1": "check-mark",
+            "text_2": "Ordered before 11 PM = shipped today",
+            "icon_2": "truck",
+            "text_3": "Pay in 3 installments with Shop Pay",
+            "icon_3": "lock",
+            "text_4": "",
+            "icon_4": "iron",
+            "text_5": "",
+            "icon_5": "star"
+          }
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {
+            "enable_collapsible_tabs": true,
+            "truncate_description": false
+          }
+        },
+        "custom_liquid_4hfkJR": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div></div>"
+          }
+        },
+        "collapsible_tab_MpJYHL": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Description",
+            "heading_text_style": "heading",
+            "content": "{{ product.description }}",
+            "page": "",
+            "icon": "none"
+          }
+        },
+        "collapsible_tab_3RiWGH": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Delivery & returns",
+            "heading_text_style": "heading",
+            "content": "<p><br/>• Free shipping worldwide on orders over $150  <br/>• Try at home  <br/>• 30-day free returns for a perfect fit guarantee<br/></p>",
+            "page": "",
+            "icon": "none"
+          }
+        },
+        "custom_liquid_X7Krfx": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<body>\n    <section class=\"trustpilot-reviews-section\">\n      <svg style=\"display: none\">\n        <!-- Navigation Arrows -->\n        <symbol id=\"tp-prev-arrow\" viewBox=\"0 0 24 24\">\n          <path\n            d=\"M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z\"\n            fill=\"currentColor\"\n          />\n        </symbol>\n        <symbol id=\"tp-next-arrow\" viewBox=\"0 0 24 24\">\n          <path\n            d=\"M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z\"\n            fill=\"currentColor\"\n          />\n        </symbol>\n\n        <!-- Verified Badge -->\n        <symbol id=\"verified-badge\" viewBox=\"0 0 14 14\">\n          <title>Verified</title>\n          <circle cx=\"7\" cy=\"7\" r=\"7\" fill=\"#1DA1F2\" />\n          <path\n            d=\"M4.2 7.3l1.2 1.2 3.4-3.4\"\n            fill=\"none\"\n            stroke=\"#fff\"\n            stroke-width=\"1.4\"\n            stroke-linecap=\"round\"\n            stroke-linejoin=\"round\"\n          />\n        </symbol>\n\n        <!-- Star Icon -->\n        <symbol id=\"tp-star\" viewBox=\"0 0 14 15\">\n          <path\n            d=\"M13.4049 0.499023H0.919922V14.3272H13.4049V0.499023Z\"\n            fill=\"#00B67A\"\n          />\n          <path\n            d=\"M7.16319 9.72332L9.1148 9.14576L9.89457 11.885L7.16319 9.72332ZM11.588 6.26351H8.20604L7.16319 2.80371L6.12023 6.26351H2.73828L5.46966 8.42521L4.42681 11.885L7.15819 9.72332L8.84671 8.42521L11.588 6.26351Z\"\n            fill=\"white\"\n          />\n        </symbol>\n      </svg>\n\n      <p class=\"section-title\">Testimonials</p>\n\n      <div class=\"trustpilot-reviews-wrapper\">\n        <button\n          class=\"trustpilot-slider-btn trustpilot-prev-btn\"\n          aria-label=\"Previous reviews\"\n          disabled\n        >\n          <svg class=\"trustpilot-btn-icon\">\n            <use href=\"#tp-prev-arrow\"></use>\n          </svg>\n        </button>\n\n        <div class=\"trustpilot-slider-container\">\n          <div class=\"trustpilot-slider-track\">\n            <!-- Review 1 -->\n            <div class=\"trustpilot-review-card\">\n              <img\n                src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/omahlay_jaffary.jpg?v=1728296025\"\n                alt=\"Omah Lay wearing jeans\"\n                class=\"trustpilot-img\"\n              />\n              <div class=\"profile-card\">\n                <div class=\"profile-header\">\n                  <img\n                    src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/omahlay_jaffary.jpg?v=1728296025\"\n                    alt=\"Omah Lay profile picture\"\n                    class=\"profile-image\"\n                  />\n                  <div class=\"profile-info\">\n                    <div class=\"profile-name-container\">\n                      <p class=\"profile-name\">Omah Lay</p>\n                      <img\n                        class=\"verified-badge\"\n                        src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/verified.png?v=1762161629\"\n                        alt=\"\"\n                      />\n                    </div>\n                    <div class=\"stars\">\n                      <!-- 5 Stars -->\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                    </div>\n                  </div>\n                </div>\n                <p class=\"profile-text\">I need all colorways</p>\n              </div>\n            </div>\n\n            <!-- Review 2 -->\n            <div class=\"trustpilot-review-card\">\n              <img\n                src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/dj_bluss_dubai-jaffary.jpg?v=1728296206\"\n                alt=\"DJ Bliss wearing jeans\"\n                class=\"trustpilot-img\"\n              />\n              <div class=\"profile-card\">\n                <div class=\"profile-header\">\n                  <img\n                    src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/dj_bluss_dubai-jaffary.jpg?v=1728296206\"\n                    alt=\"DJ Bliss profile picture\"\n                    class=\"profile-image\"\n                  />\n                  <div class=\"profile-info\">\n                    <div class=\"profile-name-container\">\n                      <p class=\"profile-name\">DJ Bliss</p>\n                      <img\n                        class=\"verified-badge\"\n                        src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/verified.png?v=1762161629\"\n                        alt=\"\"\n                      />\n                    </div>\n                    <div class=\"stars\">\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                    </div>\n                  </div>\n                </div>\n                <p class=\"profile-text\">\n                  These jeans go hard they fit and feel perfect\n                </p>\n              </div>\n            </div>\n\n            <!-- Review 3 -->\n            <div class=\"trustpilot-review-card\">\n              <img\n                src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/camavinga_jaffary.png?v=1762158602\"\n                alt=\"Camavinga wearing jeans\"\n                class=\"trustpilot-img\"\n              />\n              <div class=\"profile-card\">\n                <div class=\"profile-header\">\n                  <img\n                    src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/camavinga_jaffary.png?v=1762158602\"\n                    alt=\"Camavinga profile picture\"\n                    class=\"profile-image\"\n                  />\n                  <div class=\"profile-info\">\n                    <div class=\"profile-name-container\">\n                      <p class=\"profile-name\">Camavinga</p>\n                      <img\n                        class=\"verified-badge\"\n                        src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/verified.png?v=1762161629\"\n                        alt=\"\"\n                      />\n                    </div>\n                    <div class=\"stars\">\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                    </div>\n                  </div>\n                </div>\n                <p class=\"profile-text\">\n                  These are one of the hardest jeans I ever put on\n                </p>\n              </div>\n            </div>\n\n            <!-- Review 4 -->\n            <div class=\"trustpilot-review-card\">\n              <img\n                src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/wizkid_jaffary.jpg?v=1728460361\"\n                alt=\"Wiz Kid wearing jeans\"\n                class=\"trustpilot-img\"\n              />\n              <div class=\"profile-card\">\n                <div class=\"profile-header\">\n                  <img\n                    src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/wizkid_jaffary.jpg?v=1728460361\"\n                    alt=\"Wiz Kid profile picture\"\n                    class=\"profile-image\"\n                  />\n                  <div class=\"profile-info\">\n                    <div class=\"profile-name-container\">\n                      <p class=\"profile-name\">Wiz Kid</p>\n                      <img\n                        class=\"verified-badge\"\n                        src=\"https://cdn.shopify.com/s/files/1/1494/6308/files/verified.png?v=1762161629\"\n                        alt=\"\"\n                      />\n                    </div>\n                    <div class=\"stars\">\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                      <svg class=\"star-icon\">\n                        <use href=\"#tp-star\"></use>\n                      </svg>\n                    </div>\n                  </div>\n                </div>\n                <p class=\"profile-text\">I F*ck with this brand</p>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <button\n          class=\"trustpilot-slider-btn trustpilot-next-btn\"\n          aria-label=\"Next reviews\"\n        >\n          <svg class=\"trustpilot-btn-icon\">\n            <use href=\"#tp-next-arrow\"></use>\n          </svg>\n        </button>\n      </div>\n    </section>\n\n    <style>\n      /* Base Styles */\n      .trustpilot-reviews-section,\n      .trustpilot-reviews-section *,\n      .trustpilot-reviews-section *::before,\n      .trustpilot-reviews-section *::after {\n        box-sizing: border-box;\n        margin: 0;\n        padding: 0;\n      }\n\n      .trustpilot-reviews-section {\n        background: #fff;\n        border-radius: 12px;\n        max-width: 1200px;\n        margin: 0 auto;\n        padding: 0px;\n        touch-action: pan-y;\n      }\n\n      /* Section Title */\n      .section-title {\n        text-align: center;\n        margin-bottom: 20px;\n        font-size: 14px;\n        color: #333;\n        letter-spacing: 0.5px;\n      }\n\n      /* Slider Wrapper */\n      .trustpilot-reviews-wrapper {\n        position: relative;\n        max-width: 900px;\n        margin: 0 auto;\n        padding: 0 40px;\n      }\n\n      /* Slider Container */\n      .trustpilot-slider-container {\n        overflow: hidden;\n        width: 100%;\n        cursor: grab;\n      }\n\n      .trustpilot-slider-container.grabbing {\n        cursor: grabbing;\n      }\n\n      .trustpilot-slider-track {\n        display: flex;\n        gap: 16px;\n        transition: transform 0.5s ease-in-out;\n        will-change: transform;\n      }\n\n      /* Review Card */\n      .trustpilot-review-card {\n        width: calc(50% - 8px);\n        min-width: calc(50% - 8px);\n        max-width: calc(50% - 8px);\n        border-radius: 12px;\n        overflow: hidden;\n        flex-shrink: 0;\n        background: #fff;\n        border: 1px solid #e0e0e0;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n        transition: transform 0.3s ease, box-shadow 0.3s ease;\n      }\n\n      /* Review Image */\n      .trustpilot-img {\n        width: 100%;\n        display: block;\n        object-fit: cover;\n        object-position: center;\n      }\n\n      /* Profile Card */\n      .profile-card {\n        padding: 16px;\n        background: #fff;\n      }\n\n      .profile-header {\n        display: flex;\n        align-items: center;\n        gap: 12px;\n        margin-bottom: 12px;\n      }\n\n      .profile-image {\n        width: 40px;\n        height: 40px;\n        border-radius: 50%;\n        object-fit: cover;\n        border: 2px solid #f0f0f0;\n      }\n\n      .profile-info {\n        flex: 1;\n      }\n\n      .profile-name-container {\n        display: flex;\n        align-items: center;\n        gap: 4px;\n        margin-bottom: 4px;\n      }\n\n      .profile-name {\n        font-size: 13px;\n        font-weight: 600;\n        color: #333;\n      }\n\n      .verified-badge {\n        width: 14px !important;\n        height: 14px !important;\n        flex-shrink: 0;\n      }\n\n      .stars {\n        display: flex;\n        align-items: center;\n        gap: 1px;\n      }\n\n      .star-icon {\n        width: 12px !important;\n        height: 12px !important;\n        display: block;\n      }\n\n      .profile-text {\n        font-size: 14px;\n        line-height: 1.5;\n        color: #444;\n        margin: 0;\n      }\n\n      /* Slider Buttons */\n      .trustpilot-slider-btn {\n        position: absolute;\n        top: 50%;\n        transform: translateY(-50%);\n        background: #ffffff;\n        border: 1px solid #ddd;\n        width: 36px;\n        height: 36px;\n        border-radius: 50%;\n        cursor: pointer;\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        z-index: 10;\n        transition: all 0.3s ease;\n        color: #333;\n        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n      }\n\n      .trustpilot-btn-icon {\n        width: 18px;\n        height: 18px;\n      }\n\n      .trustpilot-slider-btn:hover:not(:disabled) {\n        background: #00b67a;\n        border-color: #00b67a;\n        color: white;\n        transform: translateY(-50%) scale(1.1);\n      }\n\n      .trustpilot-slider-btn:disabled {\n        opacity: 0.3;\n        cursor: not-allowed;\n      }\n\n      .trustpilot-prev-btn {\n        left: 0;\n      }\n\n      .trustpilot-next-btn {\n        right: 0;\n      }\n\n      /* Responsive Styles */\n      @media (max-width: 768px) {\n        .trustpilot-reviews-wrapper {\n          padding: 0 32px;\n        }\n\n        .trustpilot-slider-track {\n          gap: 12px;\n        }\n\n        .trustpilot-review-card {\n          width: calc(50% - 6px);\n          min-width: calc(50% - 6px);\n          max-width: calc(50% - 6px);\n        }\n\n        .trustpilot-slider-btn {\n          width: 32px;\n          height: 32px;\n        }\n\n        .trustpilot-btn-icon {\n          width: 16px;\n          height: 16px;\n        }\n      }\n\n      @media (max-width: 480px) {\n        .trustpilot-reviews-wrapper {\n          padding: 0 28px;\n        }\n\n        .profile-card {\n          padding: 12px;\n        }\n\n        .profile-header {\n          gap: 10px;\n          margin-bottom: 10px;\n        }\n\n        .profile-image {\n          width: 36px;\n          height: 36px;\n        }\n\n        .profile-name {\n          font-size: 12px;\n        }\n\n        .profile-text {\n          font-size: 13px;\n        }\n      }\n\n      @media (max-width: 360px) {\n        .trustpilot-reviews-wrapper {\n          padding: 0 24px;\n        }\n\n        .trustpilot-review-card {\n          width: calc(50% - 6px);\n          min-width: calc(50% - 6px);\n          max-width: calc(50% - 6px);\n        }\n      }\n    </style>\n\n    <script>\n      const track = document.querySelector(\".trustpilot-slider-track\");\n      const nextBtn = document.querySelector(\".trustpilot-next-btn\");\n      const prevBtn = document.querySelector(\".trustpilot-prev-btn\");\n      const cards = document.querySelectorAll(\".trustpilot-review-card\");\n      const sliderContainer = document.querySelector(\".trustpilot-slider-container\");\n\n      let index = 0;\n      const total = cards.length;\n      let isDragging = false;\n      let startPos = 0;\n      let currentTranslate = 0;\n      let prevTranslate = 0;\n      let animationID = 0;\n\n      function getCardsPerView() {\n        return window.innerWidth <= 360 ? 1 : 2;\n      }\n\n      function updateSlide() {\n        const perView = getCardsPerView();\n        const maxIndex = Math.max(0, total - perView);\n        const cardWidth = cards[0].offsetWidth;\n        const gap = window.innerWidth <= 768 ? 12 : 16;\n        track.style.transform = `translateX(-${index * (cardWidth + gap)}px)`;\n\n        prevBtn.disabled = index === 0;\n        nextBtn.disabled = index >= maxIndex;\n      }\n\n      nextBtn.onclick = () => {\n        const perView = getCardsPerView();\n        const maxIndex = Math.max(0, total - perView);\n        if (index < maxIndex) {\n          index += perView;\n          if (index > maxIndex) index = maxIndex;\n          updateSlide();\n        }\n      };\n\n      prevBtn.onclick = () => {\n        const perView = getCardsPerView();\n        if (index > 0) {\n          index -= perView;\n          if (index < 0) index = 0;\n          updateSlide();\n        }\n      };\n\n      // Touch and Mouse Events\n      function getPositionX(event) {\n        return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;\n      }\n\n      function setSliderPosition() {\n        track.style.transform = `translateX(${currentTranslate}px)`;\n      }\n\n      function animation() {\n        setSliderPosition();\n        if (isDragging) requestAnimationFrame(animation);\n      }\n\n      function touchStart(event) {\n        isDragging = true;\n        startPos = getPositionX(event);\n        animationID = requestAnimationFrame(animation);\n        sliderContainer.classList.add('grabbing');\n      }\n\n      function touchMove(event) {\n        if (isDragging) {\n          const currentPosition = getPositionX(event);\n          currentTranslate = prevTranslate + currentPosition - startPos;\n        }\n      }\n\n      function touchEnd() {\n        cancelAnimationFrame(animationID);\n        isDragging = false;\n        sliderContainer.classList.remove('grabbing');\n        \n        const movedBy = currentTranslate - prevTranslate;\n        const cardWidth = cards[0].offsetWidth;\n        const gap = window.innerWidth <= 768 ? 12 : 16;\n        const cardWidthWithGap = cardWidth + gap;\n        \n        // If moved enough to trigger slide change\n        if (Math.abs(movedBy) > cardWidthWithGap * 0.2) {\n          if (movedBy < 0 && index < Math.max(0, total - getCardsPerView())) {\n            nextBtn.click();\n          } else if (movedBy > 0 && index > 0) {\n            prevBtn.click();\n          }\n        }\n        \n        // Reset position\n        currentTranslate = -index * cardWidthWithGap;\n        prevTranslate = currentTranslate;\n        setSliderPosition();\n      }\n\n      // Event Listeners for Touch\n      sliderContainer.addEventListener('touchstart', touchStart);\n      sliderContainer.addEventListener('touchmove', touchMove);\n      sliderContainer.addEventListener('touchend', touchEnd);\n\n      // Event Listeners for Mouse\n      sliderContainer.addEventListener('mousedown', touchStart);\n      sliderContainer.addEventListener('mousemove', touchMove);\n      sliderContainer.addEventListener('mouseup', touchEnd);\n      sliderContainer.addEventListener('mouseleave', touchEnd);\n\n      window.addEventListener(\"resize\", () => {\n        index = 0;\n        updateSlide();\n      });\n\n      // Initialize\n      updateSlide();\n    </script>\n  </body>"
+          }
+        }
+      },
+      "block_order": [
+        "custom_liquid_X7T9E3",
+        "title",
+        "price",
+        "text_K9e64z",
+        "variant_picker",
+        "inventory_status_QDQHj3",
+        "icon_list_yqFYGm",
+        "quantity_selector",
+        "popup_PPA7BR",
+        "custom_liquid_KCURmj",
+        "buy_buttons",
+        "icon_list_dJJWWb",
+        "description",
+        "custom_liquid_4hfkJR",
+        "collapsible_tab_MpJYHL",
+        "collapsible_tab_3RiWGH",
+        "custom_liquid_X7Krfx"
+      ],
+      "custom_css": [
+        "#addToCartButton {background: #00382f !important; color: white;}",
+        "legend.block.ukmd {display: none !important;}",
+        "legend.block.ukmd .model-size {font-size: 12px !important;}",
+        "svg {height: 85%; width: 85%;}",
+        "li.flex.items-center.justify-start {color: black;}",
+        ".lg\\:w-3\\/4 {width: 100%;}",
+        "ul.space-y-2 {column-count: 1;}",
+        ".mt-8.font-body.text-base {margin: 10px 0px 0px;}"
+      ],
+      "settings": {
+        "desktop_image_width": "one-half",
+        "desktop_image_position": "left",
+        "two_images_per_row": false,
+        "first_image_full_width": false,
+        "variant_image_behaviour": "swap",
+        "always_show_product_featured_media_first": false,
+        "enable_image_zoom": false,
+        "enable_video_looping": false,
+        "color_scheme": "primary",
+        "override_header_footer_color_scheme": false
+      }
+    },
+    "product_tabs_section_tWCj9E": {
+      "type": "Product-Tabs-Section",
+      "blocks": {
+        "tab_QQdT94": {
+          "type": "tab",
+          "settings": {
+            "title": "Jeans",
+            "collection": "jeans",
+            "products_limit": 20
+          }
+        },
+        "tab_gRA3YP": {
+          "type": "tab",
+          "settings": {
+            "title": "T-shirts",
+            "collection": "tees",
+            "products_limit": 5
+          }
+        },
+        "tab_mXPnKT": {
+          "type": "tab",
+          "settings": {
+            "title": "Hoodies",
+            "collection": "hoodies",
+            "products_limit": 5
+          }
+        }
+      },
+      "block_order": [
+        "tab_QQdT94",
+        "tab_gRA3YP",
+        "tab_mXPnKT"
+      ],
+      "disabled": true,
+      "custom_css": [
+        "h2.product-tabs__heading {font-weight: 500 !important; font-size: 14px !important;}"
+      ],
+      "settings": {
+        "heading": "You may also like",
+        "grid_columns_desktop": "5",
+        "grid_columns_mobile": "2"
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "disabled": true,
+      "custom_css": [
+        ".bg-scheme-background.text-scheme-text.section-x-padding.pt-theme-double.pb-theme.border-b-grid.border-grid-color.text-center {border: none !important;}",
+        ".product-recommendations-container.border-t-grid.border-grid-color {border: none;}",
+        ".bg-scheme-background.text-scheme-text.section-x-padding.pt-theme-double.pb-theme.border-b-grid.border-grid-color.text-center {padding: 0px;}"
+      ],
+      "settings": {
+        "show_product_recommendations": true,
+        "product_recommendations_heading": "Complete the look",
+        "limit": "4",
+        "products_per_row_desktop": "4",
+        "products_per_row_mobile": "1",
+        "color_scheme": "primary"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "product_tabs_section_tWCj9E",
+    "product-recommendations"
+  ]
+}

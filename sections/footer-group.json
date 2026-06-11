@@ -1,0 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu_nxLACT": {
+          "type": "menu",
+          "settings": {
+            "main_linklist": "main-menu",
+            "show_heading": true
+          }
+        },
+        "menu_DmkFLj": {
+          "type": "menu",
+          "settings": {
+            "main_linklist": "social-media",
+            "show_heading": true
+          }
+        }
+      },
+      "block_order": [
+        "menu_nxLACT",
+        "menu_DmkFLj"
+      ],
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "logo": "shopify://shop_images/jaffary_logo_png.png",
+        "logo_max_width": 135,
+        "show_payment_icons": true,
+        "show_locale_selector": true,
+        "show_country_selector": true,
+        "text_heading": "",
+        "text_text": "<p>Our collection is specially designed for unique individuals like you, embracing your individuality and making you stand out with every outfit.</p>",
+        "show_social": true,
+        "social_title": "",
+        "show_newsletter": true,
+        "newsletter_section_title": "",
+        "newsletter_subheading": "<p>Receive exclusive special offers and first look at new products.</p>",
+        "newsletter_color_scheme": "tertiary",
+        "show_grid_border": false,
+        "color_scheme": "tertiary"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

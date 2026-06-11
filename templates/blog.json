@@ -1,0 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "layout": "feature",
+        "show_title": true,
+        "show_rss": false,
+        "enable_tag_filter": true,
+        "feature_content_position": "lg:items-center",
+        "feature_image_width": "one-half",
+        "desktop_image_position": "right",
+        "show_author": true,
+        "show_date": true,
+        "show_excerpt": true,
+        "show_tags": true,
+        "show_comments": true,
+        "show_link": true,
+        "crop": "1",
+        "no_posts": 6,
+        "color_scheme": "primary",
+        "override_header_footer_color_scheme": false
+      }
+    },
+    "1ed29440-1571-40b1-98ce-c040e3ab4faa": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/Jaffary_02-20_8baed952-712f-4772-a991-05f239821f12.jpg",
+        "image_position": "right",
+        "image_size": "half",
+        "indent_image": false,
+        "fill_image": false,
+        "background_color": "primary",
+        "title": "",
+        "richtext": "<h6><em>After months of anticipation and restless waiting, the moment has arrived. We are thrilled to announce the release of our latest streetwear collection, \"Kill Your Distractions®\". Brace yourselves, as this is not just a fashion statement—it's a journey, a movement, and a testament to the relentless pursuit of greatness.<br/><br/>From the drawing board to the production line, every inch of this collection is infused with passion, dedication, and an unyielding commitment to quality. We proudly declare this as the best collection we have ever produced, and for good reason.<br/><br/>The fabrics selected for \"Kill Your Distractions®\" are a testament to our unwavering commitment to excellence. We've scoured the globe to source materials that not only elevate comfort but also exude style and durability. Each thread, each stitch, tells a story of meticulous craftsmanship and attention to detail.<br/><br/>Collaborating with renowned manufacturers, we've brought together a team of experts whose expertise aligns seamlessly with our vision. The result? A collection that stands at the intersection of fashion and artistry, a true representation of the synergy between great minds and great hands.<br/><br/>But \"Kill Your Distractions®\" is more than just a showcase of fabrics and stitches. It is a statement—a call to action. In a world saturated with distractions, this collection urges you to reclaim your focus, to silence the noise, and to embrace the fire that burns within. It's a reminder that fashion can be a powerful form of expression, a canvas on which you paint the narrative of your journey.<br/><br/>The journey of creating this collection has been a rollercoaster of emotions, challenges, and triumphs. We poured our hearts and souls into every design, every detail, and now we release it to the world with pride. This isn't just about clothing; it's about igniting the flames of passion and determination within each individual who wears \"Kill Your Distractions®\".<br/><br/>So, as you don the pieces from this collection, remember that you're not just wearing clothes. You're embracing a mindset, a philosophy, a way of life. \"Kill Your Distractions®\" is a celebration of the extraordinary within the ordinary, a journey that transcends trends and seasons.<br/><br/>Join us in this movement. Let the world witness the fire in your soul as you proudly wear \"Kill Your Distractions®\". This is more than fashion; this is an experience, a journey, a statement. Welcome to a new era of streetwear.</em></h6>",
+        "text_size": "text-sm",
+        "font": "body",
+        "text_alignment": "text-left",
+        "text_position": "items-center",
+        "color_scheme": "tertiary",
+        "cta_link": "shopify://collections/tops",
+        "cta_text": "",
+        "cta_style": "link"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1ed29440-1571-40b1-98ce-c040e3ab4faa"
+  ]
+}

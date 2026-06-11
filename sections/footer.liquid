@@ -1,0 +1,424 @@
+{%- liquid
+  assign section_color = 'footer'
+  assign locale_selector = false
+  assign country_selector = false
+  assign grid_cols = 12
+
+  if section.settings.show_country_selector and localization.available_countries.size > 1
+    assign country_selector = true
+  endif
+  if section.settings.show_locale_selector and shop.published_locales.size > 1
+    assign locale_selector = true
+  endif
+
+  assign show_grid_border = section.settings.show_grid_border
+  assign block_count = section.blocks.size | plus: 1
+  if section.settings.show_social
+    assign block_count = block_count | plus: 1
+  endif
+  if section.settings.text_text != blank
+    assign block_count = block_count | plus: 1
+  endif
+
+  case block_count
+    when 2
+      assign desktop_col_span = 'lg:col-span-6'
+    when 3
+      assign desktop_col_span = 'lg:col-span-4'
+    when 4
+      assign desktop_col_span = 'lg:col-span-3'
+    when 5
+      assign grid_cols = 10
+      assign desktop_col_span = 'lg:col-span-2'
+  endcase
+
+  assign desktop_grid_class = 'lg:grid-cols-' | append: grid_cols
+-%}
+
+<style>
+[data-color-scheme="footer"] {
+  --color-scheme-accent: var(--color-{{ section.settings.color_scheme }}-accent);
+  --color-scheme-text: var(--color-{{ section.settings.color_scheme }}-text);
+  --color-scheme-background: var(--color-{{ section.settings.color_scheme }}-background);
+  --color-scheme-background-hex: var(--color-{{ section.settings.color_scheme }}-background-hex);
+  --color-scheme-meta: var(--color-{{ section.settings.color_scheme }}-meta);
+  --color-scheme-text--overlay: var(--color-{{ section.settings.color_scheme }}-text--overlay);
+  --color-scheme-accent--overlay: var(--color-{{ section.settings.color_scheme }}-accent--overlay);
+  --color-scheme-accent-placeholder: var(--color-{{ section.settings.color_scheme }}-text-placeholder);
+}
+</style>
+
+<footer class="bg-scheme-background text-scheme-text" data-section-id="{{ section.id }}" data-section-type="footer" data-color-scheme="footer">
+  {% if section.settings.show_newsletter %}
+    {% render 'newsletter',
+      section_color: section.settings.newsletter_color_scheme,
+      text_size_class: 'text-base',
+      section_title: section.settings.newsletter_section_title,
+      subheading: section.settings.newsletter_subheading,
+      section_id: section.id
+    %}
+  {% endif %}
+  <div class="border-t-grid border-grid-color">
+    <div class="grid {{ desktop_grid_class }} bg-border {% if show_grid_border %}gap-gutter{% endif %%}">
+
+      {% comment %}
+      Footer logo
+      {% endcomment %}
+      <div class="{{ desktop_col_span }} section-x-padding py-theme bg-scheme-background text-scheme-text">
+        <div class="h1">
+          <a href="{{ routes.root_url }}" class="footer-logo-image break-words">
+            {% if section.settings.logo != blank %}
+              {% capture image_size %}{{ section.settings.logo_max_width }}x{% endcapture %}
+              <img src="{{ section.settings.logo | img_url: image_size }}"
+                  srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x, {{ section.settings.logo | img_url: image_size, scale: 3 }} 3x"
+                  alt="{{ section.settings.logo.alt | default: shop.name }}">
+            {% else %}
+              {{ shop.name }}
+            {% endif %}
+          </a>
+        </div>
+      </div>
+      {% if section.settings.text_text != blank %}
+        <div class="{{ desktop_col_span }} section-x-padding py-theme bg-scheme-background text-scheme-text overflow-hidden">
+          {% if section.settings.text_heading != '' %}
+            <h2 class="font-heading text-base mb-4 break-words">{{ section.settings.text_heading }}</h2>
+          {% endif %}
+          <div class="rte">
+            {{ section.settings.text_text }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {% if block.type == 'menu' %}
+          <div class="{{ desktop_col_span }} section-x-padding py-theme bg-scheme-background text-scheme-text {% unless show_grid_border %}lg:text-right{% endunless %}"  {{ block.shopify_attributes }}>
+            <div class="text-left inline-block">
+             
+            {% assign link_list = block.settings.main_linklist %}
+            {% if block.settings.show_heading %}
+              <h2 class="font-heading text-base mb-4">{{ linklists[link_list].title }}</h2>
+            {% endif %}
+            <ul class="list-none space-y-1">
+              {% for link in linklists[link_list].links %}
+                <li>
+                  <a href="{{ link.url }}" class="hover:text-scheme-accent">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if section.settings.show_social %}
+        {% assign social_style = settings.social_style %}
+        <div class="{{ desktop_col_span }} section-x-padding py-theme bg-scheme-background text-scheme-text {% unless show_grid_border %}lg:text-right{% endunless %}">
+          <div class="footer-block--newsletter"> 
+
+
+<ul class="list-unstyled list-social footer__list-social cbh-list" role="list"><li class="list-social__item">
+      <a href="https://www.facebook.com/61566990930989" class="link list-social__link"><svg aria-hidden="true" focusable="false" class="icon icon-facebook" viewBox="0 0 20 20">
+  <path fill="currentColor" d="M18 10.049C18 5.603 14.419 2 10 2c-4.419 0-8 3.603-8 8.049C2 14.067 4.925 17.396 8.75 18v-5.624H6.719v-2.328h2.03V8.275c0-2.017 1.195-3.132 3.023-3.132.874 0 1.79.158 1.79.158v1.98h-1.009c-.994 0-1.303.621-1.303 1.258v1.51h2.219l-.355 2.326H11.25V18c3.825-.604 6.75-3.933 6.75-7.951Z"></path>
+</svg>
+<span class="visually-hidden">Facebook</span>
+      </a>
+    </li><li class="list-social__item">
+      <a href="https://www.instagram.com/7ayaaofficial/" class="link list-social__link"><svg aria-hidden="true" focusable="false" class="icon icon-instagram" viewBox="0 0 20 20">
+  <path fill="currentColor" fill-rule="evenodd" d="M13.23 3.492c-.84-.037-1.096-.046-3.23-.046-2.144 0-2.39.01-3.238.055-.776.027-1.195.164-1.487.273a2.43 2.43 0 0 0-.912.593 2.486 2.486 0 0 0-.602.922c-.11.282-.238.702-.274 1.486-.046.84-.046 1.095-.046 3.23 0 2.134.01 2.39.046 3.229.004.51.097 1.016.274 1.495.145.365.319.639.602.913.282.282.538.456.92.602.474.176.974.268 1.479.273.848.046 1.103.046 3.238.046 2.134 0 2.39-.01 3.23-.046.784-.036 1.203-.164 1.486-.273.374-.146.648-.329.921-.602.283-.283.447-.548.602-.922.177-.476.27-.979.274-1.486.037-.84.046-1.095.046-3.23 0-2.134-.01-2.39-.055-3.229-.027-.784-.164-1.204-.274-1.495a2.43 2.43 0 0 0-.593-.913 2.604 2.604 0 0 0-.92-.602c-.284-.11-.703-.237-1.488-.273ZM6.697 2.05c.857-.036 1.131-.045 3.302-.045 1.1-.014 2.202.001 3.302.045.664.014 1.321.14 1.943.374a3.968 3.968 0 0 1 1.414.922c.41.397.728.88.93 1.414.23.622.354 1.279.365 1.942C18 7.56 18 7.824 18 10.005c0 2.17-.01 2.444-.046 3.292-.036.858-.173 1.442-.374 1.943-.2.53-.474.976-.92 1.423a3.896 3.896 0 0 1-1.415.922c-.51.191-1.095.337-1.943.374-.857.036-1.122.045-3.302.045-2.171 0-2.445-.009-3.302-.055-.849-.027-1.432-.164-1.943-.364a4.152 4.152 0 0 1-1.414-.922 4.128 4.128 0 0 1-.93-1.423c-.183-.51-.329-1.085-.365-1.943C2.009 12.45 2 12.167 2 10.004c0-2.161 0-2.435.055-3.302.027-.848.164-1.432.365-1.942a4.44 4.44 0 0 1 .92-1.414 4.18 4.18 0 0 1 1.415-.93c.51-.183 1.094-.33 1.943-.366Zm.427 4.806a4.105 4.105 0 1 1 5.805 5.805 4.105 4.105 0 0 1-5.805-5.805Zm1.882 5.371a2.668 2.668 0 1 0 2.042-4.93 2.668 2.668 0 0 0-2.042 4.93Zm5.922-5.942a.958.958 0 1 1-1.355-1.355.958.958 0 0 1 1.355 1.355Z" clip-rule="evenodd"></path>
+</svg>
+<span class="visually-hidden">Instagram</span>
+      </a>
+    </li><li class="list-social__item">
+      <a href="https://www.tiktok.com/@koreanglow_official" class="link list-social__link"><svg aria-hidden="true" focusable="false" class="icon icon-tiktok" viewBox="0 0 20 20">
+  <path fill="currentColor" d="M10.511 1.705h2.74s-.157 3.51 3.795 3.768v2.711s-2.114.129-3.796-1.158l.028 5.606A5.073 5.073 0 1 1 8.213 7.56h.708v2.785a2.298 2.298 0 1 0 1.618 2.205L10.51 1.705Z"></path>
+</svg>
+<span class="visually-hidden">TikTok</span>
+      </a>
+    </li>
+<li class="list-social__item">
+  <a href="https://wa.me/yourwhatsappphonenumber" class="link list-social__link" target="_blank" rel="noopener">
+    <svg aria-hidden="true" focusable="false" class="icon icon-whatsapp" viewBox="0 0 32 32">
+      <path fill="currentColor" d="M16.003 2.001a14.001 14.001 0 0 0-12.125 20.917L2 30l7.308-1.914a14.001 14.001 0 1 0 6.695-26.085Zm7.9 19.67c-.332.937-1.94 1.787-2.68 1.904-.687.105-1.539.15-2.477-.163-.571-.187-1.308-.427-2.278-.94a11.248 11.248 0 0 1-4.094-3.752c-1.44-2.06-1.781-3.689-1.336-5.055.232-.725 1.02-1.147 1.441-1.29.365-.123.833-.216 1.327.026.276.133.651 1.025.828 1.484.204.517.426 1.012.53 1.17.1.158.157.294.03.498-.488.789-.995 1.13-.706 1.693.535 1.046 2.446 2.986 3.945 3.585.666.27 1.063.235 1.429-.146.364-.377.604-.82.833-1.1.168-.206.362-.222.597-.133.233.09 1.47.692 1.724.815.256.125.426.187.488.294.065.106.065.917-.267 1.854Z"/>
+    </svg>
+    <span class="visually-hidden">WhatsApp</span>
+  </a>
+</li>
+
+<li class="list-social__item">
+  <a href="https://www.youtube.com/yourchannel" class="link list-social__link" target="_blank" rel="noopener">
+    <svg aria-hidden="true" focusable="false" class="icon icon-youtube" viewBox="0 0 32 32">
+      <path fill="currentColor" d="M31.672 9.323s-.31-2.2-1.26-3.17c-1.207-1.26-2.56-1.265-3.18-1.338C23.07 4.5 16.003 4.5 16.003 4.5h-.007s-7.07 0-11.23.315c-.617.073-1.97.077-3.177 1.337C.64 7.123.333 9.323.333 9.323S0 11.93 0 14.535v2.923c0 2.607.333 5.213.333 5.213s.31 2.2 1.26 3.17c1.207 1.26 2.79 1.22 3.5 1.353 2.543.242 10.91.313 10.91.313s7.073-.01 11.237-.327c.617-.073 1.97-.078 3.178-1.338.95-.97 1.26-3.17 1.26-3.17S32 20.065 32 17.458v-2.923c0-2.606-.328-5.213-.328-5.213ZM12.798 20.178V11.89l8.454 4.147-8.454 4.14Z"/>
+    </svg>
+    <span class="visually-hidden">YouTube</span>
+  </a>
+</li>
+</ul>
+</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="border-t-grid border-grid-color">
+    <div class="section-x-padding py-theme lg:flex lg:flex-wrap lg:items-center lg:justify-between">
+      <div class="mb-4 lg:mb-0 space-y-2 text-sm lg:flex-1">
+        <p>
+          &copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: routes.root_url }}.
+        </p>
+        <p>
+          {{ powered_by_link }}
+        </p>
+      </div>
+      {% if section.settings.show_payment_icons %}
+        {% unless shop.enabled_payment_types == empty %}
+          <div class="mb-4 md:mb-0 md:w-auto lg:flex-1">
+            <h2 class="visually-hidden">{{ 'general.payment.method' | t }}</h2>
+            <ul class="-mx-1 -mb-2 lg:text-center">
+              {% for type in shop.enabled_payment_types %}
+                <li class="inline-block mx-1 mb-2 w-7">
+                  {{ type | payment_type_svg_tag: class: 'icon' }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endunless %}
+      {% endif %}
+      {%- if country_selector or locale_selector -%}
+        <div class="flex flex-wrap items-center justify-between lg:justify-end mb-4 lg:mb-0 lg:flex-1">
+          {%- form 'localization', data-disclosure-form: '' -%}
+            {%- if locale_selector -%}
+              <div class="inline-block {% if country_selector and locale_selector %}mr-4{% endif %}">
+                <h2 class="visually-hidden" id="lang-heading">
+                  {{ 'general.language.dropdown_label' | t }}
+                </h2>
+                <div class="relative" data-disclosure-locale>
+                  <button type="button" class="text-sm border-b-text border-scheme-text py-1" aria-expanded="false" aria-controls="lang-list" aria-describedby="lang-heading" data-disclosure-toggle>
+                    {{ form.current_locale.endonym_name }}
+                    <span class="inline-block ml-1 w-3 fill-current">
+                      {% render 'icon-chevron-down' %}
+                    </span>
+                  </button>
+                  <ul id="lang-List" class="disclosure-list absolute bg-scheme-background opacity-0 top-0 lg:left-auto lg:right-0 transform transition-opacity border-text border-theme-color py-1 sm:py-2" data-disclosure-list inert>
+                    {% for locale in form.available_locales %}
+                      <li class="text-xs sm:text-sm">
+                        <a class="block p-2" href="#" lang="{{ locale.iso_code }}" {% if locale.iso_code == form.current_locale.iso_code %}aria-current="true"{% endif %} data-value="{{ locale.iso_code }}" data-disclosure-option>
+                          <span class="{% if locale.iso_code == form.current_locale.iso_code %}border-scheme-text border-b-text{% else %}border-transparent border-b-text{% endif %}">{{ locale.endonym_name }}</span>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                  <input type="hidden" name="locale_code" id="LocaleSelector" value="{{ form.current_locale.iso_code }}" data-disclosure-input/>
+                </div>
+              </div>
+            {%- endif -%}
+            {%- if country_selector -%}
+              <div class="inline-block">
+                <h2 class="visually-hidden" id="country-heading">
+                  {{ 'general.country.dropdown_label' | t }}
+                </h2>
+                <div class="relative" data-disclosure-country>
+                  <button type="button" class="text-sm border-b-text border-scheme-text py-1" aria-expanded="false" aria-controls="country-list" aria-describedby="country-heading" data-disclosure-toggle>
+                    {{ localization.country.name }} ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }})
+                    <span class="inline-block ml-1 w-3 fill-current">
+                      {% render 'icon-chevron-down' %}
+                    </span>
+                  </button>
+                  <ul id="country-list" class="disclosure-list absolute bg-scheme-background opacity-0 top-0 left-0 lg:left-auto lg:right-0 transform transition-opacity border-text border-theme-color py-1 sm:py-2" data-disclosure-list inert>
+                    {% for country in localization.available_countries %}
+                      <li class="text-xs sm:text-sm w-28 sm:w-40">
+                        <a class="block p-2" href="#" {% if country.iso_code == localization.country.iso_code %}aria-current="true"{% endif %} data-value="{{ country.iso_code }}" data-disclosure-option>
+                          <span class="{% if country.iso_code == localization.country.iso_code %}border-scheme-text border-b-text{% else %}border-transparent border-b-text{% endif %}">{{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})</span>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                  <input type="hidden" name="country_code" id="CountrySelector" value="{{ localization.country.iso_code }}" data-disclosure-input/>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+
+{% if section.settings.logo != blank %}
+  <style>
+    .footer-logo-image {
+      display: block;
+      max-width: {{ section.settings.logo_max_width }}px;
+    }
+    ul.list-unstyled.list-social.footer__list-social.cbh-list {
+    display: flex;
+    flex-wrap: wrap;
+          gap: 15px;
+      justify-content: end;
+}
+    .footer-block--newsletter svg {
+    width: 25px;
+}
+  </style>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image"
+      },
+      {
+        "type": "range",
+        "id": "logo_max_width",
+        "min": 50,
+        "max": 250,
+        "step": 5,
+        "unit": "px",
+        "label": "Logo width",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "show_payment_icons",
+        "label": "Show payment icons"
+      },
+      {
+        "type": "header",
+        "content": "Language Selector",
+        "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_locale_selector",
+        "label": "Show language selector",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Country/region selector",
+        "info": "To add a country/region, go to your [payment settings.](/admin/settings/payments)"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_country_selector",
+        "label": "Show country/region selector",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "text",
+        "id": "text_heading",
+        "label": "Heading"
+      },
+      {
+        "id": "text_text",
+        "type": "richtext",
+        "label": "Text",
+        "default": "<p>Use this to add additional information about your store, e.g. address / contact details.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Social"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "label": "Show social media"
+      },
+      {
+        "type": "text",
+        "id": "social_title",
+        "label": "Social heading"
+      },
+      {
+        "type": "header",
+        "content": "Newsletter"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_newsletter",
+        "label": "Show newsletter",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "newsletter_section_title",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "newsletter_subheading",
+        "label": "Subheading",
+        "default": "<p>Receive special offers and first look at new products.</p>"
+      },
+      {
+        "type": "select",
+        "id": "newsletter_color_scheme",
+        "label": "Newsletter color scheme",
+        "options": [
+            { "value": "primary", "label": "Primary"},
+            { "value": "secondary", "label": "Secondary"},
+            { "value": "tertiary", "label": "Tertiary"}
+        ],
+        "default":   "secondary"
+      },
+      {
+        "type":      "header",
+        "content":   "Layout"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_grid_border",
+        "label": "Show grid border",
+        "default": false
+      },
+      {
+        "type":      "header",
+        "content":   "Colors"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "options": [
+            { "value": "primary", "label": "Primary"},
+            { "value": "secondary", "label": "Secondary"},
+            { "value": "tertiary", "label": "Tertiary"}
+        ],
+        "default":   "primary"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "menu",
+        "name": "Menu",
+        "limit": 2,
+        "settings": [
+          {
+            "type": "link_list",
+            "id": "main_linklist",
+            "label": "Menu",
+            "default": "footer",
+            "info": "This menu won't show dropdown items"
+          },
+          {
+            "type": "checkbox",
+            "id": "show_heading",
+            "label": "Show heading",
+            "default": true
+          }
+        ]
+      }
+    ]
+  }
+
+{% endschema %}

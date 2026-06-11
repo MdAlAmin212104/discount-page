@@ -1,0 +1,66 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "sidebar": {
+      "type": "sidebar",
+      "settings": {
+        "menu": "main-menu",
+        "secondary_menu": "",
+        "text_size": "text-base",
+        "show_borders": true,
+        "icon": "chevron",
+        "show_search": true,
+        "show_social": false,
+        "color_scheme": "primary"
+      }
+    },
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "home_page_only": false,
+        "display": "static",
+        "text": "Free express shipping & Free returns",
+        "link": "",
+        "color_scheme": "tertiary",
+        "speed": 290,
+        "direction": "",
+        "repeat_text": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "custom_css": [
+        "svg.icon.fill-current.icon-search {margin-top: 2px;}"
+      ],
+      "settings": {
+        "logo": "shopify://shop_images/jaffary_logo_png.png",
+        "logo_max_width": 130,
+        "menu": "main-menu",
+        "layout": "logo_center_menu_left",
+        "dropdown_text_align": "left",
+        "show_all_navigation_links": false,
+        "show_search": true,
+        "sticky_header": true,
+        "show_icons": true,
+        "color_scheme": "primary",
+        "overlay_homepage": false,
+        "overlay_text_color": "white"
+      }
+    }
+  },
+  "order": [
+    "sidebar",
+    "announcement-bar",
+    "header"
+  ]
+}

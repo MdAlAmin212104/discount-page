@@ -1,0 +1,1534 @@
+{% liquid
+  assign sid = section.id
+  assign now_ts = 'now' | date: '%s' | plus: 0
+  assign p1_start_ts = 0
+  assign p1_end_ts = 0
+  assign p2_start_ts = 0
+  assign p2_end_ts = 0
+  assign p3_start_ts = 0
+  assign p3_end_ts = 0
+
+  if section.settings.phase_1_start != blank
+    assign p1_start_ts = section.settings.phase_1_start | append: ' 00:00:00' | date: '%s' | plus: 0
+  endif
+  if section.settings.phase_1_end != blank
+    assign p1_end_ts = section.settings.phase_1_end | append: ' 23:59:59' | date: '%s' | plus: 0
+  endif
+  if section.settings.phase_2_start != blank
+    assign p2_start_ts = section.settings.phase_2_start | append: ' 00:00:00' | date: '%s' | plus: 0
+  endif
+  if section.settings.phase_2_end != blank
+    assign p2_end_ts = section.settings.phase_2_end | append: ' 23:59:59' | date: '%s' | plus: 0
+  endif
+  if section.settings.phase_3_start != blank
+    assign p3_start_ts = section.settings.phase_3_start | append: ' 00:00:00' | date: '%s' | plus: 0
+  endif
+  if section.settings.phase_3_end != blank
+    assign p3_end_ts = section.settings.phase_3_end | append: ' 23:59:59' | date: '%s' | plus: 0
+  endif
+
+  assign active_phase = 0
+  assign active_discount = 0
+  assign active_code = ''
+  assign active_title = ''
+  assign active_label = ''
+  assign active_subtitle = ''
+  assign active_start_ts = 0
+  assign active_end_ts = 0
+  assign active_shipping_note_1 = ''
+  assign active_shipping_note_2 = ''
+
+  if section.settings.offer_enabled
+    if now_ts >= p1_start_ts and now_ts <= p1_end_ts
+      assign active_phase = 1
+      assign active_discount = section.settings.phase_1_discount | plus: 0
+      assign active_code = section.settings.phase_1_discount_code
+      assign active_title = section.settings.phase_1_title
+      assign active_label = section.settings.phase_1_label
+      assign active_subtitle = section.settings.phase_1_subtitle
+      assign active_start_ts = p1_start_ts
+      assign active_end_ts = p1_end_ts
+      assign active_shipping_note_1 = section.settings.phase_1_shipping_note1
+      assign active_shipping_note_2 = section.settings.phase_1_shipping_note2
+    elsif now_ts >= p2_start_ts and now_ts <= p2_end_ts
+      assign active_phase = 2
+      assign active_discount = section.settings.phase_2_discount | plus: 0
+      assign active_code = section.settings.phase_2_discount_code
+      assign active_title = section.settings.phase_2_title
+      assign active_label = section.settings.phase_2_label
+      assign active_subtitle = section.settings.phase_2_subtitle
+      assign active_start_ts = p2_start_ts
+      assign active_end_ts = p2_end_ts
+      assign active_shipping_note_1 = section.settings.phase_2_shipping_note1
+      assign active_shipping_note_2 = section.settings.phase_2_shipping_note2
+    elsif section.settings.enable_phase_3 and now_ts >= p3_start_ts and now_ts <= p3_end_ts
+      assign active_phase = 3
+      assign active_discount = section.settings.phase_3_discount | plus: 0
+      assign active_code = section.settings.phase_3_discount_code
+      assign active_title = section.settings.phase_3_title
+      assign active_label = section.settings.phase_3_label
+      assign active_subtitle = section.settings.phase_3_subtitle
+      assign active_start_ts = p3_start_ts
+      assign active_end_ts = p3_end_ts
+      assign active_shipping_note_1 = section.settings.phase_3_shipping_note1
+      assign active_shipping_note_2 = section.settings.phase_3_shipping_note2
+    endif
+  endif
+
+  assign offer_active = false
+  if active_phase > 0
+    assign offer_active = true
+  endif
+
+  assign seconds_left = active_end_ts | minus: now_ts
+  assign days_left = seconds_left | plus: 86399 | divided_by: 86400
+  assign phase_total = active_end_ts | minus: active_start_ts
+  assign remaining_percent = 100
+  if phase_total > 0
+    assign remaining_percent = seconds_left | times: 100 | divided_by: phase_total
+  endif
+  if remaining_percent < 0
+    assign remaining_percent = 0
+  endif
+  if remaining_percent > 100
+    assign remaining_percent = 100
+  endif
+
+  assign offer_collection = section.settings.product_collection
+%}
+
+{% assign circle_return_url = request.path %}
+
+<section
+  class="circle-access circle-{{ sid }}"
+  data-circle-section="{{ sid }}"
+  data-active-phase="{{ active_phase }}"
+  data-discount-percent="{{ active_discount }}"
+  data-discount-code="{{ active_code | escape }}"
+  data-active-end-ms="{{ active_end_ts | times: 1000 }}"
+  data-button-action="{{ section.settings.button_action }}"
+  data-access-codes="{{ section.settings.access_codes | escape }}"
+>
+  {% if section.settings.require_login and customer == null %}
+    <!-- NOT LOGGED IN -->
+    <div class="circle-shell">
+      <div class="circle-login-card">
+        <div class="circle-login-eyebrow">{{ section.settings.login_eyebrow }}</div>
+        <h1>{{ section.settings.login_heading }}</h1>
+        <p>{{ section.settings.login_text }}</p>
+        <a class="circle-main-btn" href="/customer_authentication/login?return_to={{ circle_return_url | url_encode }}">
+          {{ section.settings.login_button_text }}
+        </a>
+      </div>
+    </div>
+  {% else %}
+    <!-- LOGGED IN: JS decides whether to show code gate or offer -->
+    <div class="circle-shell">
+
+      <!-- CODE GATE -->
+      <div class="circle-code-gate" id="circle-code-gate-{{ sid }}" style="display:none;">
+        <div class="circle-login-card circle-code-card">
+          <div class="circle-login-eyebrow">{{ section.settings.gate_eyebrow | default: 'Private access' }}</div>
+          <h1>{{ section.settings.gate_heading | default: 'Enter your access code' }}</h1>
+          <p>{{ section.settings.gate_text | default: 'You should have received a unique access code in your invitation email. Enter it below to unlock this members offer.' }}</p>
+          {% if customer %}
+            <div class="circle-gate-email">Logged in as <span>{{ customer.email }}</span></div>
+          {% endif %}
+          <div class="circle-code-input-wrap">
+            <input
+              type="text"
+              id="circle-code-input-{{ sid }}"
+              class="circle-code-input"
+              placeholder="{{ section.settings.gate_placeholder | default: 'e.g. CIRCLE-XXXX' }}"
+              autocomplete="off"
+              autocapitalize="characters"
+              spellcheck="false"
+              maxlength="32"
+            >
+            <button type="button" class="circle-main-btn circle-code-submit" id="circle-code-submit-{{ sid }}">
+              {{ section.settings.gate_button_text | default: 'Unlock access' }}
+            </button>
+          </div>
+          <div class="circle-code-error" id="circle-code-error-{{ sid }}" style="display:none;">
+            {{ section.settings.gate_error_text | default: 'Invalid code. Please check your invitation email and try again.' }}
+          </div>
+          <div class="circle-code-hint">{{ section.settings.gate_hint | default: "Don't have a code? Join our waitlist below." }}</div>
+          {% form 'customer', class: 'circle-waitlist-form circle-gate-waitlist', id: 'circle-gate-waitlist-form' %}
+            <input type="hidden" name="contact[tags]" value="circle-waitlist">
+            <input
+              type="email"
+              name="contact[email]"
+              value="{% if customer %}{{ customer.email }}{% endif %}"
+              placeholder="Email address"
+              required
+            >
+            <button type="submit" class="circle-ghost-btn">
+              {{ section.settings.notify_button_text }}
+            </button>
+          {% endform %}
+        </div>
+      </div>
+
+      <!-- FULL OFFER CONTENT -->
+      <div class="circle-offer-content" id="circle-offer-content-{{ sid }}" style="display:none;">
+
+        <nav class="circle-nav">
+          <div class="circle-logo">{{ section.settings.brand_name }}</div>
+          <div class="circle-nav-right">
+            <div class="circle-member-pill">{{ section.settings.member_label }}</div>
+            {% if customer %}
+              <a href="{{ routes.account_logout_url }}" class="circle-signout">{{ section.settings.signout_text }}</a>
+            {% endif %}
+          </div>
+        </nav>
+
+        {% if offer_active %}
+          <div class="circle-hero">
+            <div class="circle-live-line">
+              <span class="circle-live-dot"></span>
+              {{ active_label }}
+            </div>
+            <h1>
+              {{ section.settings.welcome_heading }}
+              <br>
+              <em>{{ section.settings.welcome_emphasis }}</em>
+            </h1>
+            <p class="circle-hero-sub">
+              {% if customer %}Member <span>#{{ customer.id }}</span>{% endif %}
+              <p class="hero-sub">Members get every release first, before public launch.</p>
+            </p>
+          </div>
+
+          <!-- PHASE STRIP -->
+          <div class="circle-drop-strip">
+            <div class="circle-drop-cell {% if active_phase == 1 %}active-drop{% else %}locked{% endif %}">
+              <div class="circle-drop-num">Drop 1</div>
+              <div class="circle-drop-price">{{ section.settings.phase_1_discount }}%</div>
+              <div class="circle-drop-label">{{ section.settings.phase_1_short }}</div>
+              <div class="circle-drop-tag">{% if active_phase == 1 %}Open now{% else %}{% if active_phase > 1 %}Closed{% else %}Locked{% endif %}{% endif %}</div>
+            </div>
+            <div class="circle-drop-cell {% if active_phase == 2 %}active-drop{% elsif active_phase > 2 %}locked{% else %}locked{% endif %}">
+              <div class="circle-drop-num">Drop 2</div>
+              <div class="circle-drop-price">{{ section.settings.phase_2_discount }}%</div>
+              <div class="circle-drop-label">{{ section.settings.phase_2_short }}</div>
+              <div class="circle-drop-tag">{% if active_phase == 2 %}Open now{% elsif active_phase > 2 %}Closed{% else %}Locked{% endif %}</div>
+            </div>
+            {% if section.settings.enable_phase_3 %}
+              <div class="circle-drop-cell {% if active_phase == 3 %}active-drop{% else %}locked{% endif %}">
+                <div class="circle-drop-num">Drop 3</div>
+                <div class="circle-drop-price">{% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}%{% else %}Full{% endif %}</div>
+                <div class="circle-drop-label">{{ section.settings.phase_3_short }}</div>
+                <div class="circle-drop-tag">{% if active_phase == 3 %}Open now{% else %}Locked{% endif %}</div>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- PRODUCTS CARD -->
+          <div class="circle-card circle-products-card">
+            <div class="circle-card-label">{{ section.settings.product_heading }}</div>
+
+            {%- liquid
+              assign displayed_products_count = 0
+              for product in offer_collection.products limit: section.settings.product_limit
+                if section.settings.hide_sold_out_products and product.available == false
+                  continue
+                endif
+                assign displayed_products_count = displayed_products_count | plus: 1
+              endfor
+            -%}
+
+            {% if offer_collection != blank and displayed_products_count > 0 %}
+              <div class="circle-slider-wrapper" data-slider>
+                <button type="button" class="circle-arrow circle-arrow-prev" data-arrow="prev" aria-label="Previous" disabled>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+                <div class="circle-slider-viewport" data-slider-viewport>
+                  <div class="circle-slider-track" data-slider-track>
+                    {% assign loop_index = 0 %}
+                    {% for product in offer_collection.products limit: section.settings.product_limit %}
+                      {% if section.settings.hide_sold_out_products and product.available == false %}
+                        {% continue %}
+                      {% endif %}
+                      {% liquid
+                        assign sale_price = product.price_min
+                        if active_discount > 0
+                          assign discount_multiplier = 100 | minus: active_discount
+                          assign sale_price = product.price_min | times: discount_multiplier | divided_by: 100
+                        endif
+                      %}
+                      <div
+                        class="circle-prod {% unless product.available %}sold{% endunless %}"
+                        data-product-index="{{ loop_index }}"
+                        data-product-id="{{ product.id }}"
+                      >
+                        <div class="circle-prod-img">
+                          <span class="circle-prod-dot"></span>
+                          {% if product.featured_image %}
+                            <img
+                              src="{{ product.featured_image | image_url: width: 500 }}"
+                              alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                              loading="lazy"
+                              data-product-featured-image
+                              width="auto"
+                              height="auto"
+                            >
+                          {% else %}
+                            <span class="circle-prod-icon">🛍</span>
+                          {% endif %}
+                        </div>
+                        <div class="circle-prod-info">
+                          <div class="circle-prod-name">{{ product.title }}</div>
+                          {% if product.available %}
+                            <div class="circle-prod-pricing">
+                              <span data-product-price-display>{{ sale_price | money }}</span>
+                              {% if active_discount > 0 %}
+                                <s data-product-compare-price-display>{{ product.price_min | money }}</s>
+                              {% endif %}
+                            </div>
+                            <div class="circle-prod-status">{% if active_discount > 0 %}{{ active_discount }}% off{% else %}Available{% endif %}</div>
+                          {% else %}
+                            <div class="circle-prod-status sold-label">Sold out</div>
+                          {% endif %}
+                        </div>
+                      </div>
+                      {% assign loop_index = loop_index | plus: 1 %}
+                    {% endfor %}
+                  </div>
+                </div>
+                <button type="button" class="circle-arrow circle-arrow-next" data-arrow="next" aria-label="Next">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+              <div class="circle-slider-dots" data-slider-dots></div>
+            {% else %}
+              <div class="circle-empty">Please select a collection from this section settings.</div>
+            {% endif %}
+          </div>
+
+          <!-- VARIANT OPTIONS + SIZE GUIDE -->
+          <div class="circle-inline-options-container" data-options-container></div>
+
+          <!-- RESERVE CARD -->
+          <div class="circle-action-block">
+            <div class="circle-action-eyebrow">{{ active_label }} — {{ active_title }}</div>
+
+            <div class="circle-countdown-wrap">
+              <div class="circle-countdown-label">Phase ends in</div>
+              <div class="circle-countdown">
+                <div class="circle-t-block"><span class="circle-t-num" data-days>00</span><span class="circle-t-lbl">Days</span></div>
+                <span class="circle-t-sep">:</span>
+                <div class="circle-t-block"><span class="circle-t-num" data-hours>00</span><span class="circle-t-lbl">Hrs</span></div>
+                <span class="circle-t-sep">:</span>
+                <div class="circle-t-block"><span class="circle-t-num" data-minutes>00</span><span class="circle-t-lbl">Min</span></div>
+                <span class="circle-t-sep">:</span>
+                <div class="circle-t-block"><span class="circle-t-num" data-seconds>00</span><span class="circle-t-lbl">Sec</span></div>
+              </div>
+            </div>
+
+            <div class="circle-price-block">
+              <div class="circle-price-main">
+                <div class="circle-price-context">Your price today</div>
+                <div class="circle-price-amount" data-preview-sale-price>—</div>
+              </div>
+              <div class="circle-price-future">
+                <div class="circle-price-context">Public Release</div>
+                <div class="circle-price-was" data-preview-compare-price>—</div>
+              </div>
+            </div>
+
+            <!-- SELECTED PREVIEW -->
+            <div class="circle-selected-preview" style="display:none;" data-preview-box>
+              <div class="circle-preview-image">
+                <img src="" alt="" data-preview-img width="auto" height="auto">
+              </div>
+              <div class="circle-preview-details">
+                <div class="circle-preview-title" data-preview-title></div>
+                <div class="circle-preview-variant" data-preview-variant></div>
+                <em class="circle-preview-savings" data-preview-savings></em>
+              </div>
+              <button type="button" class="circle-view-details-btn" data-view-details aria-label="View product details">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v6M8 11h6"/></svg>
+                Details
+              </button>
+            </div>
+
+            <div class="circle-scarcity" data-scarcity-text>Select a product above to see availability.</div>
+
+            <button type="button" class="circle-cta-btn" data-reserve-main>
+              {{ section.settings.reserve_button_text }}
+            </button>
+            {% comment %} <div class="circle-cta-meta">{{ active_shipping_note }}</div> {% endcomment %}
+             <div class="circle-cta-meta">
+              <p>{{ active_shipping_note_1 }}</p>
+              <p>{{active_shipping_note_2}}</p>
+            </div>
+          </div>
+
+          <!-- PROGRESS / PHASE INFO -->
+          {% comment %} <div class="circle-card circle-reserve-card">
+            <div class="circle-phase-header">
+              <div>
+                <div class="circle-phase-eye">{{ active_label }}</div>
+                <div class="circle-phase-title">{{ active_title }}</div>
+              </div>
+              <div class="circle-badge">
+                {% if active_discount > 0 %}{{ active_discount }}% off{% else %}No discount{% endif %}
+              </div>
+            </div>
+            <div class="circle-progress-row">
+              <span>{{ active_subtitle }}</span>
+              <span>{{ days_left }} days left</span>
+            </div>
+            <div class="circle-progress">
+              <span style="width: {{ remaining_percent }}%;"></span>
+            </div>
+            <div class="circle-stats">
+              <div>
+                <strong>{% if active_discount > 0 %}{{ active_discount }}%{% else %}0%{% endif %}</strong>
+                <span>Today's discount</span>
+              </div>
+              <div>
+                <strong>{{ days_left }}</strong>
+                <span>Days left</span>
+              </div>
+            </div>
+          </div> {% endcomment %}
+
+          <!-- NEXT PHASE / NOTIFY CARD -->
+          <div class="circle-locked-row">
+            <div class="circle-locked-left">
+              <div class="circle-locked-eyebrow">
+                {% if active_phase == 1 %}Drop 2 — Opens after Drop 1
+                {% elsif active_phase == 2 and section.settings.enable_phase_3 %}Drop 3 — Opens after Drop 2
+                {% else %}Final phase{% endif %}
+              </div>
+              <div class="circle-locked-title">
+                {% if active_phase == 1 %}{{ section.settings.phase_2_title }}
+                {% elsif active_phase == 2 and section.settings.enable_phase_3 %}{{ section.settings.phase_3_title }}
+                {% else %}{{ section.settings.ended_heading }}{% endif %}
+              </div>
+            </div>
+            <div class="circle-locked-right">
+              <div class="circle-locked-price">
+                {% if active_phase == 1 %}{{ section.settings.phase_2_discount }}% off
+                {% elsif active_phase == 2 and section.settings.enable_phase_3 %}
+                  {% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}% off{% else %}Full price{% endif %}
+                {% else %}Closed{% endif %}
+              </div>
+              <div class="locked-when">Ships in ~30–40 days</div>
+              
+          </div>
+
+          {% if section.blocks.size > 0 %}
+            <div class="circle-social">
+              <div class="circle-card-label" style="margin-bottom:16px;">{{ section.settings.social_heading }}</div>
+              <div class="circle-social-grid">
+                {% for block in section.blocks %}
+                  <div class="circle-social-card" {{ block.shopify_attributes }}>
+                    <div class="circle-social-top">
+                      <div class="circle-avatar">{{ block.settings.avatar_text }}</div>
+                      <div>
+                        <div class="circle-social-name">{{ block.settings.name }}{% if block.settings.verified %}<span>✓</span>{% endif %}</div>
+                        <div class="circle-handle">{{ block.settings.handle }}</div>
+                      </div>
+                    </div>
+                    <div class="circle-stars"><i></i><i></i><i></i><i></i><i></i></div>
+                    <div class="circle-quote">"{{ block.settings.quote }}"</div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
+        {% else %}
+          <!-- ENDED STATE -->
+          <div class="circle-login-card circle-ended-card">
+            <div class="circle-login-eyebrow">{{ section.settings.ended_eyebrow }}</div>
+            <h1>{{ section.settings.ended_heading }}</h1>
+            <p>{{ section.settings.ended_text }}</p>
+            {% if customer and customer.accepts_marketing %}
+              <div class="circle-already-subscribed">
+                <strong>You're already on the list.</strong>
+                <p>We'll notify you when the next Circle offer launches.</p>
+              </div>
+            {% else %}
+              {% form 'customer', class: 'circle-waitlist-form ended' %}
+                <input type="hidden" name="contact[tags]" value="circle-waitlist">
+                <input type="email" name="contact[email]" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="Email address" required>
+                <button type="submit" class="circle-main-btn">{{ section.settings.ended_button_text }}</button>
+              {% endform %}
+            {% endif %}
+          </div>
+        {% endif %}
+
+      </div><!-- /.circle-offer-content -->
+
+    </div><!-- /.circle-shell -->
+
+    <!-- ═══ PRODUCT DETAILS MODAL ═══ -->
+    <div class="circle-modal-overlay" id="circle-product-modal-{{ sid }}" style="display:none;" role="dialog" aria-modal="true" aria-label="Product details">
+      <div class="circle-modal">
+        <button type="button" class="circle-modal-close" id="circle-modal-close-{{ sid }}" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Image slider -->
+        <div class="circle-modal-gallery" data-modal-gallery>
+          <div class="circle-modal-img-track" data-modal-img-track>
+            <!-- images injected by JS -->
+          </div>
+          <button type="button" class="circle-modal-img-prev" data-modal-img-prev aria-label="Previous image" style="display:none;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" class="circle-modal-img-next" data-modal-img-next aria-label="Next image" style="display:none;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+          <div class="circle-modal-img-dots" data-modal-img-dots></div>
+        </div>
+
+        <div class="circle-modal-body">
+          <div class="circle-modal-label" data-modal-label></div>
+          <div class="circle-modal-title" data-modal-title></div>
+          <div class="circle-modal-price-row">
+            <span class="circle-modal-sale" data-modal-sale></span>
+            <s class="circle-modal-was" data-modal-was></s>
+            <em class="circle-modal-save" data-modal-save></em>
+          </div>
+          <p class="circle-modal-desc" data-modal-desc></p>
+          {% comment %} <a href="#" class="circle-modal-link" data-modal-link target="_blank" rel="noopener">
+            View full product page
+            <svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a> {% endcomment %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SIZE GUIDE MODAL ═══ -->
+    <div class="circle-modal-overlay" id="circle-size-modal-{{ sid }}" style="display:none;" role="dialog" aria-modal="true" aria-label="Size guide">
+      <div class="circle-modal circle-size-modal">
+        <button type="button" class="circle-modal-close" id="circle-size-close-{{ sid }}" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="circle-modal-body">
+          <div class="circle-modal-title" style="margin-bottom:20px;">{{ section.settings.size_guide_title | default: 'Size Guide' }}</div>
+          <div class="circle-size-guide-content">
+            {{ section.settings.size_guide_content }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if offer_active and offer_collection != blank %}
+      <script type="application/json" id="CircleProducts-{{ sid }}">
+        [
+          {% assign printed_first = false %}
+          {% for product in offer_collection.products limit: section.settings.product_limit %}
+            {% if section.settings.hide_sold_out_products and product.available == false %}{% continue %}{% endif %}
+            {% if printed_first %},{% endif %}
+            {% assign printed_first = true %}
+            {
+              "id": {{ product.id | json }},
+              "title": {{ product.title | json }},
+              "url": {{ product.url | json }},
+              "available": {{ product.available | json }},
+              "price": {{ product.price_min | json }},
+              "compare_at_price": {{ product.compare_at_price_max | default: product.price_min | json }},
+              "description": {{ product.description | strip_html | truncate: 320 | json }},
+              "options": {{ product.options | json }},
+              "images": [
+                {% assign printed_img_first = false %}
+                {% for image in product.images limit: 8 %}
+                  {% if printed_img_first %},{% endif %}
+                  {% assign printed_img_first = true %}
+                  { "src": {{ image | image_url: width: 1200 | json }}, "alt": {{ image.alt | default: product.title | json }} }
+                {% endfor %}
+              ],
+              "variants": [
+                {% assign printed_var_first = false %}
+                {% for variant in product.variants %}
+                  {% if printed_var_first %},{% endif %}
+                  {% assign printed_var_first = true %}
+                  {
+                    "id": {{ variant.id | json }},
+                    "title": {{ variant.title | json }},
+                    "available": {{ variant.available | json }},
+                    "price": {{ variant.price | json }},
+                    "compare_at_price": {{ variant.compare_at_price | default: product.compare_at_price_max | default: variant.price | json }},
+                    "inventory_quantity": {{ variant.inventory_quantity | json }},
+                    "featured_image": {% if variant.featured_image %}{{ variant.featured_image | image_url: width: 500 | json }}{% else %}null{% endif %},
+                    "options": {{ variant.options | json }}
+                  }
+                {% endfor %}
+              ]
+            }
+          {% endfor %}
+        ]
+      </script>
+    {% endif %}
+  {% endif %}
+</section>
+
+<style>
+
+  :root {
+  --bg: #f0efeb;
+  --ink: #0e0e0d;
+  --forest: #1a3a2a;
+  --forest-mid: #2d5c42;
+  --forest-tint: #eaf2ed;
+  --stone: #e2dfd9;
+  --muted: #9a9792;
+  --faint: #c4c1bc;
+  --card: #faf9f7;
+  --serif: 'Cormorant Garamond', serif;
+  --mono: 'DM Mono', monospace;
+}
+
+.hero-sub {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  line-height: 1.85;
+  max-width: 380px;
+  padding-left: 16px;
+  border-left: 1.5px solid var(--forest);
+}
+
+
+.locked-when {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+}
+
+
+/* ── BASE ── */
+  .circle-{{ sid }} {
+    background: {{ section.settings.bg_color | default: '#f0efeb' }};
+    color: {{ section.settings.text_color | default: '#0e0e0d' }};
+    padding: {{ section.settings.section_padding_top }}px 16px {{ section.settings.section_padding_bottom }}px;
+    font-family: "DM Mono", monospace;
+    -webkit-font-smoothing: antialiased;
+  }
+  .circle-{{ sid }} * { box-sizing: border-box; }
+  .circle-{{ sid }} .circle-shell { max-width: {{ section.settings.max_width | default: 580 }}px; margin: 0 auto; }
+
+  /* ── NAV ── */
+  .circle-{{ sid }} .circle-nav { display: flex; justify-content: flex-end; align-items: center; gap: 16px; padding: 26px 0 28px; }
+  .circle-{{ sid }} .circle-logo { font-family: "Cormorant Garamond", serif; font-weight: 300; font-size: 13px; letter-spacing: .4em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-right: auto; }
+  .circle-{{ sid }} .circle-nav-right { display: flex; align-items: center; gap: 16px; }
+  .circle-{{ sid }} .circle-member-pill { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.accent_color }}; border: 0.5px solid rgba(26,58,42,0.28); padding: 5px 14px; border-radius: 99px; }
+  .circle-{{ sid }} .circle-signout { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-decoration: none; transition: color .15s; }
+  .circle-{{ sid }} .circle-signout:hover { color: {{ section.settings.text_color }}; }
+
+  /* ── HERO ── */
+  .circle-{{ sid }} .circle-hero { padding: 8px 0 48px; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 40px; }
+  .circle-{{ sid }} .circle-live-line { display: flex; align-items: center; gap: 8px; font-size: 9px; letter-spacing: .26em; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 20px; }
+  .circle-{{ sid }} .circle-live-dot { width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }}; animation: circlePulse-{{ sid }} 2.2s ease-in-out infinite; flex-shrink: 0; }
+  @keyframes circlePulse-{{ sid }} { 0%,100%{opacity:1;} 50%{opacity:.2;} }
+  .circle-{{ sid }} h1 { font-family: "Cormorant Garamond", serif; font-weight: 300; font-size: clamp(40px,9vw,52px); line-height: 1.06; letter-spacing: .015em; margin: 0 0 18px; }
+  .circle-{{ sid }} h1 em { color: {{ section.settings.accent_color }}; font-style: italic; }
+  .circle-{{ sid }} .circle-hero-sub { font-size: 12px; color: {{ section.settings.muted_color }}; letter-spacing: .03em; line-height: 1.85; padding-left: 16px; border-left: 1.5px solid {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-hero-sub span { color: {{ section.settings.accent_color }}; }
+
+  /* ── DROP STRIP ── */
+  .circle-{{ sid }} .circle-drop-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: {{ section.settings.border_color }}; border-radius: 14px; overflow: hidden; margin-bottom: 36px; }
+  .circle-{{ sid }} .circle-drop-cell { background: {{ section.settings.card_color }}; padding: 22px 16px 20px; text-align: center; transition: background .15s; }
+  .circle-{{ sid }} .circle-drop-cell.active-drop { background: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-drop-cell.locked { background: #f4f3f0; }
+  .circle-{{ sid }} .circle-drop-num { font-size: 8px; letter-spacing: .24em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 8px; }
+  .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-num { color: rgba(255,255,255,.45); }
+  .circle-{{ sid }} .circle-drop-cell.locked .circle-drop-num { color: #ccc; }
+  .circle-{{ sid }} .circle-drop-price { font-family: "Cormorant Garamond", serif; font-size: 26px; font-weight: 600; line-height: 1; margin-bottom: 4px; color: {{ section.settings.text_color }}; }
+  .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-price { color: #fff; font-size: 30px; }
+  .circle-{{ sid }} .circle-drop-cell.locked .circle-drop-price { color: {{ section.settings.muted_color }}; font-size: 20px; }
+  .circle-{{ sid }} .circle-drop-label { font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 10px; }
+  .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-label { color: rgba(255,255,255,.55); }
+  .circle-{{ sid }} .circle-drop-tag { display: inline-block; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; background: rgba(255,255,255,.14); color: rgba(255,255,255,.8); }
+  .circle-{{ sid }} .circle-drop-cell:not(.active-drop) .circle-drop-tag { background: {{ section.settings.bg_color | default: '#f0efeb' }}; color: {{ section.settings.muted_color }}; }
+
+  /* ── CARDS ── */
+  .circle-{{ sid }} .circle-card {padding: 22px; margin-bottom: 18px;}
+  .circle-{{ sid }} .circle-login-card { background: {{ section.settings.card_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 12px; padding: 22px; margin-bottom: 18px; }
+  .circle-{{ sid }} .circle-login-card { text-align: center; max-width: 560px; margin: 60px auto; }
+  .circle-{{ sid }} .circle-login-card p { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; margin: 14px auto 22px; max-width: 420px; }
+  .circle-{{ sid }} .circle-card-label { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 16px; }
+  .circle-{{ sid }} .circle-login-eyebrow { font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 10px; }
+
+  /* ── CODE GATE ── */
+  .circle-{{ sid }} .circle-code-card { padding: 40px 32px; }
+  .circle-{{ sid }} .circle-gate-email { font-size: 10px; letter-spacing: .1em; color: {{ section.settings.muted_color }}; margin: -10px auto 20px; }
+  .circle-{{ sid }} .circle-gate-email span { color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-code-input-wrap { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .circle-{{ sid }} .circle-code-input { width: 100%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 999px; padding: 14px 20px; font: inherit; font-size: 14px; letter-spacing: .12em; text-align: center; text-transform: uppercase; outline: none; transition: border-color .15s; }
+  .circle-{{ sid }} .circle-code-input:focus { border-color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-code-input.error { border-color: {{ section.settings.warning_color }}; animation: circleShake-{{ sid }} .35s ease; }
+  @keyframes circleShake-{{ sid }} { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+  .circle-{{ sid }} .circle-code-error { font-size: 11px; color: {{ section.settings.warning_color }}; margin-bottom: 16px; line-height: 1.5; }
+  .circle-{{ sid }} .circle-code-hint { font-size: 10px; color: {{ section.settings.muted_color }}; margin: 0 auto 20px; line-height: 1.6; }
+  .circle-{{ sid }} .circle-gate-waitlist { max-width: 400px; margin: 0 auto; }
+
+  /* ── SLIDER ── */
+  .circle-{{ sid }} .circle-slider-wrapper { position: relative; display: flex; align-items: center; gap: 8px; width: 100%; }
+  .circle-{{ sid }} .circle-slider-viewport { overflow: hidden; width: 100%; flex: 1; }
+  .circle-{{ sid }} .circle-slider-track { display: flex; gap: 10px; transition: transform .38s cubic-bezier(.25,1,.5,1); will-change: transform; margin-bottom: 10px; }
+  .circle-{{ sid }} .circle-arrow { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s ease; padding: 0; z-index: 2; }
+  .circle-{{ sid }} .circle-arrow:hover:not(:disabled) { border-color: {{ section.settings.accent_color }}; color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-arrow:disabled { opacity: .25; cursor: not-allowed; }
+  .circle-{{ sid }} .circle-slider-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+  .circle-{{ sid }} .circle-slider-dot { width: 5px; height: 5px; border-radius: 50%; background: {{ section.settings.border_color }}; cursor: pointer; border: none; padding: 0; transition: all .2s ease; }
+  .circle-{{ sid }} .circle-slider-dot.active { background: {{ section.settings.accent_color }}; width: 16px; border-radius: 3px; }
+
+  /* ── PRODUCT CARDS ── */
+  .circle-{{ sid }} .circle-prod { flex: 0 0 calc(25% - 8px); width: calc(25% - 8px); border: 1px solid transparent; border-radius: 10px; overflow: hidden; background: {{ section.settings.card_color }}; cursor: pointer; transition: all .18s ease; position: relative; }
+  .circle-{{ sid }} .circle-prod:hover:not(.sold) { border-color: {{ section.settings.border_color }}; }
+  .circle-{{ sid }} .circle-prod.active { border-color: {{ section.settings.accent_color }}; background: #fff; box-shadow: 0 2px 16px rgba(26,58,42,.08); }
+  .circle-{{ sid }} .circle-prod.sold { opacity: .38; cursor: default; }
+  .circle-{{ sid }} .circle-prod-img { width: 100%; aspect-ratio: 1 / 1; background: {{ section.settings.image_bg_color }}; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .circle-{{ sid }} .circle-prod-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+  .circle-{{ sid }} .circle-prod:hover:not(.sold) .circle-prod-img img { transform: scale(1.03); }
+  .circle-{{ sid }} .circle-prod-dot { position: absolute; top: 8px; right: 8px; z-index: 2; width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.border_color }}; transition: background .15s; }
+  .circle-{{ sid }} .circle-prod.active .circle-prod-dot { background: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-prod-icon { font-size: 28px; opacity: .25; }
+  .circle-{{ sid }} .circle-prod-info { padding: 10px 10px 12px; }
+  .circle-{{ sid }} .circle-prod-name { font-family: "Cormorant Garamond", serif; font-size: 14px; color: {{ section.settings.text_color }}; margin-bottom: 3px; line-height: 1.2; }
+  .circle-{{ sid }} .circle-prod-pricing { display: flex; gap: 6px; align-items: center; }
+  .circle-{{ sid }} .circle-prod-pricing span { font-size: 12px; color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-prod-pricing s { font-size: 10px; color: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-prod-status { font-size: 8px; letter-spacing: .1em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-top: 3px; }
+  .circle-{{ sid }} .circle-prod.active .circle-prod-status { color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-prod-status.sold-label { color: {{ section.settings.warning_color }}; }
+
+  /* ── VARIANT OPTIONS ── */
+  .circle-{{ sid }} .circle-inline-options-container { margin-bottom: 18px; }
+  .circle-{{ sid }} .circle-inline-options-container:empty { display: none; }
+  .circle-{{ sid }} .circle-options-inner { padding: 22px; }
+  .circle-{{ sid }} .circle-options-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+  .circle-{{ sid }} .circle-options-product-title { font-family: "Cormorant Garamond", serif; font-size: 18px; color: {{ section.settings.text_color }}; }
+  .circle-{{ sid }} .circle-size-guide-link { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: {{ section.settings.muted_color }}; cursor: pointer; border-bottom: 0.5px solid {{ section.settings.muted_color }}; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; padding: 0; transition: color .15s; }
+  .circle-{{ sid }} .circle-size-guide-link:hover { color: {{ section.settings.accent_color }}; border-bottom-color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-option-group { margin-bottom: 18px; }
+  .circle-{{ sid }} .circle-option-group-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .circle-{{ sid }} .circle-option-group-label strong { color: {{ section.settings.accent_color }}; font-size: 10px; }
+  .circle-{{ sid }} .circle-option-values { display: flex; gap: 8px; flex-wrap: wrap; }
+  .circle-{{ sid }} .circle-sz { width: 50px; height: 50px; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; font-family: inherit; font-size: 12px; cursor: pointer; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: all .14s; }
+  .circle-{{ sid }} .circle-sz:hover:not(.sold-out) { border-color: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-sz.active { border: 1.5px solid {{ section.settings.accent_color }}; background: #eaf2ed; color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-sz.sold-out { color: {{ section.settings.border_color }}; cursor: default; text-decoration: line-through; background: transparent; }
+  .circle-{{ sid }} .circle-sz.last-unit { border-color: {{ section.settings.warning_color }}; }
+  .circle-{{ sid }} .circle-sz-dot { width: 4px; height: 4px; border-radius: 50%; }
+  .circle-{{ sid }} .circle-sz.active .circle-sz-dot { background: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-sz.last-unit .circle-sz-dot { background: {{ section.settings.warning_color }}; }
+  .circle-{{ sid }} .circle-sz.sold-out .circle-sz-dot { background: {{ section.settings.border_color }}; }
+  .circle-{{ sid }} .circle-option-value-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; height: 44px; padding: 0 16px; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 8px; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; font: inherit; font-size: 11px; cursor: pointer; transition: all .15s ease; }
+  .circle-{{ sid }} .circle-option-value-btn:hover:not(.sold-out):not(.active) { border-color: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-option-value-btn.active { border: 1.5px solid {{ section.settings.accent_color }}; background: #eaf2ed; color: {{ section.settings.accent_color }}; font-weight: bold; }
+  .circle-{{ sid }} .circle-option-value-btn.sold-out { opacity: .32; text-decoration: line-through; cursor: not-allowed; }
+  .circle-{{ sid }} .circle-option-value-btn.last-unit { border-color: {{ section.settings.warning_color }}; }
+  .circle-{{ sid }} .circle-option-dot { width: 4px; height: 4px; border-radius: 50%; background: {{ section.settings.border_color }}; display: inline-block; }
+  .circle-{{ sid }} .circle-option-value-btn.active .circle-option-dot { background: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-option-value-btn.last-unit .circle-option-dot { background: {{ section.settings.warning_color }}; }
+  .circle-{{ sid }} .circle-option-value-btn.sold-out .circle-option-dot { background: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-option-value-btn.is-color { width: 44px; padding: 0; }
+  .circle-{{ sid }} .circle-color-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,.08); display: inline-block; }
+  .circle-{{ sid }} .circle-option-value-btn.active .circle-color-swatch { box-shadow: 0 0 0 2px {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-size-legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; font-size: 9px; letter-spacing: .08em; color: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-size-legend span { display: flex; align-items: center; gap: 5px; }
+  .circle-{{ sid }} .circle-legend-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+  .circle-{{ sid }} .circle-legend-dot.selected { background: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-legend-dot.last-unit { background: {{ section.settings.warning_color }}; }
+  .circle-{{ sid }} .circle-legend-dot.sold-out { background: {{ section.settings.border_color }}; }
+
+  /* ── ACTION BLOCK (Reserve card) ── */
+  .circle-{{ sid }} .circle-action-block { background: #fff; border-radius: 16px; padding: 28px 28px 24px; margin-bottom: 18px; box-shadow: 0 1px 0 {{ section.settings.border_color }}, 0 4px 24px rgba(0,0,0,.04); }
+  .circle-{{ sid }} .circle-action-eyebrow { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 24px; }
+  .circle-{{ sid }} .circle-countdown-wrap { margin-bottom: 26px; }
+  .circle-{{ sid }} .circle-countdown-label { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-align: center; margin-bottom: 12px; }
+  .circle-{{ sid }} .circle-countdown { display: flex; align-items: flex-start; justify-content: center; gap: 4px; }
+  .circle-{{ sid }} .circle-t-block { text-align: center; }
+  .circle-{{ sid }} .circle-t-num { font-family: "Cormorant Garamond", serif; font-size: 46px; font-weight: 600; color: {{ section.settings.text_color }}; min-width: 52px; display: block; line-height: 1; }
+  .circle-{{ sid }} .circle-t-lbl { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; display: block; margin-top: 5px; }
+  .circle-{{ sid }} .circle-t-sep { font-size: 28px; color: {{ section.settings.border_color }}; padding: 8px 2px 0; line-height: 1; }
+  .circle-{{ sid }} .circle-price-block { display: flex; align-items: flex-end; justify-content: space-between; padding: 20px 0; border-top: 0.5px solid {{ section.settings.border_color }}; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 20px; }
+  .circle-{{ sid }} .circle-price-context { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 4px; }
+  .circle-{{ sid }} .circle-price-amount { font-family: "Cormorant Garamond", serif; font-size: 48px; font-weight: 600; color: {{ section.settings.accent_color }}; line-height: 1; }
+  .circle-{{ sid }} .circle-price-future { text-align: right; }
+  .circle-{{ sid }} .circle-price-was { font-family: "Cormorant Garamond", serif; font-size: 32px; font-weight: 300; color: {{ section.settings.muted_color }}; display: block; line-height: 1; }
+  .circle-{{ sid }} .circle-selected-preview { display: flex; align-items: center; gap: 14px; background: {{ section.settings.soft_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; padding: 12px; margin-bottom: 20px; }
+  .circle-{{ sid }} .circle-preview-image { width: 56px; height: 56px; border-radius: 6px; background: {{ section.settings.image_bg_color }}; overflow: hidden; flex-shrink: 0; }
+  .circle-{{ sid }} .circle-preview-image img { width: 100%; height: 100%; object-fit: cover; }
+  .circle-{{ sid }} .circle-preview-details { flex-grow: 1; overflow: hidden; }
+  .circle-{{ sid }} .circle-preview-title { font-family: "Cormorant Garamond", serif; font-size: 16px; color: {{ section.settings.text_color }}; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .circle-{{ sid }} .circle-preview-variant { font-size: 9px; text-transform: uppercase; color: {{ section.settings.muted_color }}; letter-spacing: .1em; }
+  .circle-{{ sid }} .circle-preview-savings { font-style: normal; font-size: 9px; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.07); padding: 2px 7px; border-radius: 4px; margin-top: 4px; display: inline-block; }
+  .circle-{{ sid }} .circle-view-details-btn { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; font-family: inherit; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; border: 0.5px solid {{ section.settings.border_color }}; background: none; border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; transition: all .15s ease; }
+  .circle-{{ sid }} .circle-view-details-btn:hover { color: {{ section.settings.accent_color }}; border-color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-scarcity { text-align: center; font-size: 10px; letter-spacing: .06em; color: {{ section.settings.warning_color }}; margin-bottom: 12px; }
+  .circle-{{ sid }} .circle-cta-btn { display: block; width: 100%; background: {{ section.settings.accent_color }}; color: #fff; border: none; border-radius: 99px; font-family: inherit; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; padding: 18px 24px; cursor: pointer; margin-bottom: 12px; transition: background .18s, transform .1s; }
+  .circle-{{ sid }} .circle-cta-btn:hover { background: #2d5c42; }
+  .circle-{{ sid }} .circle-cta-btn:active { transform: scale(.99); }
+  .circle-{{ sid }} .circle-cta-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .circle-{{ sid }} .circle-cta-meta { text-align: center; font-size: 9px; letter-spacing: .08em; color: {{ section.settings.muted_color }};
+    display: flex;
+    justify-content: space-around;
+    max-width: 70%;
+    margin: 0 auto; }
+  /* ── PHASE PROGRESS CARD ── */
+  .circle-{{ sid }} .circle-reserve-card { }
+  .circle-{{ sid }} .circle-phase-header { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 10px; }
+  .circle-{{ sid }} .circle-phase-eye { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 4px; }
+  .circle-{{ sid }} .circle-phase-title { font-family: "Cormorant Garamond", serif; font-size: 24px; color: {{ section.settings.text_color }}; }
+  .circle-{{ sid }} .circle-badge { background: {{ section.settings.accent_color }}; color: #fff; font-family: "Cormorant Garamond", serif; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; white-space: nowrap; }
+  .circle-{{ sid }} .circle-progress-row { display: flex; justify-content: space-between; font-size: 10px; color: {{ section.settings.muted_color }}; margin-bottom: 6px; }
+  .circle-{{ sid }} .circle-progress { height: 2px; background: {{ section.settings.border_color }}; border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+  .circle-{{ sid }} .circle-progress span { display: block; height: 100%; background: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .circle-{{ sid }} .circle-stats div { background: {{ section.settings.soft_color }}; border-radius: 8px; padding: 14px; text-align: center; }
+  .circle-{{ sid }} .circle-stats strong { display: block; font-family: "Cormorant Garamond", serif; font-size: 30px; line-height: 1; }
+  .circle-{{ sid }} .circle-stats span { display: block; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-top: 5px; }
+
+  /* ── LOCKED / NEXT DROP ROW ── */
+  .circle-{{ sid }} .circle-locked-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 20px 0; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 28px; }
+  .circle-{{ sid }} .circle-locked-eyebrow { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 5px; }
+  .circle-{{ sid }} .circle-locked-title { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-locked-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+  .circle-{{ sid }} .circle-locked-price { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; white-space: nowrap; }
+  .circle-{{ sid }} .circle-notify-inline { display: flex; gap: 8px; align-items: center; }
+  .circle-{{ sid }} .circle-notify-inline input { border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 99px; padding: 8px 14px; font: inherit; font-size: 10px; width: 180px; outline: none; }
+  .circle-{{ sid }} .circle-notify-inline input:focus { border-color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-notify-btn { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; background: none; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 99px; padding: 8px 14px; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all .15s; }
+  .circle-{{ sid }} .circle-notify-btn:hover { border-color: {{ section.settings.muted_color }}; color: {{ section.settings.text_color }}; }
+
+  /* ── SHARED BUTTONS ── */
+  .circle-{{ sid }} .circle-main-btn { display: block; width: 100%; border-radius: 999px; font-family: inherit; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; padding: 16px; cursor: pointer; text-align: center; text-decoration: none; background: {{ section.settings.accent_color }}; color: #fff; border: 0; }
+  .circle-{{ sid }} .circle-ghost-btn { display: block; width: 100%; border-radius: 999px; font-family: inherit; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; padding: 16px; cursor: pointer; text-align: center; background: transparent; color: {{ section.settings.muted_color }}; border: 0.5px solid {{ section.settings.border_color }}; }
+  .circle-{{ sid }} .circle-waitlist-form { display: grid; gap: 10px; }
+  .circle-{{ sid }} .circle-waitlist-form input { width: 100%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 999px; padding: 14px 16px; font: inherit; font-size: 11px; outline: none; }
+  .circle-{{ sid }} .circle-waitlist-form input:focus { border-color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-already-subscribed { background: {{ section.settings.soft_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; padding: 16px; margin-top: 12px; font-size: 12px; line-height: 1.7; }
+
+  /* ── SOCIAL ── */
+  .circle-{{ sid }} .circle-social { margin-bottom: 18px; }
+  .circle-{{ sid }} .circle-social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .circle-{{ sid }} .circle-social-card { background: {{ section.settings.card_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 12px; padding: 14px; }
+  .circle-{{ sid }} .circle-social-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .circle-{{ sid }} .circle-avatar { width: 40px; height: 40px; border-radius: 50%; background: {{ section.settings.image_bg_color }}; display: flex; align-items: center; justify-content: center; font-family: "Cormorant Garamond", serif; flex-shrink: 0; }
+  .circle-{{ sid }} .circle-social-name { font-size: 13px; }
+  .circle-{{ sid }} .circle-social-name span { color: #3b82f6; }
+  .circle-{{ sid }} .circle-handle { font-size: 10px; color: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-stars { display: flex; gap: 3px; margin-bottom: 7px; }
+  .circle-{{ sid }} .circle-stars i { width: 12px; height: 12px; border-radius: 2px; background: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-quote { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 14px; color: {{ section.settings.body_color }}; line-height: 1.45; }
+  .circle-{{ sid }} .circle-empty { font-size: 12px; color: {{ section.settings.muted_color }}; line-height: 1.7; }
+
+  /* ══ MODALS ══ */
+  .circle-{{ sid }} .circle-modal-overlay { position: fixed; inset: 0; background: rgba(14,14,13,.55); z-index: 9999; display: flex; align-items: flex-end; justify-content: center; padding: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  @media (min-width: 600px) {
+    .circle-{{ sid }} .circle-modal-overlay { align-items: center; padding: 24px; }
+  }
+  .circle-{{ sid }} .circle-modal { position: relative; background: {{ section.settings.card_color | default: '#faf9f7' }}; width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto; border-radius: 20px 20px 0 0; animation: circleModalIn-{{ sid }} .28s cubic-bezier(.25,1,.5,1); }
+  @media (min-width: 600px) {
+    .circle-{{ sid }} .circle-modal { border-radius: 16px; max-height: 88vh; }
+  }
+  @keyframes circleModalIn-{{ sid }} { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .circle-{{ sid }} .circle-modal-close { position: absolute; top: 16px; right: 16px; z-index: 10; width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color | default: '#f0efeb' }}; color: {{ section.settings.muted_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .circle-{{ sid }} .circle-modal-close:hover { background: {{ section.settings.border_color }}; color: {{ section.settings.text_color }}; }
+  .circle-{{ sid }} .circle-modal-gallery { position: relative; width: 100%; aspect-ratio: 1 / 1; background: {{ section.settings.image_bg_color }}; overflow: hidden; border-radius: 20px 20px 0 0; }
+  @media (min-width: 600px) {
+    .circle-{{ sid }} .circle-modal-gallery { border-radius: 16px 16px 0 0; }
+  }
+  .circle-{{ sid }} .circle-modal-img-track { display: flex; height: 100%; transition: transform .35s cubic-bezier(.25,1,.5,1); }
+  .circle-{{ sid }} .circle-modal-img-track img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .circle-{{ sid }} .circle-modal-img-prev,
+  .circle-{{ sid }} .circle-modal-img-next { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; border: 0.5px solid rgba(255,255,255,.3); background: rgba(255,255,255,.85); color: {{ section.settings.text_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 3; transition: all .15s; }
+  .circle-{{ sid }} .circle-modal-img-prev { left: 12px; }
+  .circle-{{ sid }} .circle-modal-img-next { right: 12px; }
+  .circle-{{ sid }} .circle-modal-img-prev:hover,
+  .circle-{{ sid }} .circle-modal-img-next:hover { background: #fff; }
+  .circle-{{ sid }} .circle-modal-img-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
+  .circle-{{ sid }} .circle-modal-img-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); border: none; cursor: pointer; padding: 0; transition: all .2s; }
+  .circle-{{ sid }} .circle-modal-img-dot.active { background: #fff; width: 14px; border-radius: 3px; }
+  .circle-{{ sid }} .circle-modal-body { padding: 22px 24px 28px; }
+  .circle-{{ sid }} .circle-modal-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 6px; }
+  .circle-{{ sid }} .circle-modal-title { font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 300; color: {{ section.settings.text_color }}; margin-bottom: 10px; }
+  .circle-{{ sid }} .circle-modal-price-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .circle-{{ sid }} .circle-modal-sale { font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 600; color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-modal-was { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; }
+  .circle-{{ sid }} .circle-modal-save { font-style: normal; font-size: 9px; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.08); padding: 3px 8px; border-radius: 5px; }
+  .circle-{{ sid }} .circle-modal-desc { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; margin-bottom: 20px; }
+  .circle-{{ sid }} .circle-modal-link { display: inline-flex; align-items: center; gap: 6px; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-decoration: none; border-bottom: 0.5px solid {{ section.settings.border_color }}; padding-bottom: 1px; transition: all .15s; }
+  .circle-{{ sid }} .circle-modal-link:hover { color: {{ section.settings.accent_color }}; border-bottom-color: {{ section.settings.accent_color }}; }
+  .circle-{{ sid }} .circle-size-modal { }
+  .circle-{{ sid }} .circle-size-guide-content { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; }
+  .circle-{{ sid }} .circle-size-guide-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  .circle-{{ sid }} .circle-size-guide-content th, .circle-{{ sid }} .circle-size-guide-content td { border: 0.5px solid {{ section.settings.border_color }}; padding: 10px 12px; font-size: 11px; text-align: left; }
+  .circle-{{ sid }} .circle-size-guide-content th { background: {{ section.settings.soft_color }}; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: {{ section.settings.muted_color }}; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .circle-{{ sid }} .circle-prod { flex: 0 0 calc(50% - 5px); width: calc(50% - 5px); }
+    .circle-{{ sid }} .circle-social-grid { grid-template-columns: 1fr; }
+    .circle-{{ sid }} .circle-card, .circle-{{ sid }} .circle-login-card { padding: 18px; }
+    .circle-{{ sid }} .circle-code-card { padding: 28px 18px; }
+    .circle-{{ sid }} .circle-action-block { padding: 22px 20px 20px; }
+    .circle-{{ sid }} .circle-t-num { min-width: 40px; font-size: 36px; }
+    .circle-{{ sid }} .circle-price-amount { font-size: 38px; }
+    .circle-{{ sid }} .circle-drop-price { font-size: 22px; }
+    .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-price { font-size: 26px; }
+    .circle-{{ sid }} .circle-locked-row { flex-direction: column; gap: 14px; }
+    .circle-{{ sid }} .circle-locked-right { align-items: flex-start; width: 100%; }
+    .circle-{{ sid }} .circle-notify-inline { width: 100%; }
+    .circle-{{ sid }} .circle-notify-inline input { flex: 1; width: auto; }
+    .circle-{{ sid }} .circle-selected-preview { flex-wrap: wrap; }
+  }
+</style>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-circle-section="{{ sid }}"]');
+  if (!root) return;
+
+  const sid         = '{{ sid }}';
+  const STORAGE_KEY = 'circle_access_' + sid;
+  const ACCESS_DURATION = 24 * 60 * 60 * 1000;
+
+  const gateEl    = document.getElementById('circle-code-gate-' + sid);
+  const offerEl   = document.getElementById('circle-offer-content-' + sid);
+  const codeInput = document.getElementById('circle-code-input-' + sid);
+  const submitBtn = document.getElementById('circle-code-submit-' + sid);
+  const errorEl   = document.getElementById('circle-code-error-' + sid);
+
+  const rawCodes   = (root.dataset.accessCodes || '').trim();
+  const validCodes = rawCodes.length
+    ? rawCodes.split(',').map(c => c.trim().toUpperCase()).filter(Boolean)
+    : [];
+
+  // ── localStorage check — code persists across refreshes until expiry ──
+  function isVerified() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if (!saved || !saved.code || !saved.expires || !saved.codeList) return false;
+      if (Date.now() > saved.expires) { localStorage.removeItem(STORAGE_KEY); return false; }
+      // Invalidate if admin changed the code list
+      if (saved.codeList !== rawCodes) { localStorage.removeItem(STORAGE_KEY); return false; }
+      // Invalidate if the specific saved code is no longer valid
+      if (!validCodes.includes(saved.code)) { localStorage.removeItem(STORAGE_KEY); return false; }
+      return true;
+    } catch (e) {
+      localStorage.removeItem(STORAGE_KEY);
+      return false;
+    }
+  }
+
+  function grantAccess(code) {
+    if (code) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          code: code.toUpperCase(),
+          codeList: rawCodes,
+          expires: Date.now() + ACCESS_DURATION
+        }));
+      } catch (e) {}
+    }
+    if (gateEl)  gateEl.style.display  = 'none';
+    if (offerEl) offerEl.style.display = 'block';
+    initOffer();
+  }
+
+  function showGate() {
+    if (gateEl)  gateEl.style.display  = 'block';
+    if (offerEl) offerEl.style.display = 'none';
+  }
+
+  // Skip gate if no codes configured OR already verified in localStorage
+  if (!validCodes.length || isVerified()) {
+    grantAccess(null);
+  } else {
+    showGate();
+  }
+
+  function tryCode() {
+    if (!codeInput) return;
+    const entered = codeInput.value.trim().toUpperCase();
+    if (!entered) { codeInput.focus(); return; }
+    if (validCodes.includes(entered)) {
+      if (errorEl) errorEl.style.display = 'none';
+      codeInput.classList.remove('error');
+      grantAccess(entered);
+    } else {
+      if (errorEl) errorEl.style.display = 'block';
+      codeInput.classList.add('error');
+      codeInput.value = '';
+      codeInput.focus();
+      setTimeout(() => codeInput.classList.remove('error'), 400);
+    }
+  }
+
+  if (submitBtn) submitBtn.addEventListener('click', tryCode);
+  if (codeInput) {
+    codeInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryCode(); });
+    codeInput.addEventListener('input',   () => { codeInput.value = codeInput.value.toUpperCase(); });
+  }
+
+  // ── Main offer ────────────────────────────────────────────────────────────
+  function initOffer() {
+    const dataEl = document.getElementById('CircleProducts-' + sid);
+    if (!dataEl) return;
+
+    let products = [];
+    try { products = JSON.parse(dataEl.textContent.trim()); }
+    catch (e) { console.error('Circle products JSON error:', e); return; }
+    if (!products.length) return;
+
+    const moneyFormat     = {{ shop.money_format | json }};
+    const discountPercent = Number(root.dataset.discountPercent || 0);
+    const discountCode    = root.dataset.discountCode || '';
+    const buttonAction    = root.dataset.buttonAction || 'cart';
+    const activePhase     = root.dataset.activePhase || '0';
+
+    const mainReserveBtn   = root.querySelector('[data-reserve-main]');
+    const scarcityText     = root.querySelector('[data-scarcity-text]');
+    const optionsContainer = root.querySelector('[data-options-container]');
+    const previewBox       = root.querySelector('[data-preview-box]');
+    const previewImg       = root.querySelector('[data-preview-img]');
+    const previewTitle     = root.querySelector('[data-preview-title]');
+    const previewVariant   = root.querySelector('[data-preview-variant]');
+    const previewSalePrice = root.querySelector('[data-preview-sale-price]');
+    const previewWas       = root.querySelector('[data-preview-compare-price]');
+    const previewSavings   = root.querySelector('[data-preview-savings]');
+    const viewDetailsBtn   = root.querySelector('[data-view-details]');
+    const dotsContainer    = root.querySelector('[data-slider-dots]');
+    const track            = root.querySelector('[data-slider-track]');
+    const viewport         = root.querySelector('[data-slider-viewport]');
+    const prevBtn          = root.querySelector('[data-arrow="prev"]');
+    const nextBtn          = root.querySelector('[data-arrow="next"]');
+    const cards            = root.querySelectorAll('[data-product-index]');
+
+    // Modals
+    const productModal    = document.getElementById('circle-product-modal-' + sid);
+    const productModalClose = document.getElementById('circle-modal-close-' + sid);
+    const sizeModal       = document.getElementById('circle-size-modal-' + sid);
+    const sizeModalClose  = document.getElementById('circle-size-close-' + sid);
+
+    let selectedProduct = null;
+    let selectedOptions = [];
+    let selectedVariant = null;
+    let currentSlide    = 0;
+
+    // ── Money ──────────────────────────────────────────────────────────────
+    function formatMoney(cents) {
+      if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+        return window.Shopify.formatMoney(cents, moneyFormat);
+      }
+      const value     = Math.round(Number(cents) || 0);
+      const whole     = Math.floor(value / 100);
+      const dec       = String(value % 100).padStart(2, '0');
+      const withComma = s => String(s).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return moneyFormat
+        .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/g, String(whole).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + dec)
+        .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/g, String(whole).replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
+        .replace(/\{\{\s*amount_no_decimals_with_space_separator\s*\}\}/g, String(whole).replace(/\B(?=(\d{3})+(?!\d))/g, ' '))
+        .replace(/\{\{\s*amount_no_decimals\s*\}\}/g, withComma(whole))
+        .replace(/\{\{\s*amount_with_apostrophe_separator\s*\}\}/g, withComma(whole).replace(/,/g,"'") + '.' + dec)
+        .replace(/\{\{\s*amount\s*\}\}/g, withComma(whole) + '.' + dec);
+    }
+
+    function discountedPrice(priceCents) {
+      if (!discountPercent) return Number(priceCents || 0);
+      return Math.round(Number(priceCents || 0) * (100 - discountPercent) / 100);
+    }
+
+    // ── Slider ─────────────────────────────────────────────────────────────
+    function getVisibleCount() { return window.innerWidth <= 480 ? 2 : 4; }
+    function maxSlide()        { return Math.max(0, cards.length - getVisibleCount()); }
+
+    function buildDots() {
+      if (!dotsContainer) return;
+      dotsContainer.innerHTML = '';
+      const pages = maxSlide() + 1;
+      if (pages <= 1) { dotsContainer.style.display = 'none'; return; }
+      dotsContainer.style.display = 'flex';
+      for (let i = 0; i < pages; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'circle-slider-dot' + (i === currentSlide ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function updateDots() {
+      if (!dotsContainer) return;
+      dotsContainer.querySelectorAll('.circle-slider-dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+    }
+
+    function goTo(index) {
+      const max = maxSlide();
+      currentSlide = Math.max(0, Math.min(index, max));
+      const allCards = track ? track.querySelectorAll('.circle-prod') : [];
+      if (!allCards.length) return;
+      const gap       = 10;
+      const cardWidth = allCards[0].getBoundingClientRect().width;
+      if (track) track.style.transform = `translateX(-${currentSlide * (cardWidth + gap)}px)`;
+      if (prevBtn) prevBtn.disabled = currentSlide === 0;
+      if (nextBtn) nextBtn.disabled = currentSlide >= max;
+      updateDots();
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { if (currentSlide > 0) goTo(currentSlide - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { if (currentSlide < maxSlide()) goTo(currentSlide + 1); });
+
+    if (viewport) {
+      let touchStartX = 0;
+      viewport.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) { diff > 0 ? goTo(currentSlide + 1) : goTo(currentSlide - 1); }
+      }, { passive: true });
+    }
+
+    setTimeout(() => { buildDots(); goTo(0); }, 80);
+    window.addEventListener('resize', () => { buildDots(); goTo(Math.min(currentSlide, maxSlide())); });
+
+    // ── Product selection ──────────────────────────────────────────────────
+    function selectProduct(index) {
+      const product = products[index];
+      if (!product) return;
+      selectedProduct = product;
+      cards.forEach(card => card.classList.toggle('active', Number(card.dataset.productIndex) === index));
+      const init = product.variants.find(v => v.available) || product.variants[0];
+      selectedOptions = init ? [...init.options] : [];
+      renderOptions();
+      updateSelectedVariant();
+    }
+
+    function looksLikeColor(val) {
+      const s = document.createElement('span');
+      s.style.color = val.toLowerCase().replace(/\s/g, '');
+      return s.style.color !== '' || /^#[0-9a-f]{3,8}$/i.test(val);
+    }
+
+    function isSizeOption(name) {
+      return /size|maat|taille|größe|taglia/i.test(name);
+    }
+
+    function renderOptions() {
+      if (!optionsContainer || !selectedProduct) return;
+      const isDefaultOnly = selectedProduct.variants.length === 1 && selectedProduct.variants[0].title === 'Default Title';
+      if (isDefaultOnly) { optionsContainer.innerHTML = ''; return; }
+
+      const hasSizeOption = selectedProduct.options.some(o => isSizeOption(o));
+
+      let html = '<div class="circle-options-inner">';
+      html += '<div class="circle-options-header">';
+      html += `<div class="circle-options-product-title">${selectedProduct.title}</div>`;
+      if (hasSizeOption && {{ section.settings.size_guide_content | json }} !== 'null' && {{ section.settings.size_guide_content | json }} !== '') {
+        html += `<button type="button" class="circle-size-guide-link" id="circle-size-guide-trigger-${sid}">Size guide</button>`;
+      }
+      html += '</div>';
+
+      selectedProduct.options.forEach((optName, optIdx) => {
+        const values      = [...new Set(selectedProduct.variants.map(v => v.options[optIdx]))];
+        const selectedVal = selectedOptions[optIdx];
+        html += `<div class="circle-option-group"><div class="circle-option-group-label">${optName}<strong>${selectedVal ? ' — ' + selectedVal : ''}</strong></div><div class="circle-option-values">`;
+        const isSize  = isSizeOption(optName);
+        values.forEach(val => {
+          const matchingVariants = selectedProduct.variants.filter(v =>
+            selectedProduct.options.every((_, i) => i === optIdx ? v.options[i] === val : (selectedOptions[i] == null || v.options[i] === selectedOptions[i]))
+          );
+          const isAvailable = matchingVariants.some(v => v.available);
+          const totalQty    = matchingVariants.reduce((s, v) => s + Number(v.inventory_quantity || 0), 0);
+          const isSelected  = selectedOptions[optIdx] === val;
+          const isLastUnit  = isAvailable && totalQty > 0 && totalQty <= 5;
+          const isColor     = looksLikeColor(val);
+
+          if (isSize) {
+            let cls = 'circle-sz';
+            if (isSelected)   cls += ' active';
+            if (!isAvailable) cls += ' sold-out';
+            else if (isLastUnit) cls += ' last-unit';
+            html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${val}"${!isAvailable ? ' disabled' : ''}><span>${val}</span><span class="circle-sz-dot"></span></button>`;
+          } else {
+            let cls = 'circle-option-value-btn';
+            if (isSelected)   cls += ' active';
+            if (!isAvailable) cls += ' sold-out';
+            else if (isLastUnit) cls += ' last-unit';
+            if (isColor)      cls += ' is-color';
+            if (isColor) {
+              html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${val}" title="${val}"><span class="circle-color-swatch" style="background:${val.toLowerCase().replace(/\s/g,'')}"></span></button>`;
+            } else {
+              html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${val}"><span class="circle-option-dot"></span>${val}</button>`;
+            }
+          }
+        });
+        html += '</div></div>';
+      });
+
+      html += '<div class="circle-size-legend"><span><span class="circle-legend-dot last-unit"></span> Last units</span><span><span class="circle-legend-dot sold-out"></span> Sold out</span></div>';
+      html += '</div>';
+      optionsContainer.innerHTML = html;
+
+      // Bind option buttons
+      optionsContainer.querySelectorAll('[data-opt-idx]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.classList.contains('sold-out') || btn.disabled) return;
+          selectedOptions[Number(btn.dataset.optIdx)] = btn.dataset.optVal;
+          renderOptions();
+          updateSelectedVariant();
+        });
+      });
+
+      // Bind size guide trigger
+      const sgt = document.getElementById('circle-size-guide-trigger-' + sid);
+      if (sgt && sizeModal) {
+        sgt.addEventListener('click', () => openModal(sizeModal));
+      }
+    }
+
+    function updateSelectedVariant() {
+      if (!selectedProduct) return;
+      let variant = selectedProduct.variants.find(v => v.options.every((optVal, idx) => optVal === selectedOptions[idx]));
+      if (!variant) variant = selectedProduct.variants.find(v => v.available) || selectedProduct.variants[0];
+      selectedVariant = variant;
+      if (!selectedVariant) return;
+
+      // Update card image + price
+      const activeCard = root.querySelector('.circle-prod.active');
+      if (activeCard) {
+        const cardImg   = activeCard.querySelector('[data-product-featured-image]');
+        const priceSpan = activeCard.querySelector('[data-product-price-display]');
+        const compareS  = activeCard.querySelector('[data-product-compare-price-display]');
+        if (cardImg) {
+          const src = selectedVariant.featured_image || (selectedProduct.images[0] && selectedProduct.images[0].src);
+          if (src) cardImg.src = src;
+        }
+        if (priceSpan) priceSpan.textContent = formatMoney(discountedPrice(selectedVariant.price));
+        if (compareS)  compareS.textContent  = discountPercent > 0 ? formatMoney(selectedVariant.price) : '';
+      }
+
+      // Scarcity
+      const qty = Number(selectedVariant.inventory_quantity || 0);
+      if (scarcityText) {
+        scarcityText.textContent = !selectedVariant.available
+          ? 'This variant is sold out.'
+          : (qty > 0 && qty <= 5)
+            ? `⚠ Only ${qty} unit${qty !== 1 ? 's' : ''} left in stock`
+            : 'Available now — members only.';
+      }
+
+      // Preview box
+      if (previewBox) {
+        previewBox.style.display = 'flex';
+        const imgSrc = selectedVariant.featured_image || (selectedProduct.images[0] && selectedProduct.images[0].src) || '';
+        if (previewImg)   { previewImg.src = imgSrc; previewImg.alt = selectedProduct.title; }
+        if (previewTitle)   previewTitle.textContent   = selectedProduct.title;
+        if (previewVariant) previewVariant.textContent = selectedVariant.title === 'Default Title' ? 'Standard' : selectedVariant.title;
+        const current  = discountedPrice(selectedVariant.price);
+        const original = selectedVariant.price;
+        const savings  = original - current;
+        if (previewSalePrice) previewSalePrice.textContent = formatMoney(current);
+        if (previewWas)       previewWas.textContent       = discountPercent > 0 ? formatMoney(original) : '';
+        if (previewSavings) {
+          previewSavings.textContent    = discountPercent > 0 ? `Save ${formatMoney(savings)}` : '';
+          previewSavings.style.display  = discountPercent > 0 ? 'inline-block' : 'none';
+        }
+      }
+
+      // Reserve button
+      if (mainReserveBtn) {
+        mainReserveBtn.disabled = !selectedVariant.available;
+        if (!selectedVariant.available) mainReserveBtn.textContent = 'Sold out';
+        else if (discountPercent > 0)   mainReserveBtn.textContent = `Reserve — lock in ${discountPercent}% off`;
+        else {
+          const vLabel = selectedVariant.title === 'Default Title' ? '' : ` — ${selectedVariant.title}`;
+          mainReserveBtn.textContent = `Reserve${vLabel}`;
+        }
+      }
+    }
+
+    // ── Reserve / cart ─────────────────────────────────────────────────────
+    async function reserveProduct() {
+      if (!selectedProduct || !selectedVariant || !selectedVariant.available) return;
+      if (buttonAction === 'product') {
+        window.location.href = discountCode
+          ? `/discount/${encodeURIComponent(discountCode)}?redirect=${encodeURIComponent(selectedProduct.url)}`
+          : selectedProduct.url;
+        return;
+      }
+      if (mainReserveBtn) { mainReserveBtn.disabled = true; mainReserveBtn.textContent = 'Adding…'; }
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: selectedVariant.id, quantity: 1, properties: { '_Circle phase': `Phase ${activePhase}`, '_Circle discount': discountPercent ? `${discountPercent}%` : 'None' } })
+        });
+        if (!res.ok) throw new Error('Cart error');
+        window.location.href = discountCode
+          ? `/discount/${encodeURIComponent(discountCode)}?redirect=/cart`
+          : '/cart';
+      } catch(err) {
+        console.error(err);
+        if (mainReserveBtn) { mainReserveBtn.disabled = false; mainReserveBtn.textContent = 'Try again'; }
+      }
+    }
+
+    cards.forEach(card => card.addEventListener('click', () => selectProduct(Number(card.dataset.productIndex))));
+    if (mainReserveBtn) mainReserveBtn.addEventListener('click', reserveProduct);
+
+    // ── Product details modal ──────────────────────────────────────────────
+    function openProductModal(product, variant) {
+      if (!productModal) return;
+      const imgTrack  = productModal.querySelector('[data-modal-img-track]');
+      const imgPrev   = productModal.querySelector('[data-modal-img-prev]');
+      const imgNext   = productModal.querySelector('[data-modal-img-next]');
+      const imgDots   = productModal.querySelector('[data-modal-img-dots]');
+      const modalLabel= productModal.querySelector('[data-modal-label]');
+      const modalTitle= productModal.querySelector('[data-modal-title]');
+      const modalSale = productModal.querySelector('[data-modal-sale]');
+      const modalWas  = productModal.querySelector('[data-modal-was]');
+      const modalSave = productModal.querySelector('[data-modal-save]');
+      const modalDesc = productModal.querySelector('[data-modal-desc]');
+      const modalLink = productModal.querySelector('[data-modal-link]');
+
+      const images = product.images && product.images.length ? product.images : [];
+      let modalImgIdx = 0;
+
+      // Prefer variant image as first
+      let orderedImgs = [...images];
+      if (variant && variant.featured_image) {
+        orderedImgs = [{ src: variant.featured_image, alt: product.title }, ...images.filter(i => i.src !== variant.featured_image)];
+      }
+
+      if (imgTrack) {
+        imgTrack.innerHTML = orderedImgs.map(img =>
+          `<img src="${img.src}" alt="${img.alt || product.title}" loading="lazy">`
+        ).join('');
+        imgTrack.style.transform = 'translateX(0)';
+      }
+
+      function goModalImg(idx) {
+        modalImgIdx = Math.max(0, Math.min(idx, orderedImgs.length - 1));
+        if (imgTrack) imgTrack.style.transform = `translateX(-${modalImgIdx * 100}%)`;
+        if (imgDots) imgDots.querySelectorAll('.circle-modal-img-dot').forEach((d, i) => d.classList.toggle('active', i === modalImgIdx));
+        if (imgPrev) imgPrev.style.display = modalImgIdx > 0 ? 'flex' : 'none';
+        if (imgNext) imgNext.style.display = modalImgIdx < orderedImgs.length - 1 ? 'flex' : 'none';
+      }
+
+      if (imgDots) {
+        imgDots.innerHTML = orderedImgs.length > 1
+          ? orderedImgs.map((_, i) => `<button type="button" class="circle-modal-img-dot${i === 0 ? ' active' : ''}" aria-label="Image ${i+1}"></button>`).join('')
+          : '';
+        imgDots.querySelectorAll('.circle-modal-img-dot').forEach((d, i) => d.addEventListener('click', () => goModalImg(i)));
+      }
+      if (imgPrev) { imgPrev.onclick = () => goModalImg(modalImgIdx - 1); imgPrev.style.display = 'none'; }
+      if (imgNext) { imgNext.onclick = () => goModalImg(modalImgIdx + 1); imgNext.style.display = orderedImgs.length > 1 ? 'flex' : 'none'; }
+
+      // Touch swipe in modal
+      if (imgTrack) {
+        let tStart = 0;
+        imgTrack.addEventListener('touchstart', e => { tStart = e.touches[0].clientX; }, { passive: true });
+        imgTrack.addEventListener('touchend', e => {
+          const diff = tStart - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 40) { diff > 0 ? goModalImg(modalImgIdx + 1) : goModalImg(modalImgIdx - 1); }
+        }, { passive: true });
+      }
+
+      if (modalLabel) modalLabel.textContent = discountPercent > 0 ? `${discountPercent}% off for Circle members` : 'Circle Members Only';
+      if (modalTitle) modalTitle.textContent = product.title;
+      const currentPrice  = variant ? discountedPrice(variant.price) : discountedPrice(product.price);
+      const originalPrice = variant ? variant.price : product.price;
+      const savings       = originalPrice - currentPrice;
+      if (modalSale) modalSale.textContent = formatMoney(currentPrice);
+      if (modalWas)  modalWas.textContent  = discountPercent > 0 ? formatMoney(originalPrice) : '';
+      if (modalSave) { modalSave.textContent = discountPercent > 0 ? `Save ${formatMoney(savings)}` : ''; modalSave.style.display = discountPercent > 0 ? 'inline-block' : 'none'; }
+      if (modalDesc) modalDesc.textContent = product.description || '';
+      if (modalLink) modalLink.href = product.url;
+
+      openModal(productModal);
+    }
+
+    if (viewDetailsBtn) {
+      viewDetailsBtn.addEventListener('click', e => {
+        e.preventDefault();
+        if (selectedProduct) openProductModal(selectedProduct, selectedVariant);
+      });
+    }
+
+    // ── Modal helpers ──────────────────────────────────────────────────────
+    function openModal(modal) {
+      if (!modal) return;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => modal.querySelector('.circle-modal').style.animation = `circleModalIn-{{ sid }} .28s cubic-bezier(.25,1,.5,1)`);
+    }
+
+    function closeModal(modal) {
+      if (!modal) return;
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    if (productModalClose) productModalClose.addEventListener('click', () => closeModal(productModal));
+    if (sizeModalClose)    sizeModalClose.addEventListener('click',    () => closeModal(sizeModal));
+
+    [productModal, sizeModal].forEach(modal => {
+      if (!modal) return;
+      modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeModal(productModal);
+        closeModal(sizeModal);
+      }
+    });
+
+    // ── Countdown ──────────────────────────────────────────────────────────
+    function updateCountdown() {
+      const endMs = Number(root.dataset.activeEndMs || 0);
+      if (!endMs) return;
+      const diff = Math.max(0, endMs - Date.now());
+      const pad  = n => String(n).padStart(2, '0');
+      const set  = (sel, val) => { const el = root.querySelector(sel); if (el) el.textContent = pad(val); };
+      set('[data-days]',    Math.floor(diff / 86400000));
+      set('[data-hours]',   Math.floor((diff % 86400000) / 3600000));
+      set('[data-minutes]', Math.floor((diff % 3600000) / 60000));
+      set('[data-seconds]', Math.floor((diff % 60000) / 1000));
+      if (diff <= 0 && mainReserveBtn) { mainReserveBtn.disabled = true; mainReserveBtn.textContent = 'Offer ended'; }
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    selectProduct(0);
+  } // end initOffer()
+
+})();
+
+// Waitlist webhook
+document.addEventListener('DOMContentLoaded', function() {
+  ['circle-waitlist-form', 'circle-gate-waitlist-form'].forEach(function(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    form.addEventListener('submit', function() {
+      const emailField = form.querySelector('input[name="contact[email]"]');
+      if (!emailField) return;
+      fetch('https://flow-webhooks.k8s.eu.codecreationlabs.cloud/webhook/77vz1k5x', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': '616b1377177c202d5h780f5d206c5c1o790g3731631g7r0d215p3q3s641o3d0j' },
+        body: JSON.stringify({ email: emailField.value, source: 'circle-waitlist' })
+      })
+      .then(r => r.json())
+      .then(d => console.log('Webhook Success:', d))
+      .catch(e => console.error('Webhook Error:', e));
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Circle Member Offer",
+  "settings": [
+    { "type": "header", "content": "General" },
+    { "type": "checkbox", "id": "offer_enabled", "label": "Enable offer", "default": true },
+    { "type": "checkbox", "id": "require_login", "label": "Require login", "default": true },
+    { "type": "text", "id": "access_codes", "label": "Valid access codes (comma-separated)", "info": "e.g. CIRCLE-A1B2, CIRCLE-C3D4. Leave blank to skip the code gate." },
+    { "type": "text", "id": "brand_name", "label": "Brand name", "default": "Jaffary" },
+    { "type": "text", "id": "member_label", "label": "Member pill text", "default": "The Circle" },
+    { "type": "text", "id": "signout_text", "label": "Sign out text", "default": "Sign out" },
+    { "type": "range", "id": "max_width", "label": "Max width (px)", "min": 400, "max": 1200, "step": 10, "default": 580 },
+    { "type": "range", "id": "section_padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 0 },
+    { "type": "range", "id": "section_padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 80 },
+    { "type": "header", "content": "Login Gate" },
+    { "type": "text", "id": "login_eyebrow", "label": "Login eyebrow", "default": "Members only" },
+    { "type": "text", "id": "login_heading", "label": "Login heading", "default": "Sign in to access" },
+    { "type": "textarea", "id": "login_text", "label": "Login body text" },
+    { "type": "text", "id": "login_button_text", "label": "Login button text", "default": "Sign in" },
+    { "type": "header", "content": "Code Gate" },
+    { "type": "text", "id": "gate_eyebrow", "label": "Eyebrow", "default": "Private access" },
+    { "type": "text", "id": "gate_heading", "label": "Heading", "default": "Enter your access code" },
+    { "type": "textarea", "id": "gate_text", "label": "Body text" },
+    { "type": "text", "id": "gate_placeholder", "label": "Input placeholder", "default": "e.g. CIRCLE-XXXX" },
+    { "type": "text", "id": "gate_button_text", "label": "Button text", "default": "Unlock access" },
+    { "type": "text", "id": "gate_error_text", "label": "Error text", "default": "Invalid code. Please check your invitation email and try again." },
+    { "type": "text", "id": "gate_hint", "label": "Hint text", "default": "Don't have a code? Join our waitlist below." },
+    { "type": "header", "content": "Welcome" },
+    { "type": "text", "id": "welcome_heading", "label": "Heading line 1", "default": "You're in" },
+    { "type": "text", "id": "welcome_emphasis", "label": "Heading emphasis (italic)", "default": "the Circle." },
+    { "type": "header", "content": "Phase 1" },
+    { "type": "text", "id": "phase_1_start", "label": "Start date (YYYY-MM-DD)" },
+    { "type": "text", "id": "phase_1_end", "label": "End date (YYYY-MM-DD)" },
+    { "type": "range", "id": "phase_1_discount", "label": "Discount %", "min": 0, "max": 80, "step": 1, "default": 30 },
+    { "type": "text", "id": "phase_1_discount_code", "label": "Shopify discount code" },
+    { "type": "text", "id": "phase_1_title", "label": "Title", "default": "Inner Circle Access" },
+    { "type": "text", "id": "phase_1_label", "label": "Label (eyebrow)", "default": "Drop 1 — open now" },
+    { "type": "text", "id": "phase_1_short", "label": "Short label (phase strip)", "default": "Inner Circle" },
+    { "type": "text", "id": "phase_1_subtitle", "label": "Progress subtitle" },
+    { "type": "text", "id": "phase_1_shipping_note1", "label": "Shipping note left side" },
+    { "type": "text", "id": "phase_1_shipping_note2", "label": "Shipping note right side" },
+    { "type": "header", "content": "Phase 2" },
+    { "type": "text", "id": "phase_2_start", "label": "Start date (YYYY-MM-DD)" },
+    { "type": "text", "id": "phase_2_end", "label": "End date (YYYY-MM-DD)" },
+    { "type": "range", "id": "phase_2_discount", "label": "Discount %", "min": 0, "max": 80, "step": 1, "default": 20 },
+    { "type": "text", "id": "phase_2_discount_code", "label": "Shopify discount code" },
+    { "type": "text", "id": "phase_2_title", "label": "Title", "default": "Second Release" },
+    { "type": "text", "id": "phase_2_label", "label": "Label (eyebrow)", "default": "Drop 2 — open now" },
+    { "type": "text", "id": "phase_2_short", "label": "Short label (phase strip)", "default": "Circle" },
+    { "type": "text", "id": "phase_2_subtitle", "label": "Progress subtitle" },
+    { "type": "text", "id": "phase_2_shipping_note1", "label": "Shipping note left side" },
+    { "type": "text", "id": "phase_2_shipping_note2", "label": "Shipping note right side" },
+    { "type": "header", "content": "Phase 3 (Optional)" },
+    { "type": "checkbox", "id": "enable_phase_3", "label": "Enable phase 3", "default": false },
+    { "type": "text", "id": "phase_3_start", "label": "Start date (YYYY-MM-DD)" },
+    { "type": "text", "id": "phase_3_end", "label": "End date (YYYY-MM-DD)" },
+    { "type": "range", "id": "phase_3_discount", "label": "Discount % (0 = full price)", "min": 0, "max": 80, "step": 1, "default": 0 },
+    { "type": "text", "id": "phase_3_discount_code", "label": "Shopify discount code" },
+    { "type": "text", "id": "phase_3_title", "label": "Title", "default": "Public Release" },
+    { "type": "text", "id": "phase_3_label", "label": "Label (eyebrow)", "default": "Drop 3 — open now" },
+    { "type": "text", "id": "phase_3_short", "label": "Short label (phase strip)", "default": "Public" },
+    { "type": "text", "id": "phase_3_subtitle", "label": "Progress subtitle" },
+    { "type": "text", "id": "phase_3_shipping_note1", "label": "Shipping note left side" },
+    { "type": "text", "id": "phase_3_shipping_note2", "label": "Shipping note right side" },
+    { "type": "header", "content": "Products" },
+    { "type": "collection", "id": "product_collection", "label": "Product collection" },
+    { "type": "range", "id": "product_limit", "label": "Max products", "min": 1, "max": 24, "step": 1, "default": 8 },
+    { "type": "text", "id": "product_heading", "label": "Section heading", "default": "Choose your piece" },
+    { "type": "checkbox", "id": "hide_sold_out_products", "label": "Hide sold out products", "default": false },
+    { "type": "header", "content": "Reserve Button" },
+    { "type": "text", "id": "reserve_button_text", "label": "Reserve button default text", "default": "Reserve your piece" },
+    { "type": "text", "id": "button_action", "label": "Button action (cart / product)", "default": "cart" },
+    { "type": "header", "content": "Size Guide" },
+    { "type": "text", "id": "size_guide_title", "label": "Modal title", "default": "Size Guide" },
+    { "type": "textarea", "id": "size_guide_content", "label": "Size guide content (HTML / table supported)" },
+    { "type": "header", "content": "Ended / Waitlist" },
+    { "type": "text", "id": "ended_eyebrow", "label": "Ended eyebrow", "default": "All phases closed" },
+    { "type": "text", "id": "ended_heading", "label": "Ended heading", "default": "This offer has ended" },
+    { "type": "textarea", "id": "ended_text", "label": "Ended body text" },
+    { "type": "text", "id": "ended_button_text", "label": "Ended button text", "default": "Notify me for the next drop" },
+    { "type": "text", "id": "notify_button_text", "label": "Notify button text", "default": "Notify me" },
+    { "type": "text", "id": "notify_placeholder", "label": "Notify input placeholder", "default": "Email for next drop" },
+    { "type": "text", "id": "notify_note", "label": "Notify note" },
+    { "type": "header", "content": "Social Proof" },
+    { "type": "text", "id": "social_heading", "label": "Social section heading", "default": "From the community" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f0efeb" },
+    { "type": "color", "id": "card_color", "label": "Card background", "default": "#faf9f7" },
+    { "type": "color", "id": "soft_color", "label": "Soft fill", "default": "#f0efeb" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#0e0e0d" },
+    { "type": "color", "id": "body_color", "label": "Body text", "default": "#5a5855" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#9a9792" },
+    { "type": "color", "id": "border_color", "label": "Border / divider", "default": "#e2dfd9" },
+    { "type": "color", "id": "accent_color", "label": "Accent (forest green)", "default": "#1a3a2a" },
+    { "type": "color", "id": "warning_color", "label": "Warning (scarcity)", "default": "#b8341b" },
+    { "type": "color", "id": "image_bg_color", "label": "Image placeholder bg", "default": "#e8e5e0" },
+    { "type": "color", "id": "gold_color", "label": "Gold / hint color", "default": "#9a7f4a" }
+  ],
+  "presets": [
+    { "name": "Circle Member Offer" }
+  ]
+}
+{% endschema %}

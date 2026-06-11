@@ -1,0 +1,113 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": "lg:w-full",
+        "content_position": "lg:justify-start",
+        "color_scheme": "primary",
+        "override_header_footer_color_scheme": false
+      }
+    },
+    "discount_sections_mdwqhB": {
+      "type": "discount-sections",
+      "name": "Circle member offer",
+      "settings": {
+        "offer_enabled": true,
+        "require_login": false,
+        "access_codes": "CIRCLE-A1B2, CIRCLE-C3D",
+        "brand_name": "Jaffary",
+        "member_label": "The Circle",
+        "signout_text": "Sign out",
+        "max_width": 800,
+        "section_padding_top": 40,
+        "section_padding_bottom": 40,
+        "login_eyebrow": "Members only",
+        "login_heading": "Log in to unlock The Circle.",
+        "login_text": "This private offer page is only available for logged-in customers. Please log in first, then you will be redirected back to this same page.",
+        "login_button_text": "Log in to view offer",
+        "gate_eyebrow": "Private access",
+        "gate_heading": "Enter your access code",
+        "gate_text": "You should have received a unique access code in your invitation email. Enter it below to unlock this members offer.",
+        "gate_placeholder": "e.g. CIRCLE-XXXX",
+        "gate_button_text": "Unlock access",
+        "gate_error_text": "Invalid code. Please check your invitation email and try again.",
+        "gate_hint": "Don't have a code? Join our waitlist below.",
+        "welcome_heading": "You're in",
+        "welcome_emphasis": "The Circle.",
+        "phase_1_start": "2026-06-08",
+        "phase_1_end": "2026-06-9",
+        "phase_1_discount": 30,
+        "phase_1_discount_code": "CIRCLE30",
+        "phase_1_title": "Inner Circle Access",
+        "phase_1_label": "Drop 1",
+        "phase_1_short": "10 days",
+        "phase_1_subtitle": "Discount depletes daily",
+        "phase_1_shipping_note1": "Shipping included",
+        "phase_1_shipping_note2": "Ships in ~14 days",
+        "phase_2_start": "2026-06-9",
+        "phase_2_end": "2026-06-20",
+        "phase_2_discount": 20,
+        "phase_2_discount_code": "CIRCLE20",
+        "phase_2_title": "Second Release",
+        "phase_2_label": "Phase 02 active",
+        "phase_2_short": "1 month",
+        "phase_2_subtitle": "Flat member discount",
+        "phase_2_shipping_note1": "",
+        "phase_2_shipping_note2": "",
+        "enable_phase_3": true,
+        "phase_3_start": "2026-06-7",
+        "phase_3_end": "2026-06-10",
+        "phase_3_discount": 0,
+        "phase_3_discount_code": "",
+        "phase_3_title": "Public Release",
+        "phase_3_label": "Phase 03 active",
+        "phase_3_short": "Public release",
+        "phase_3_subtitle": "Open to everyone",
+        "phase_3_shipping_note1": "",
+        "phase_3_shipping_note2": "",
+        "product_collection": "test",
+        "product_limit": 12,
+        "product_heading": "Choose your piece",
+        "hide_sold_out_products": false,
+        "reserve_button_text": "Reserve selected product",
+        "button_action": "cart",
+        "size_guide_title": "Size Guide",
+        "size_guide_content": "<div class=\"size-guide\">\n  <h3>Size Guide</h3>\n\n  <p>Please use the chart below to find your recommended size. If you are between sizes, we recommend choosing the larger size for a more relaxed fit.</p>\n\n  <table border=\"1\" cellpadding=\"10\" cellspacing=\"0\" style=\"width:100%; border-collapse:collapse; text-align:center;\">\n    <thead>\n      <tr>\n        <th>Size</th>\n        <th>Chest (cm)</th>\n        <th>Length (cm)</th>\n        <th>Shoulder (cm)</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>S</td>\n        <td>96</td>\n        <td>68</td>\n        <td>42</td>\n      </tr>\n      <tr>\n        <td>M</td>\n        <td>102</td>\n        <td>70</td>\n        <td>44</td>\n      </tr>\n      <tr>\n        <td>L</td>\n        <td>108</td>\n        <td>72</td>\n        <td>46</td>\n      </tr>\n      <tr>\n        <td>XL</td>\n        <td>114</td>\n        <td>74</td>\n        <td>48</td>\n      </tr>\n      <tr>\n        <td>XXL</td>\n        <td>120</td>\n        <td>76</td>\n        <td>50</td>\n      </tr>\n    </tbody>\n  </table>\n\n  <p style=\"margin-top:15px;\">\n    <strong>Note:</strong> Measurements may vary by 1–3 cm due to manual measurement. For the best fit, compare these measurements with a similar t-shirt you already own.\n  </p>\n</div>",
+        "ended_eyebrow": "Offer closed",
+        "ended_heading": "This Circle offer has ended.",
+        "ended_text": "This private offer is currently closed. If we create another member-only release, join the waitlist and we will email you.",
+        "ended_button_text": "Email me next time",
+        "notify_button_text": "Notify me when next phase opens",
+        "notify_placeholder": "Email for next drop",
+        "notify_note": "We will save your email under the Circle waitlist tag.",
+        "social_heading": "Seen wearing Jaffary",
+        "bg_color": "#f0efeb",
+        "card_color": "#ffffff",
+        "soft_color": "#f7f6f3",
+        "text_color": "#111111",
+        "body_color": "#777777",
+        "muted_color": "#999999",
+        "border_color": "#e0ddd8",
+        "accent_color": "#1a3a2a",
+        "warning_color": "#c0392b",
+        "image_bg_color": "#ece9e4",
+        "gold_color": "#c8b89a"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "discount_sections_mdwqhB"
+  ]
+}

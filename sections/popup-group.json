@@ -1,0 +1,32 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "aside",
+  "name": "Popup",
+  "sections": {
+    "popup": {
+      "type": "popup",
+      "settings": {
+        "delay": 4,
+        "frequency": 30,
+        "title": "",
+        "text": "<p>Receive special offers and first look at new products.</p>",
+        "text_size": "text-base",
+        "call_to_action": "newsletter",
+        "cta_link": "",
+        "cta_text": "Shop Now",
+        "color_scheme": "secondary"
+      }
+    }
+  },
+  "order": [
+    "popup"
+  ]
+}
