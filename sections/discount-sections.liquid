@@ -95,6 +95,36 @@
   endif
 
   assign offer_collection = section.settings.product_collection
+
+  assign ref_product_price = 0
+  for _p in offer_collection.products limit: section.settings.product_limit
+    if _p.available
+      assign ref_product_price = _p.price_min
+      break
+    endif
+  endfor
+
+  assign p1_d = section.settings.phase_1_discount | plus: 0
+  assign p2_d = section.settings.phase_2_discount | plus: 0
+  assign p3_d = section.settings.phase_3_discount | plus: 0
+
+  assign p1_price = ref_product_price
+  if p1_d > 0 and ref_product_price > 0
+    assign p1_mult = 100 | minus: p1_d
+    assign p1_price = ref_product_price | times: p1_mult | divided_by: 100
+  endif
+
+  assign p2_price = ref_product_price
+  if p2_d > 0 and ref_product_price > 0
+    assign p2_mult = 100 | minus: p2_d
+    assign p2_price = ref_product_price | times: p2_mult | divided_by: 100
+  endif
+
+  assign p3_price = ref_product_price
+  if p3_d > 0 and ref_product_price > 0
+    assign p3_mult = 100 | minus: p3_d
+    assign p3_price = ref_product_price | times: p3_mult | divided_by: 100
+  endif
 %}
 
 {% assign circle_return_url = request.path %}
@@ -203,20 +233,42 @@
           <div class="circle-drop-strip">
             <div class="circle-drop-cell {% if active_phase == 1 %}active-drop{% else %}locked{% endif %}">
               <div class="circle-drop-num">Drop 1</div>
-              <div class="circle-drop-price">{{ section.settings.phase_1_discount }}%</div>
+              <div class="circle-drop-price">
+                {% if ref_product_price > 0 %}
+                  {{ p1_price | money }}
+                {% else %}
+                  {{ section.settings.phase_1_discount }}% off
+                {% endif %}
+              </div>
               <div class="circle-drop-label">{{ section.settings.phase_1_short }}</div>
               <div class="circle-drop-tag">{% if active_phase == 1 %}Open now{% else %}{% if active_phase > 1 %}Closed{% else %}Locked{% endif %}{% endif %}</div>
             </div>
             <div class="circle-drop-cell {% if active_phase == 2 %}active-drop{% elsif active_phase > 2 %}locked{% else %}locked{% endif %}">
               <div class="circle-drop-num">Drop 2</div>
-              <div class="circle-drop-price">{{ section.settings.phase_2_discount }}%</div>
+              <div class="circle-drop-price">
+                {% if ref_product_price > 0 %}
+                  {{ p2_price | money }}
+                {% else %}
+                  {{ section.settings.phase_2_discount }}% off
+                {% endif %}
+              </div>
               <div class="circle-drop-label">{{ section.settings.phase_2_short }}</div>
               <div class="circle-drop-tag">{% if active_phase == 2 %}Open now{% elsif active_phase > 2 %}Closed{% else %}Locked{% endif %}</div>
             </div>
             {% if section.settings.enable_phase_3 %}
               <div class="circle-drop-cell {% if active_phase == 3 %}active-drop{% else %}locked{% endif %}">
                 <div class="circle-drop-num">Drop 3</div>
-                <div class="circle-drop-price">{% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}%{% else %}Full{% endif %}</div>
+                <div class="circle-drop-price">
+                  {% if ref_product_price > 0 %}
+                    {% if section.settings.phase_3_discount > 0 %}
+                      {{ p3_price | money }}
+                    {% else %}
+                      {{ ref_product_price | money }}
+                    {% endif %}
+                  {% else %}
+                    {% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}% off{% else %}Full{% endif %}
+                  {% endif %}
+                </div>
                 <div class="circle-drop-label">{{ section.settings.phase_3_short }}</div>
                 <div class="circle-drop-tag">{% if active_phase == 3 %}Open now{% else %}Locked{% endif %}</div>
               </div>
@@ -414,13 +466,31 @@
             </div>
             <div class="circle-locked-right">
               <div class="circle-locked-price">
-                {% if active_phase == 1 %}{{ section.settings.phase_2_discount }}% off
+                {% if active_phase == 1 %}
+                  {% if ref_product_price > 0 %}
+                    {{ p2_price | money }}
+                    <span class="circle-locked-badge">{{ section.settings.phase_2_discount }}% off</span>
+                  {% else %}
+                    {{ section.settings.phase_2_discount }}% off
+                  {% endif %}
                 {% elsif active_phase == 2 and section.settings.enable_phase_3 %}
-                  {% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}% off{% else %}Full price{% endif %}
-                {% else %}Closed{% endif %}
+                  {% if ref_product_price > 0 %}
+                    {% if section.settings.phase_3_discount > 0 %}
+                      {{ p3_price | money }}
+                      <span class="circle-locked-badge">{{ section.settings.phase_3_discount }}% off</span>
+                    {% else %}
+                      {{ ref_product_price | money }}
+                      <span class="circle-locked-badge">Full price</span>
+                    {% endif %}
+                  {% else %}
+                    {% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}% off{% else %}Full price{% endif %}
+                  {% endif %}
+                {% else %}
+                  Closed
+                {% endif %}
               </div>
               <div class="locked-when">Ships in ~30–40 days</div>
-              
+            </div>
           </div>
 
           {% if section.blocks.size > 0 %}
@@ -796,7 +866,8 @@
   .circle-{{ sid }} .circle-locked-eyebrow { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 5px; }
   .circle-{{ sid }} .circle-locked-title { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; }
   .circle-{{ sid }} .circle-locked-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
-  .circle-{{ sid }} .circle-locked-price { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; white-space: nowrap; }
+  .circle-{{ sid }} .circle-locked-price { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .circle-{{ sid }} .circle-locked-badge { font-family: "DM Mono", monospace; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.07); padding: 2px 7px; border-radius: 4px; font-weight: 400; }
   .circle-{{ sid }} .circle-notify-inline { display: flex; gap: 8px; align-items: center; }
   .circle-{{ sid }} .circle-notify-inline input { border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 99px; padding: 8px 14px; font: inherit; font-size: 10px; width: 180px; outline: none; }
   .circle-{{ sid }} .circle-notify-inline input:focus { border-color: {{ section.settings.accent_color }}; }
