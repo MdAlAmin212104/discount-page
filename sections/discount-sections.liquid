@@ -157,61 +157,18 @@
   {% else %}
     <!-- LOGGED IN: JS decides whether to show code gate or offer -->
     <div class="circle-shell">
-      <!-- CODE GATE -->
-      <div class="circle-code-gate" id="circle-code-gate-{{ sid }}" style="display:none;">
-        <div class="circle-login-card circle-code-card">
-          <div class="circle-login-eyebrow">{{ section.settings.gate_eyebrow | default: 'Private access' }}</div>
-          <h1>{{ section.settings.gate_heading | default: 'Enter your access code' }}</h1>
-          <p>
-            {{
-              section.settings.gate_text
-              | default: 'You should have received a unique access code in your invitation email. Enter it below to unlock this members offer.'
-            }}
-          </p>
-          {% if customer %}
-            <div class="circle-gate-email">
-              Logged in as <span>{{ customer.email }}</span>
-            </div>
-          {% endif %}
-          <div class="circle-code-input-wrap">
-            <input
-              type="text"
-              id="circle-code-input-{{ sid }}"
-              class="circle-code-input"
-              placeholder="{{ section.settings.gate_placeholder | default: 'e.g. CIRCLE-XXXX' }}"
-              autocomplete="off"
-              autocapitalize="characters"
-              spellcheck="false"
-              maxlength="32"
-            >
-            <button type="button" class="circle-main-btn circle-code-submit" id="circle-code-submit-{{ sid }}">
-              {{ section.settings.gate_button_text | default: 'Unlock access' }}
-            </button>
-          </div>
-          <div class="circle-code-error" id="circle-code-error-{{ sid }}" style="display:none;">
-            {{
-              section.settings.gate_error_text
-              | default: 'Invalid code. Please check your invitation email and try again.'
-            }}
-          </div>
-          <div class="circle-code-hint">
-            {{ section.settings.gate_hint | default: "Don't have a code? Join our waitlist below." }}
-          </div>
-          {% form 'customer', class: 'circle-waitlist-form circle-gate-waitlist', id: 'circle-gate-waitlist-form' %}
-            <input type="hidden" name="contact[tags]" value="circle-waitlist">
-            <input
-              type="email"
-              name="contact[email]"
-              value="{% if customer %}{{ customer.email }}{% endif %}"
-              placeholder="Email address"
-              required
-            >
-            <button type="submit" class="circle-ghost-btn">
-              {{ section.settings.notify_button_text }}
-            </button>
-          {% endform %}
-        </div>
-      </div>
+      {%- render 'circle_login',
+  sid: section.id,
+  gate_heading: section.settings.gate_heading,
+  gate_eyebrow: section.settings.gate_eyebrow,
+  gate_text: section.settings.gate_text,
+  gate_placeholder: section.settings.gate_placeholder,
+  gate_button_text: section.settings.gate_button_text,
+  gate_error_text: section.settings.gate_error_text,
+  gate_hint: section.settings.gate_hint,
+  notify_button_text: section.settings.notify_button_text
+-%}
+      
 
       <!-- FULL OFFER CONTENT -->
       <div class="circle-offer-content" id="circle-offer-content-{{ sid }}" style="display:none;">

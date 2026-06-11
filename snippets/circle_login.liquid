@@ -1,0 +1,287 @@
+
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --bg: #f0efeb;
+    --ink: #0e0e0d;
+    --forest: #1a3a2a;
+    --forest-mid: #2d5c42;
+    --stone: #e2dfd9;
+    --muted: #9a9792;
+    --faint: #c4c1bc;
+    --serif: 'Cormorant Garamond', serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  .custom_div {
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: var(--mono);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  .title {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: .01em;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .title em {
+    font-style: italic;
+    color: var(--forest);
+  }
+
+  .subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 19px;
+    font-weight: 300;
+    color: #8a8784;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 56px;
+  }
+
+  .form-wrap,
+  .waitlist-wrap {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .input-field,
+  .waitlist-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: .5px solid var(--stone);
+    padding: 16px 0;
+    font-family: var(--mono);
+    color: var(--ink);
+    text-align: center;
+    outline: none;
+    transition: border-color .2s;
+    display: block;
+  }
+
+  .input-field {
+    font-size: 13px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .waitlist-input {
+    font-size: 11px;
+    letter-spacing: .1em;
+    margin-bottom: 20px;
+  }
+
+  .input-field::placeholder,
+  .waitlist-input::placeholder {
+    color: var(--faint);
+  }
+
+  .input-field:focus,
+  .waitlist-input:focus {
+    border-bottom-color: var(--forest);
+  }
+
+  .cta-btn {
+    width: 100%;
+    border: none;
+    border-radius: 99px;
+    background: var(--forest);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    padding: 20px;
+    cursor: pointer;
+    transition: .2s;
+  }
+
+  .cta-btn:hover {
+    background: var(--forest-mid);
+  }
+
+  .waitlist-wrap {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: .5px solid var(--stone);
+    text-align: center;
+  }
+
+  .waitlist-eyebrow {
+    font-size: 9px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 16px;
+  }
+
+  .waitlist-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--faint);
+    line-height: 1.7;
+    max-width: 320px;
+    margin: 0 auto 28px;
+  }
+
+  .waitlist-btn {
+    width: 100%;
+    background: transparent;
+    color: var(--muted);
+    border: .5px solid var(--stone);
+    border-radius: 99px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    padding: 16px;
+    cursor: pointer;
+    transition: .2s;
+  }
+
+  .waitlist-btn:hover {
+    color: var(--ink);
+    border-color: var(--muted);
+  }
+
+  .circle-gate-email {
+    font-size: 11px;
+    letter-spacing: .1em;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .circle-gate-email span {
+    color: var(--forest);
+  }
+
+  .circle-code-error {
+    font-size: 11px;
+    letter-spacing: .08em;
+    color: #c0392b;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  .circle-code-hint {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--faint);
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
+  .circle-waitlist-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 480px) {
+    .title {
+      font-size: 52px;
+    }
+    .subtitle {
+      font-size: 16px;
+    }
+  }
+</style>
+
+<div class="custom_div" id="circle-code-gate-{{ sid }}">
+  <div class="page">
+
+    <h1 class="title">
+      The<br>
+      <em>{{ gate_heading | default: 'Circle.' }}</em>
+    </h1>
+
+    <p class="subtitle">
+      {{ gate_text | default: 'Access requires a valid private key.' }}
+    </p>
+
+    {% if customer %}
+      <div class="circle-gate-email">
+        Logged in as <span>{{ customer.email }}</span>
+      </div>
+    {% endif %}
+
+    <!-- CODE INPUT -->
+    <div class="form-wrap">
+      <input
+        class="input-field"
+        type="text"
+        id="circle-code-input-{{ sid }}"
+        placeholder="{{ gate_placeholder | default: 'Enter your private key' }}"
+        maxlength="32"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+      >
+
+      <button type="button" class="cta-btn" id="circle-code-submit-{{ sid }}">
+        {{ gate_button_text | default: 'Enter The Circle' }}
+      </button>
+
+      <div class="circle-code-error" id="circle-code-error-{{ sid }}" style="display:none;">
+        {{ gate_error_text | default: 'Invalid code. Please check your invitation email and try again.' }}
+      </div>
+    </div>
+
+    <!-- WAITLIST -->
+    <div class="waitlist-wrap">
+
+      <div class="waitlist-eyebrow">
+        {{ gate_eyebrow | default: 'The Circle is currently closed for new members.' }}
+      </div>
+
+      <p class="waitlist-text">
+        {{ gate_hint | default: "Join the waitlist and we'll notify you when we're accepting new members again." }}
+      </p>
+
+      {% form 'customer', class: 'circle-waitlist-form', id: 'circle-gate-waitlist-form-{{ sid }}' %}
+        <input type="hidden" name="contact[tags]" value="circle-waitlist">
+        <input
+          class="waitlist-input"
+          type="email"
+          name="contact[email]"
+          value="{% if customer %}{{ customer.email }}{% endif %}"
+          placeholder="YOUR EMAIL"
+          required
+        >
+        <button type="submit" class="waitlist-btn">
+          {{ notify_button_text | default: 'Join Waitlist' }}
+        </button>
+      {% endform %}
+
+    </div>
+
+  </div>
+</div>
