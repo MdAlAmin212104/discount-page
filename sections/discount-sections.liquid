@@ -108,22 +108,22 @@
   assign p2_d = section.settings.phase_2_discount | plus: 0
   assign p3_d = section.settings.phase_3_discount | plus: 0
 
-  assign p1_price = ref_product_price
+  assign p1_price_display = ref_product_price
   if p1_d > 0 and ref_product_price > 0
     assign p1_mult = 100 | minus: p1_d
-    assign p1_price = ref_product_price | times: p1_mult | divided_by: 100
+    assign p1_price_display = ref_product_price | times: p1_mult | divided_by: 100
   endif
 
-  assign p2_price = ref_product_price
+  assign p2_price_display = ref_product_price
   if p2_d > 0 and ref_product_price > 0
     assign p2_mult = 100 | minus: p2_d
-    assign p2_price = ref_product_price | times: p2_mult | divided_by: 100
+    assign p2_price_display = ref_product_price | times: p2_mult | divided_by: 100
   endif
 
-  assign p3_price = ref_product_price
+  assign p3_price_display = ref_product_price
   if p3_d > 0 and ref_product_price > 0
     assign p3_mult = 100 | minus: p3_d
-    assign p3_price = ref_product_price | times: p3_mult | divided_by: 100
+    assign p3_price_display = ref_product_price | times: p3_mult | divided_by: 100
   endif
 %}
 
@@ -138,6 +138,9 @@
   data-active-end-ms="{{ active_end_ts | times: 1000 }}"
   data-button-action="{{ section.settings.button_action }}"
   data-access-codes="{{ section.settings.access_codes | escape }}"
+  data-phase-1-discount="{{ section.settings.phase_1_discount | plus: 0 }}"
+  data-phase-2-discount="{{ section.settings.phase_2_discount | plus: 0 }}"
+  data-phase-3-discount="{{ section.settings.phase_3_discount | plus: 0 }}"
 >
   {% if section.settings.require_login and customer == null %}
     <!-- NOT LOGGED IN -->
@@ -230,47 +233,74 @@
           </div>
 
           <!-- PHASE STRIP -->
-          <div class="circle-drop-strip">
+          {%- liquid
+            assign strip_cols = 3
+            if active_phase == 1 and section.settings.enable_phase_3 == false
+              assign strip_cols = 2
+            endif
+          -%}
+          <div class="circle-drop-strip" style="grid-template-columns: {% if strip_cols == 2 %}1fr 1fr{% else %}1fr 1.2fr 1fr{% endif %};">
             <div class="circle-drop-cell {% if active_phase == 1 %}active-drop{% else %}locked{% endif %}">
               <div class="circle-drop-num">Drop 1</div>
-              <div class="circle-drop-price">
+              <div class="circle-drop-price" data-strip-price="1" data-phase-discount="{{ section.settings.phase_1_discount | plus: 0 }}">
                 {% if ref_product_price > 0 %}
-                  {{ p1_price | money }}
+                  {% if p1_d > 0 %}
+                    {{ p1_price_display | money }}
+                  {% else %}
+                    {{ ref_product_price | money }}
+                  {% endif %}
                 {% else %}
-                  {{ section.settings.phase_1_discount }}% off
+                  {{ p1_d }}% off
                 {% endif %}
               </div>
               <div class="circle-drop-label">{{ section.settings.phase_1_short }}</div>
               <div class="circle-drop-tag">{% if active_phase == 1 %}Open now{% else %}{% if active_phase > 1 %}Closed{% else %}Locked{% endif %}{% endif %}</div>
+              {% if active_phase == 1 %}<div class="circle-drop-ships">{{ section.settings.phase_1_ships_note | default: 'Ships in ~14 days' }}</div>{% endif %}
             </div>
-            <div class="circle-drop-cell {% if active_phase == 2 %}active-drop{% elsif active_phase > 2 %}locked{% else %}locked{% endif %}">
-              <div class="circle-drop-num">Drop 2</div>
-              <div class="circle-drop-price">
-                {% if ref_product_price > 0 %}
-                  {{ p2_price | money }}
-                {% else %}
-                  {{ section.settings.phase_2_discount }}% off
-                {% endif %}
-              </div>
-              <div class="circle-drop-label">{{ section.settings.phase_2_short }}</div>
-              <div class="circle-drop-tag">{% if active_phase == 2 %}Open now{% elsif active_phase > 2 %}Closed{% else %}Locked{% endif %}</div>
-            </div>
-            {% if section.settings.enable_phase_3 %}
-              <div class="circle-drop-cell {% if active_phase == 3 %}active-drop{% else %}locked{% endif %}">
-                <div class="circle-drop-num">Drop 3</div>
-                <div class="circle-drop-price">
+            {% unless active_phase == 1 and section.settings.enable_phase_3 == false %}
+              <div class="circle-drop-cell {% if active_phase == 2 %}active-drop{% elsif active_phase > 2 %}locked{% else %}locked{% endif %}">
+                <div class="circle-drop-num">Drop 2</div>
+                <div class="circle-drop-price" data-strip-price="2" data-phase-discount="{{ section.settings.phase_2_discount | plus: 0 }}">
                   {% if ref_product_price > 0 %}
-                    {% if section.settings.phase_3_discount > 0 %}
-                      {{ p3_price | money }}
+                    {% if p2_d > 0 %}
+                      {{ p2_price_display | money }}
                     {% else %}
                       {{ ref_product_price | money }}
                     {% endif %}
                   {% else %}
-                    {% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}% off{% else %}Full{% endif %}
+                    {{ p2_d }}% off
+                  {% endif %}
+                </div>
+                <div class="circle-drop-label">{{ section.settings.phase_2_short }}</div>
+                <div class="circle-drop-tag">{% if active_phase == 2 %}Open now{% elsif active_phase > 2 %}Closed{% else %}Locked{% endif %}</div>
+                {% if active_phase == 2 %}<div class="circle-drop-ships">{{ section.settings.phase_2_ships_note | default: 'Ships in ~30 days' }}</div>{% endif %}
+              </div>
+            {% endunless %}
+            {% if section.settings.enable_phase_3 %}
+              <div class="circle-drop-cell {% if active_phase == 3 %}active-drop{% else %}locked{% endif %}">
+                <div class="circle-drop-num">Drop 3</div>
+                <div class="circle-drop-price" data-strip-price="3" data-phase-discount="{{ section.settings.phase_3_discount | plus: 0 }}">
+                  {% if ref_product_price > 0 %}
+                    {% if p3_d > 0 %}
+                      {{ p3_price_display | money }}
+                    {% else %}
+                      {{ ref_product_price | money }}
+                    {% endif %}
+                  {% else %}
+                    {% if p3_d > 0 %}{{ p3_d }}% off{% else %}Full price{% endif %}
                   {% endif %}
                 </div>
                 <div class="circle-drop-label">{{ section.settings.phase_3_short }}</div>
                 <div class="circle-drop-tag">{% if active_phase == 3 %}Open now{% else %}Locked{% endif %}</div>
+              </div>
+            {% else %}
+              <div class="circle-drop-cell public-release">
+                <div class="circle-drop-num">{{ section.settings.public_release_eyebrow | default: 'Public Release' }}</div>
+                <div class="circle-drop-price" data-strip-price="public">
+                  {% if ref_product_price > 0 %}{{ ref_product_price | money }}{% else %}Full price{% endif %}
+                </div>
+                <div class="circle-drop-label">{{ section.settings.public_release_label | default: 'No member benefits' }}</div>
+                <div class="circle-drop-tag">{{ section.settings.public_release_tag | default: 'Coming soon' }}</div>
               </div>
             {% endif %}
           </div>
@@ -413,42 +443,11 @@
             <button type="button" class="circle-cta-btn" data-reserve-main>
               {{ section.settings.reserve_button_text }}
             </button>
-            {% comment %} <div class="circle-cta-meta">{{ active_shipping_note }}</div> {% endcomment %}
-             <div class="circle-cta-meta">
+            <div class="circle-cta-meta">
               <p>{{ active_shipping_note_1 }}</p>
-              <p>{{active_shipping_note_2}}</p>
+              <p>{{ active_shipping_note_2 }}</p>
             </div>
           </div>
-
-          <!-- PROGRESS / PHASE INFO -->
-          {% comment %} <div class="circle-card circle-reserve-card">
-            <div class="circle-phase-header">
-              <div>
-                <div class="circle-phase-eye">{{ active_label }}</div>
-                <div class="circle-phase-title">{{ active_title }}</div>
-              </div>
-              <div class="circle-badge">
-                {% if active_discount > 0 %}{{ active_discount }}% off{% else %}No discount{% endif %}
-              </div>
-            </div>
-            <div class="circle-progress-row">
-              <span>{{ active_subtitle }}</span>
-              <span>{{ days_left }} days left</span>
-            </div>
-            <div class="circle-progress">
-              <span style="width: {{ remaining_percent }}%;"></span>
-            </div>
-            <div class="circle-stats">
-              <div>
-                <strong>{% if active_discount > 0 %}{{ active_discount }}%{% else %}0%{% endif %}</strong>
-                <span>Today's discount</span>
-              </div>
-              <div>
-                <strong>{{ days_left }}</strong>
-                <span>Days left</span>
-              </div>
-            </div>
-          </div> {% endcomment %}
 
           <!-- NEXT PHASE / NOTIFY CARD -->
           <div class="circle-locked-row">
@@ -465,28 +464,29 @@
               </div>
             </div>
             <div class="circle-locked-right">
-              <div class="circle-locked-price">
+              <div class="circle-locked-price" data-locked-price>
                 {% if active_phase == 1 %}
-                  {% if ref_product_price > 0 %}
-                    {{ p2_price | money }}
-                    <span class="circle-locked-badge">{{ section.settings.phase_2_discount }}% off</span>
+                  {% if ref_product_price > 0 and p2_d > 0 %}
+                    <span data-locked-price-amount>{{ p2_price_display | money }}</span>
+                    <span class="circle-locked-badge" data-locked-badge>{{ p2_d }}% off</span>
+                  {% elsif ref_product_price > 0 %}
+                    <span data-locked-price-amount>{{ ref_product_price | money }}</span>
+                    <span class="circle-locked-badge" data-locked-badge>Full price</span>
                   {% else %}
-                    {{ section.settings.phase_2_discount }}% off
+                    <span data-locked-price-amount>{{ p2_d }}% off</span>
                   {% endif %}
                 {% elsif active_phase == 2 and section.settings.enable_phase_3 %}
-                  {% if ref_product_price > 0 %}
-                    {% if section.settings.phase_3_discount > 0 %}
-                      {{ p3_price | money }}
-                      <span class="circle-locked-badge">{{ section.settings.phase_3_discount }}% off</span>
-                    {% else %}
-                      {{ ref_product_price | money }}
-                      <span class="circle-locked-badge">Full price</span>
-                    {% endif %}
+                  {% if ref_product_price > 0 and p3_d > 0 %}
+                    <span data-locked-price-amount>{{ p3_price_display | money }}</span>
+                    <span class="circle-locked-badge" data-locked-badge>{{ p3_d }}% off</span>
+                  {% elsif ref_product_price > 0 %}
+                    <span data-locked-price-amount>{{ ref_product_price | money }}</span>
+                    <span class="circle-locked-badge" data-locked-badge>Full price</span>
                   {% else %}
-                    {% if section.settings.phase_3_discount > 0 %}{{ section.settings.phase_3_discount }}% off{% else %}Full price{% endif %}
+                    <span data-locked-price-amount>{% if p3_d > 0 %}{{ p3_d }}% off{% else %}Full price{% endif %}</span>
                   {% endif %}
                 {% else %}
-                  Closed
+                  <span data-locked-price-amount>Closed</span>
                 {% endif %}
               </div>
               <div class="locked-when">Ships in ~30–40 days</div>
@@ -569,10 +569,6 @@
             <em class="circle-modal-save" data-modal-save></em>
           </div>
           <p class="circle-modal-desc" data-modal-desc></p>
-          {% comment %} <a href="#" class="circle-modal-link" data-modal-link target="_blank" rel="noopener">
-            View full product page
-            <svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          </a> {% endcomment %}
         </div>
       </div>
     </div>
@@ -710,6 +706,12 @@
   .circle-{{ sid }} .circle-drop-cell { background: {{ section.settings.card_color }}; padding: 22px 16px 20px; text-align: center; transition: background .15s; }
   .circle-{{ sid }} .circle-drop-cell.active-drop { background: {{ section.settings.accent_color }}; }
   .circle-{{ sid }} .circle-drop-cell.locked { background: #f4f3f0; }
+  .circle-{{ sid }} .circle-drop-cell.public-release { background: #e8e5e0; padding: 28px 16px; }
+  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-num { color: #999; }
+  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-price { color: #555; font-size: 32px; }
+  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-label { color: #888; }
+  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-tag { background: #ddd; color: #999; }
+  .circle-{{ sid }} .circle-drop-ships { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 10px; }
   .circle-{{ sid }} .circle-drop-num { font-size: 8px; letter-spacing: .24em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 8px; }
   .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-num { color: rgba(255,255,255,.45); }
   .circle-{{ sid }} .circle-drop-cell.locked .circle-drop-num { color: #ccc; }
@@ -978,15 +980,13 @@
     ? rawCodes.split(',').map(c => c.trim().toUpperCase()).filter(Boolean)
     : [];
 
-  // ── localStorage check — code persists across refreshes until expiry ──
+  // ── localStorage check ──
   function isVerified() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
       if (!saved || !saved.code || !saved.expires || !saved.codeList) return false;
       if (Date.now() > saved.expires) { localStorage.removeItem(STORAGE_KEY); return false; }
-      // Invalidate if admin changed the code list
       if (saved.codeList !== rawCodes) { localStorage.removeItem(STORAGE_KEY); return false; }
-      // Invalidate if the specific saved code is no longer valid
       if (!validCodes.includes(saved.code)) { localStorage.removeItem(STORAGE_KEY); return false; }
       return true;
     } catch (e) {
@@ -1015,7 +1015,6 @@
     if (offerEl) offerEl.style.display = 'none';
   }
 
-  // Skip gate if no codes configured OR already verified in localStorage
   if (!validCodes.length || isVerified()) {
     grantAccess(null);
   } else {
@@ -1059,7 +1058,13 @@
     const discountPercent = Number(root.dataset.discountPercent || 0);
     const discountCode    = root.dataset.discountCode || '';
     const buttonAction    = root.dataset.buttonAction || 'cart';
-    const activePhase     = root.dataset.activePhase || '0';
+    const activePhase     = Number(root.dataset.activePhase || '0');
+    
+    // Get all phase discounts from data attributes
+    const phase1Discount = Number(root.dataset.phase1Discount || 0);
+    const phase2Discount = Number(root.dataset.phase2Discount || 0);
+    const phase3Discount = Number(root.dataset.phase3Discount || 0);
+    const enablePhase3 = {{ section.settings.enable_phase_3 | default: false | json }};
 
     const mainReserveBtn   = root.querySelector('[data-reserve-main]');
     const scarcityText     = root.querySelector('[data-scarcity-text]');
@@ -1078,6 +1083,16 @@
     const prevBtn          = root.querySelector('[data-arrow="prev"]');
     const nextBtn          = root.querySelector('[data-arrow="next"]');
     const cards            = root.querySelectorAll('[data-product-index]');
+    
+    // Get locked row elements
+    const lockedPriceAmount = root.querySelector('[data-locked-price-amount]');
+    const lockedBadge = root.querySelector('[data-locked-badge]');
+    
+    // Get strip price elements
+    const stripPrice1 = root.querySelector('[data-strip-price="1"]');
+    const stripPrice2 = root.querySelector('[data-strip-price="2"]');
+    const stripPrice3 = root.querySelector('[data-strip-price="3"]');
+    const publicPrice = root.querySelector('[data-strip-price="public"]');
 
     // Modals
     const productModal    = document.getElementById('circle-product-modal-' + sid);
@@ -1090,7 +1105,7 @@
     let selectedVariant = null;
     let currentSlide    = 0;
 
-    // ── Money ──────────────────────────────────────────────────────────────
+    // ── Money formatting ───────────────────────────────────────────────────
     function formatMoney(cents) {
       if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
         return window.Shopify.formatMoney(cents, moneyFormat);
@@ -1108,12 +1123,13 @@
         .replace(/\{\{\s*amount\s*\}\}/g, withComma(whole) + '.' + dec);
     }
 
-    function discountedPrice(priceCents) {
-      if (!discountPercent) return Number(priceCents || 0);
-      return Math.round(Number(priceCents || 0) * (100 - discountPercent) / 100);
+    function discountedPrice(priceCents, customDiscount = null) {
+      const disc = customDiscount !== null ? customDiscount : discountPercent;
+      if (!disc || disc === 0) return Number(priceCents || 0);
+      return Math.round(Number(priceCents || 0) * (100 - disc) / 100);
     }
 
-    // ── Slider ─────────────────────────────────────────────────────────────
+    // ── Slider functions ───────────────────────────────────────────────────
     function getVisibleCount() { return window.innerWidth <= 480 ? 2 : 4; }
     function maxSlide()        { return Math.max(0, cards.length - getVisibleCount()); }
 
@@ -1165,6 +1181,91 @@
     setTimeout(() => { buildDots(); goTo(0); }, 80);
     window.addEventListener('resize', () => { buildDots(); goTo(Math.min(currentSlide, maxSlide())); });
 
+    // ── Update all prices based on selected variant ────────────────────────
+        // ── Update all prices based on selected variant ────────────────────────
+    function updateAllPrices() {
+      if (!selectedVariant) return;
+      
+      const basePrice = selectedVariant.price;
+      
+      // Update main price (Your price today) - uses current phase discount
+      if (previewSalePrice) {
+        const currentPrice = discountedPrice(basePrice);
+        previewSalePrice.textContent = formatMoney(currentPrice);
+      }
+      
+      // Update compare price (Public Release)
+      if (previewWas) {
+        previewWas.textContent = formatMoney(basePrice);
+      }
+      
+      // Update savings text
+      if (previewSavings) {
+        const currentPrice = discountedPrice(basePrice);
+        const savings = basePrice - currentPrice;
+        if (discountPercent > 0 && savings > 0) {
+          previewSavings.textContent = `Save ${formatMoney(savings)}`;
+          previewSavings.style.display = 'inline-block';
+        } else {
+          previewSavings.style.display = 'none';
+        }
+      }
+      
+      // Update Drop Strip Prices using data-phase-discount attribute
+      const stripCells = root.querySelectorAll('[data-strip-price]');
+      stripCells.forEach(cell => {
+        const phase = cell.getAttribute('data-strip-price');
+        if (phase === 'public') {
+          cell.textContent = formatMoney(basePrice);
+        } else {
+          const phaseDiscount = Number(cell.getAttribute('data-phase-discount') || 0);
+          if (phaseDiscount > 0) {
+            const discounted = Math.round(basePrice * (100 - phaseDiscount) / 100);
+            cell.textContent = formatMoney(discounted);
+          } else {
+            cell.textContent = formatMoney(basePrice);
+          }
+        }
+      });
+      
+      // Update Locked Row (next phase price)
+      if (lockedPriceAmount) {
+        if (activePhase === 1) {
+          // Show Phase 2 price
+          const p2Price = discountedPrice(basePrice, phase2Discount);
+          lockedPriceAmount.textContent = formatMoney(p2Price);
+          if (lockedBadge) {
+            lockedBadge.textContent = phase2Discount > 0 ? phase2Discount + '% off' : 'Full price';
+            lockedBadge.style.display = 'inline-block';
+          }
+        } else if (activePhase === 2 && enablePhase3) {
+          // Show Phase 3 price
+          const p3Price = discountedPrice(basePrice, phase3Discount);
+          lockedPriceAmount.textContent = formatMoney(p3Price);
+          if (lockedBadge) {
+            lockedBadge.textContent = phase3Discount > 0 ? phase3Discount + '% off' : 'Full price';
+            lockedBadge.style.display = 'inline-block';
+          }
+        } else if (activePhase === 3) {
+          lockedPriceAmount.textContent = 'Closed';
+          if (lockedBadge) lockedBadge.style.display = 'none';
+        }
+      }
+      
+      // Update active product card price
+      const activeCard = root.querySelector('.circle-prod.active');
+      if (activeCard) {
+        const priceSpan = activeCard.querySelector('[data-product-price-display]');
+        const compareS = activeCard.querySelector('[data-product-compare-price-display]');
+        if (priceSpan) {
+          priceSpan.textContent = formatMoney(discountedPrice(basePrice));
+        }
+        if (compareS && discountPercent > 0) {
+          compareS.textContent = formatMoney(basePrice);
+        }
+      }
+    }
+
     // ── Product selection ──────────────────────────────────────────────────
     function selectProduct(index) {
       const product = products[index];
@@ -1196,7 +1297,7 @@
 
       let html = '<div class="circle-options-inner">';
       html += '<div class="circle-options-header">';
-      html += `<div class="circle-options-product-title">${selectedProduct.title}</div>`;
+      html += `<div class="circle-options-product-title">${escapeHtml(selectedProduct.title)}</div>`;
       if (hasSizeOption && {{ section.settings.size_guide_content | json }} !== 'null' && {{ section.settings.size_guide_content | json }} !== '') {
         html += `<button type="button" class="circle-size-guide-link" id="circle-size-guide-trigger-${sid}">Size guide</button>`;
       }
@@ -1205,7 +1306,7 @@
       selectedProduct.options.forEach((optName, optIdx) => {
         const values      = [...new Set(selectedProduct.variants.map(v => v.options[optIdx]))];
         const selectedVal = selectedOptions[optIdx];
-        html += `<div class="circle-option-group"><div class="circle-option-group-label">${optName}<strong>${selectedVal ? ' — ' + selectedVal : ''}</strong></div><div class="circle-option-values">`;
+        html += `<div class="circle-option-group"><div class="circle-option-group-label">${escapeHtml(optName)}<strong>${selectedVal ? ' — ' + escapeHtml(selectedVal) : ''}</strong></div><div class="circle-option-values">`;
         const isSize  = isSizeOption(optName);
         values.forEach(val => {
           const matchingVariants = selectedProduct.variants.filter(v =>
@@ -1222,7 +1323,7 @@
             if (isSelected)   cls += ' active';
             if (!isAvailable) cls += ' sold-out';
             else if (isLastUnit) cls += ' last-unit';
-            html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${val}"${!isAvailable ? ' disabled' : ''}><span>${val}</span><span class="circle-sz-dot"></span></button>`;
+            html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${escapeHtml(val)}"${!isAvailable ? ' disabled' : ''}><span>${escapeHtml(val)}</span><span class="circle-sz-dot"></span></button>`;
           } else {
             let cls = 'circle-option-value-btn';
             if (isSelected)   cls += ' active';
@@ -1230,9 +1331,9 @@
             else if (isLastUnit) cls += ' last-unit';
             if (isColor)      cls += ' is-color';
             if (isColor) {
-              html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${val}" title="${val}"><span class="circle-color-swatch" style="background:${val.toLowerCase().replace(/\s/g,'')}"></span></button>`;
+              html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${escapeHtml(val)}" title="${escapeHtml(val)}"><span class="circle-color-swatch" style="background:${val.toLowerCase().replace(/\s/g,'')}"></span></button>`;
             } else {
-              html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${val}"><span class="circle-option-dot"></span>${val}</button>`;
+              html += `<button type="button" class="${cls}" data-opt-idx="${optIdx}" data-opt-val="${escapeHtml(val)}"><span class="circle-option-dot"></span>${escapeHtml(val)}</button>`;
             }
           }
         });
@@ -1259,6 +1360,17 @@
         sgt.addEventListener('click', () => openModal(sizeModal));
       }
     }
+    
+    // Helper function to escape HTML
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
 
     function updateSelectedVariant() {
       if (!selectedProduct) return;
@@ -1267,21 +1379,20 @@
       selectedVariant = variant;
       if (!selectedVariant) return;
 
-      // Update card image + price
+      // Update all prices based on selected variant
+      updateAllPrices();
+
+      // Update card image
       const activeCard = root.querySelector('.circle-prod.active');
       if (activeCard) {
-        const cardImg   = activeCard.querySelector('[data-product-featured-image]');
-        const priceSpan = activeCard.querySelector('[data-product-price-display]');
-        const compareS  = activeCard.querySelector('[data-product-compare-price-display]');
+        const cardImg = activeCard.querySelector('[data-product-featured-image]');
         if (cardImg) {
           const src = selectedVariant.featured_image || (selectedProduct.images[0] && selectedProduct.images[0].src);
           if (src) cardImg.src = src;
         }
-        if (priceSpan) priceSpan.textContent = formatMoney(discountedPrice(selectedVariant.price));
-        if (compareS)  compareS.textContent  = discountPercent > 0 ? formatMoney(selectedVariant.price) : '';
       }
 
-      // Scarcity
+      // Scarcity text
       const qty = Number(selectedVariant.inventory_quantity || 0);
       if (scarcityText) {
         scarcityText.textContent = !selectedVariant.available
@@ -1291,22 +1402,13 @@
             : 'Available now — members only.';
       }
 
-      // Preview box
+      // Update preview box
       if (previewBox) {
         previewBox.style.display = 'flex';
         const imgSrc = selectedVariant.featured_image || (selectedProduct.images[0] && selectedProduct.images[0].src) || '';
         if (previewImg)   { previewImg.src = imgSrc; previewImg.alt = selectedProduct.title; }
         if (previewTitle)   previewTitle.textContent   = selectedProduct.title;
         if (previewVariant) previewVariant.textContent = selectedVariant.title === 'Default Title' ? 'Standard' : selectedVariant.title;
-        const current  = discountedPrice(selectedVariant.price);
-        const original = selectedVariant.price;
-        const savings  = original - current;
-        if (previewSalePrice) previewSalePrice.textContent = formatMoney(current);
-        if (previewWas)       previewWas.textContent       = discountPercent > 0 ? formatMoney(original) : '';
-        if (previewSavings) {
-          previewSavings.textContent    = discountPercent > 0 ? `Save ${formatMoney(savings)}` : '';
-          previewSavings.style.display  = discountPercent > 0 ? 'inline-block' : 'none';
-        }
       }
 
       // Reserve button
@@ -1363,12 +1465,10 @@
       const modalWas  = productModal.querySelector('[data-modal-was]');
       const modalSave = productModal.querySelector('[data-modal-save]');
       const modalDesc = productModal.querySelector('[data-modal-desc]');
-      const modalLink = productModal.querySelector('[data-modal-link]');
 
       const images = product.images && product.images.length ? product.images : [];
       let modalImgIdx = 0;
 
-      // Prefer variant image as first
       let orderedImgs = [...images];
       if (variant && variant.featured_image) {
         orderedImgs = [{ src: variant.featured_image, alt: product.title }, ...images.filter(i => i.src !== variant.featured_image)];
@@ -1398,7 +1498,6 @@
       if (imgPrev) { imgPrev.onclick = () => goModalImg(modalImgIdx - 1); imgPrev.style.display = 'none'; }
       if (imgNext) { imgNext.onclick = () => goModalImg(modalImgIdx + 1); imgNext.style.display = orderedImgs.length > 1 ? 'flex' : 'none'; }
 
-      // Touch swipe in modal
       if (imgTrack) {
         let tStart = 0;
         imgTrack.addEventListener('touchstart', e => { tStart = e.touches[0].clientX; }, { passive: true });
@@ -1417,7 +1516,6 @@
       if (modalWas)  modalWas.textContent  = discountPercent > 0 ? formatMoney(originalPrice) : '';
       if (modalSave) { modalSave.textContent = discountPercent > 0 ? `Save ${formatMoney(savings)}` : ''; modalSave.style.display = discountPercent > 0 ? 'inline-block' : 'none'; }
       if (modalDesc) modalDesc.textContent = product.description || '';
-      if (modalLink) modalLink.href = product.url;
 
       openModal(productModal);
     }
@@ -1474,6 +1572,7 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
+    // Initialize with first product
     selectProduct(0);
   } // end initOffer()
 
@@ -1541,6 +1640,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "text", "id": "phase_1_subtitle", "label": "Progress subtitle" },
     { "type": "text", "id": "phase_1_shipping_note1", "label": "Shipping note left side" },
     { "type": "text", "id": "phase_1_shipping_note2", "label": "Shipping note right side" },
+    { "type": "text", "id": "phase_1_ships_note", "label": "Ships-in note (shown in strip)", "default": "Ships in ~14 days" },
     { "type": "header", "content": "Phase 2" },
     { "type": "text", "id": "phase_2_start", "label": "Start date (YYYY-MM-DD)" },
     { "type": "text", "id": "phase_2_end", "label": "End date (YYYY-MM-DD)" },
@@ -1552,6 +1652,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "text", "id": "phase_2_subtitle", "label": "Progress subtitle" },
     { "type": "text", "id": "phase_2_shipping_note1", "label": "Shipping note left side" },
     { "type": "text", "id": "phase_2_shipping_note2", "label": "Shipping note right side" },
+    { "type": "text", "id": "phase_2_ships_note", "label": "Ships-in note (shown in strip)", "default": "Ships in ~30 days" },
     { "type": "header", "content": "Phase 3 (Optional)" },
     { "type": "checkbox", "id": "enable_phase_3", "label": "Enable phase 3", "default": false },
     { "type": "text", "id": "phase_3_start", "label": "Start date (YYYY-MM-DD)" },
@@ -1564,6 +1665,10 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "text", "id": "phase_3_subtitle", "label": "Progress subtitle" },
     { "type": "text", "id": "phase_3_shipping_note1", "label": "Shipping note left side" },
     { "type": "text", "id": "phase_3_shipping_note2", "label": "Shipping note right side" },
+    { "type": "header", "content": "Public Release Strip Cell" },
+    { "type": "text", "id": "public_release_eyebrow", "label": "Eyebrow", "default": "Public Release" },
+    { "type": "text", "id": "public_release_label", "label": "Sub-label", "default": "No member benefits" },
+    { "type": "text", "id": "public_release_tag", "label": "Tag text", "default": "Coming soon" },
     { "type": "header", "content": "Products" },
     { "type": "collection", "id": "product_collection", "label": "Product collection" },
     { "type": "range", "id": "product_limit", "label": "Max products", "min": 1, "max": 24, "step": 1, "default": 8 },
@@ -1571,7 +1676,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "checkbox", "id": "hide_sold_out_products", "label": "Hide sold out products", "default": false },
     { "type": "header", "content": "Reserve Button" },
     { "type": "text", "id": "reserve_button_text", "label": "Reserve button default text", "default": "Reserve your piece" },
-    { "type": "text", "id": "button_action", "label": "Button action (cart / product)", "default": "cart" },
+    { "type": "select", "id": "button_action", "label": "Button action", "default": "cart", "options": [{"value":"cart","label":"Add to cart"},{"value":"product","label":"Go to product page"}] },
     { "type": "header", "content": "Size Guide" },
     { "type": "text", "id": "size_guide_title", "label": "Modal title", "default": "Size Guide" },
     { "type": "textarea", "id": "size_guide_content", "label": "Size guide content (HTML / table supported)" },
@@ -1597,6 +1702,19 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "color", "id": "warning_color", "label": "Warning (scarcity)", "default": "#b8341b" },
     { "type": "color", "id": "image_bg_color", "label": "Image placeholder bg", "default": "#e8e5e0" },
     { "type": "color", "id": "gold_color", "label": "Gold / hint color", "default": "#9a7f4a" }
+  ],
+  "blocks": [
+    {
+      "type": "social",
+      "name": "Social proof",
+      "settings": [
+        { "type": "text", "id": "avatar_text", "label": "Avatar text (initials)", "default": "JD" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Jane Doe" },
+        { "type": "checkbox", "id": "verified", "label": "Verified", "default": true },
+        { "type": "text", "id": "handle", "label": "Handle", "default": "@jane" },
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "Incredible quality — worth every penny." }
+      ]
+    }
   ],
   "presets": [
     { "name": "Circle Member Offer" }
