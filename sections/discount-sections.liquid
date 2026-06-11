@@ -544,103 +544,89 @@
             </div>
           </div>
 
-          <!-- NEXT PHASE / NOTIFY CARD -->
-<div class="circle-locked-row">
-  <div class="circle-locked-left">
-    <div class="circle-locked-eyebrow">
-      {% if active_phase == 1 %}
-        Next drops — Drops 2 & 3
-      {% elsif active_phase == 2 %}
-        {% if section.settings.enable_phase_3 %}
-          Next drop — Drop 3
-        {% else %}
-          Public Release — Coming soon
-        {% endif %}
-      {% elsif active_phase == 3 %}
-        Final phase — Offer ended
-      {% else %}
-        Final phase
-      {% endif %}
+
+<!-- NEXT PHASE / NOTIFY CARD -->
+{% if active_phase == 1 %}
+  <!-- Drop 2 Row -->
+  <div class="circle-locked-row">
+    <div class="circle-locked-left">
+      <div class="circle-locked-eyebrow">Drop 2 — Opens after Drop 1</div>
+      <div class="circle-locked-title">{{ section.settings.phase_2_title | default: 'Second Release' }}</div>
     </div>
-    <div class="circle-locked-title">
-      {% if active_phase == 1 %}
-        Upcoming releases
-      {% elsif active_phase == 2 %}
-        {% if section.settings.enable_phase_3 %}
-          {{ section.settings.phase_3_title }}
-        {% else %}
-          {{ section.settings.public_release_eyebrow | default: 'Public Release' }}
-        {% endif %}
-      {% elsif active_phase == 3 %}
-        {{ section.settings.ended_heading | default: 'Offer ended' }}
-      {% else %}
-        {{ section.settings.ended_heading }}
-      {% endif %}
+    <div class="circle-locked-right">
+      <div class="circle-locked-price-wrapper">
+        <span class="circle-locked-price-amount" data-locked-price-2 data-phase-discount="{{ p2_d }}">—</span>
+        {% comment %} <span class="circle-locked-badge" data-locked-badge-2></span> {% endcomment %}
+      </div>
+      <div class="locked-when" data-locked-when-2>{{ section.settings.phase_2_ships_note | default: 'Ships in ~30–40 days' }}</div>
     </div>
   </div>
-  <div class="circle-locked-right">
-    <div class="circle-locked-price" data-locked-price>
-      {% if active_phase == 1 %}
-        {% comment %}Show both Drop 2 and Drop 3{% endcomment %}
-        <div class="circle-locked-drop-group">
-          <div class="circle-locked-drop-item">
-            <div class="circle-locked-drop-name">Drop 2</div>
-            <span class="circle-locked-price-amount" data-locked-price-amount-2 data-phase-discount="{{ p2_d }}">—</span>
-            <span class="circle-locked-badge" data-locked-badge-2></span>
-            <div class="locked-when" data-locked-when-2>
-              {{ section.settings.phase_2_ships_note | default: 'Ships in ~30 days' }}
-            </div>
-          </div>
-          {% if section.settings.enable_phase_3 %}
-            <div class="circle-locked-drop-item">
-              <div class="circle-locked-drop-name">Drop 3</div>
-              <span class="circle-locked-price-amount" data-locked-price-amount-3 data-phase-discount="{{ p3_d }}">—</span>
-              <span class="circle-locked-badge" data-locked-badge-3></span>
-              <div class="locked-when" data-locked-when-3>
-                {{ section.settings.phase_3_ships_note | default: 'Ships in ~40 days' }}
-              </div>
-            </div>
-          {% endif %}
+
+  <!-- Drop 3 Row (if enabled) -->
+  {% if section.settings.enable_phase_3 %}
+    <div class="circle-locked-row">
+      <div class="circle-locked-left">
+        <div class="circle-locked-eyebrow">Drop 3 — Public release</div>
+        <div class="circle-locked-title">{{ section.settings.phase_3_title | default: 'Open to everyone' }}</div>
+      </div>
+      <div class="circle-locked-right">
+        <div class="circle-locked-price-wrapper">
+          <span class="circle-locked-price-amount" data-locked-price-3 data-phase-discount="{{ p3_d }}">—</span>
+          {% comment %} <span class="circle-locked-badge" data-locked-badge-3></span> {% endcomment %}
         </div>
-        
-      {% elsif active_phase == 2 and section.settings.enable_phase_3 %}
-        {% comment %}Show Phase 3 (next drop){% endcomment %}
-        <div class="circle-locked-drop-item">
-          <div class="circle-locked-drop-name">Drop 3</div>
-          <span class="circle-locked-price-amount" data-locked-price-amount data-phase-discount="{{ p3_d }}">—</span>
-          <span class="circle-locked-badge" data-locked-badge></span>
-          <div class="locked-when" data-locked-when>
-            {{ section.settings.phase_3_ships_note | default: 'Ships in ~30–40 days' }}
-          </div>
+        <div class="locked-when" data-locked-when-3>{{ section.settings.phase_3_ships_note | default: 'Ships in ~40–50 days' }}</div>
+      </div>
+    </div>
+  {% endif %}
+
+{% elsif active_phase == 2 %}
+  <!-- Show Drop 3 only (if enabled) -->
+  {% if section.settings.enable_phase_3 %}
+    <div class="circle-locked-row">
+      <div class="circle-locked-left">
+        <div class="circle-locked-eyebrow">Drop 3 — Public release</div>
+        <div class="circle-locked-title">{{ section.settings.phase_3_title | default: 'Open to everyone' }}</div>
+      </div>
+      <div class="circle-locked-right">
+        <div class="circle-locked-price-wrapper">
+          <span class="circle-locked-price-amount" data-locked-price data-phase-discount="{{ p3_d }}">—</span>
+          {% comment %} <span class="circle-locked-badge" data-locked-badge></span> {% endcomment %}
         </div>
-        
-      {% elsif active_phase == 2 and section.settings.enable_phase_3 == false %}
-        {% comment %}Phase 2 active with no Phase 3 - show public release (no discount){% endcomment %}
-        <div class="circle-locked-drop-item">
-          <div class="circle-locked-drop-name">Public Release</div>
-          <span class="circle-locked-price-amount" data-locked-price-amount data-phase-discount="0">—</span>
-          <span class="circle-locked-badge" data-locked-badge>Full price</span>
-          <div class="locked-when" data-locked-when>
-            {{ section.settings.public_release_tag | default: 'Coming soon' }}
-          </div>
+        <div class="locked-when" data-locked-when>{{ section.settings.phase_3_ships_note | default: 'Ships in ~30–40 days' }}</div>
+      </div>
+    </div>
+  {% else %}
+    <!-- Public Release Row (when no Phase 3) -->
+    <div class="circle-locked-row">
+      <div class="circle-locked-left">
+        <div class="circle-locked-eyebrow">Public Release — Coming soon</div>
+        <div class="circle-locked-title">{{ section.settings.public_release_eyebrow | default: 'Open to everyone' }}</div>
+      </div>
+      <div class="circle-locked-right">
+        <div class="circle-locked-price-wrapper">
+          <span class="circle-locked-price-amount" data-locked-price data-phase-discount="0">—</span>
+          {% comment %} <span class="circle-locked-badge" data-locked-badge>Full price</span> {% endcomment %}
         </div>
-        
-      {% elsif active_phase == 3 %}
-        {% comment %}Phase 3 active - all drops finished, show ended state{% endcomment %}
-        <div class="circle-locked-drop-item">
-          <span class="circle-locked-price-amount" data-locked-price-amount>Closed</span>
-          <div class="locked-when" data-locked-when>Offer ended</div>
-        </div>
-        
-      {% else %}
-        <div class="circle-locked-drop-item">
-          <span class="circle-locked-price-amount" data-locked-price-amount>Closed</span>
-          <div class="locked-when" data-locked-when>Not available</div>
-        </div>
-      {% endif %}
+        <div class="locked-when" data-locked-when>{{ section.settings.public_release_tag | default: 'Coming soon' }}</div>
+      </div>
+    </div>
+  {% endif %}
+
+{% elsif active_phase == 3 %}
+  <!-- Offer Ended State -->
+  <div class="circle-locked-row">
+    <div class="circle-locked-left">
+      <div class="circle-locked-eyebrow">Final phase — Offer ended</div>
+      <div class="circle-locked-title">{{ section.settings.ended_heading | default: 'This offer has ended' }}</div>
+    </div>
+    <div class="circle-locked-right">
+      <div class="circle-locked-price-wrapper">
+        <span class="circle-locked-price-amount" data-locked-price>Closed</span>
+      </div>
+      <div class="locked-when">No longer available</div>
     </div>
   </div>
-</div>
+{% endif %}
 
           {% if section.blocks.size > 0 %}
             <div class="circle-social">
@@ -1584,6 +1570,34 @@ function updateAllPrices() {
       compareS.textContent = formatMoney(basePrice);
     }
   }
+
+  // Update Locked Row prices (separate rows for Drop 2 and Drop 3)
+const lockedRows = root.querySelectorAll('.circle-locked-row');
+lockedRows.forEach(row => {
+  const priceEl = row.querySelector('[data-locked-price-2], [data-locked-price-3], [data-locked-price]');
+  if (priceEl && priceEl.textContent !== 'Closed') {
+    const phaseDiscount = Number(priceEl.getAttribute('data-phase-discount') || 0);
+    let discountedPriceValue = basePrice;
+    let badgeText = '';
+    
+    if (phaseDiscount > 0) {
+      discountedPriceValue = Math.round(basePrice * (100 - phaseDiscount) / 100);
+      badgeText = phaseDiscount + '% off';
+    } else if (phaseDiscount === 0) {
+      discountedPriceValue = basePrice;
+      badgeText = 'Full price';
+    }
+    
+    priceEl.textContent = formatMoney(discountedPriceValue);
+    
+    // Update corresponding badge in the same row
+    const badge = row.querySelector('[data-locked-badge-2], [data-locked-badge-3], [data-locked-badge]');
+    if (badge && badgeText) {
+      badge.textContent = badgeText;
+      badge.style.display = 'inline-block';
+    }
+  }
+});
 }
 
     // ── Product selection ──────────────────────────────────────────────────
