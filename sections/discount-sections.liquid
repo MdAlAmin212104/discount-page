@@ -157,15 +157,21 @@
   {% else %}
     <!-- LOGGED IN: JS decides whether to show code gate or offer -->
     <div class="circle-shell">
-
       <!-- CODE GATE -->
       <div class="circle-code-gate" id="circle-code-gate-{{ sid }}" style="display:none;">
         <div class="circle-login-card circle-code-card">
           <div class="circle-login-eyebrow">{{ section.settings.gate_eyebrow | default: 'Private access' }}</div>
           <h1>{{ section.settings.gate_heading | default: 'Enter your access code' }}</h1>
-          <p>{{ section.settings.gate_text | default: 'You should have received a unique access code in your invitation email. Enter it below to unlock this members offer.' }}</p>
+          <p>
+            {{
+              section.settings.gate_text
+              | default: 'You should have received a unique access code in your invitation email. Enter it below to unlock this members offer.'
+            }}
+          </p>
           {% if customer %}
-            <div class="circle-gate-email">Logged in as <span>{{ customer.email }}</span></div>
+            <div class="circle-gate-email">
+              Logged in as <span>{{ customer.email }}</span>
+            </div>
           {% endif %}
           <div class="circle-code-input-wrap">
             <input
@@ -183,9 +189,14 @@
             </button>
           </div>
           <div class="circle-code-error" id="circle-code-error-{{ sid }}" style="display:none;">
-            {{ section.settings.gate_error_text | default: 'Invalid code. Please check your invitation email and try again.' }}
+            {{
+              section.settings.gate_error_text
+              | default: 'Invalid code. Please check your invitation email and try again.'
+            }}
           </div>
-          <div class="circle-code-hint">{{ section.settings.gate_hint | default: "Don't have a code? Join our waitlist below." }}</div>
+          <div class="circle-code-hint">
+            {{ section.settings.gate_hint | default: "Don't have a code? Join our waitlist below." }}
+          </div>
           {% form 'customer', class: 'circle-waitlist-form circle-gate-waitlist', id: 'circle-gate-waitlist-form' %}
             <input type="hidden" name="contact[tags]" value="circle-waitlist">
             <input
@@ -204,7 +215,6 @@
 
       <!-- FULL OFFER CONTENT -->
       <div class="circle-offer-content" id="circle-offer-content-{{ sid }}" style="display:none;">
-
         <nav class="circle-nav">
           <div class="circle-logo">{{ section.settings.brand_name }}</div>
           <div class="circle-nav-right">
@@ -227,7 +237,9 @@
               <em>{{ section.settings.welcome_emphasis }}</em>
             </h1>
             <p class="circle-hero-sub">
-              {% if customer %}Member <span>#{{ customer.id }}</span>{% endif %}
+              {% if customer -%}
+                Member <span>#{{ customer.id }}</span>
+              {%- endif %}
               <p class="hero-sub">Members get every release first, before public launch.</p>
             </p>
           </div>
@@ -239,10 +251,17 @@
               assign strip_cols = 2
             endif
           -%}
-          <div class="circle-drop-strip" style="grid-template-columns: {% if strip_cols == 2 %}1fr 1fr{% else %}1fr 1.2fr 1fr{% endif %};">
+          <div
+            class="circle-drop-strip"
+            style="grid-template-columns: {% if strip_cols == 2 %}1fr 1fr{% else %}1fr 1.2fr 1fr{% endif %};"
+          >
             <div class="circle-drop-cell {% if active_phase == 1 %}active-drop{% else %}locked{% endif %}">
               <div class="circle-drop-num">Drop 1</div>
-              <div class="circle-drop-price" data-strip-price="1" data-phase-discount="{{ section.settings.phase_1_discount | plus: 0 }}">
+              <div
+                class="circle-drop-price"
+                data-strip-price="1"
+                data-phase-discount="{{ section.settings.phase_1_discount | plus: 0 }}"
+              >
                 {% if ref_product_price > 0 %}
                   {% if p1_d > 0 %}
                     {{ p1_price_display | money }}
@@ -254,13 +273,27 @@
                 {% endif %}
               </div>
               <div class="circle-drop-label">{{ section.settings.phase_1_short }}</div>
-              <div class="circle-drop-tag">{% if active_phase == 1 %}Open now{% else %}{% if active_phase > 1 %}Closed{% else %}Locked{% endif %}{% endif %}</div>
-              {% if active_phase == 1 %}<div class="circle-drop-ships">{{ section.settings.phase_1_ships_note | default: 'Ships in ~14 days' }}</div>{% endif %}
+              <div class="circle-drop-tag">
+                {% if active_phase == 1 -%}
+                  Open now
+                {%- else -%}
+                  {%- if active_phase > 1 %}Closed{% else %}Locked{% endif -%}
+                {%- endif %}
+              </div>
+              {% if active_phase == 1 %}
+                <div class="circle-drop-ships">
+                  {{ section.settings.phase_1_ships_note | default: 'Ships in ~14 days' }}
+                </div>
+              {% endif %}
             </div>
             {% unless active_phase == 1 and section.settings.enable_phase_3 == false %}
               <div class="circle-drop-cell {% if active_phase == 2 %}active-drop{% elsif active_phase > 2 %}locked{% else %}locked{% endif %}">
                 <div class="circle-drop-num">Drop 2</div>
-                <div class="circle-drop-price" data-strip-price="2" data-phase-discount="{{ section.settings.phase_2_discount | plus: 0 }}">
+                <div
+                  class="circle-drop-price"
+                  data-strip-price="2"
+                  data-phase-discount="{{ section.settings.phase_2_discount | plus: 0 }}"
+                >
                   {% if ref_product_price > 0 %}
                     {% if p2_d > 0 %}
                       {{ p2_price_display | money }}
@@ -272,14 +305,24 @@
                   {% endif %}
                 </div>
                 <div class="circle-drop-label">{{ section.settings.phase_2_short }}</div>
-                <div class="circle-drop-tag">{% if active_phase == 2 %}Open now{% elsif active_phase > 2 %}Closed{% else %}Locked{% endif %}</div>
-                {% if active_phase == 2 %}<div class="circle-drop-ships">{{ section.settings.phase_2_ships_note | default: 'Ships in ~30 days' }}</div>{% endif %}
+                <div class="circle-drop-tag">
+                  {% if active_phase == 2 %}Open now{% elsif active_phase > 2 %}Closed{% else %}Locked{% endif %}
+                </div>
+                {% if active_phase == 2 %}
+                  <div class="circle-drop-ships">
+                    {{ section.settings.phase_2_ships_note | default: 'Ships in ~30 days' }}
+                  </div>
+                {% endif %}
               </div>
             {% endunless %}
             {% if section.settings.enable_phase_3 %}
               <div class="circle-drop-cell {% if active_phase == 3 %}active-drop{% else %}locked{% endif %}">
                 <div class="circle-drop-num">Drop 3</div>
-                <div class="circle-drop-price" data-strip-price="3" data-phase-discount="{{ section.settings.phase_3_discount | plus: 0 }}">
+                <div
+                  class="circle-drop-price"
+                  data-strip-price="3"
+                  data-phase-discount="{{ section.settings.phase_3_discount | plus: 0 }}"
+                >
                   {% if ref_product_price > 0 %}
                     {% if p3_d > 0 %}
                       {{ p3_price_display | money }}
@@ -291,15 +334,21 @@
                   {% endif %}
                 </div>
                 <div class="circle-drop-label">{{ section.settings.phase_3_short }}</div>
-                <div class="circle-drop-tag">{% if active_phase == 3 %}Open now{% else %}Locked{% endif %}</div>
+                <div class="circle-drop-tag">
+                  {% if active_phase == 3 %}Open now{% else %}Locked{% endif %}
+                </div>
               </div>
             {% else %}
               <div class="circle-drop-cell public-release">
-                <div class="circle-drop-num">{{ section.settings.public_release_eyebrow | default: 'Public Release' }}</div>
+                <div class="circle-drop-num">
+                  {{ section.settings.public_release_eyebrow | default: 'Public Release' }}
+                </div>
                 <div class="circle-drop-price" data-strip-price="public">
                   {% if ref_product_price > 0 %}{{ ref_product_price | money }}{% else %}Full price{% endif %}
                 </div>
-                <div class="circle-drop-label">{{ section.settings.public_release_label | default: 'No member benefits' }}</div>
+                <div class="circle-drop-label">
+                  {{ section.settings.public_release_label | default: 'No member benefits' }}
+                </div>
                 <div class="circle-drop-tag">{{ section.settings.public_release_tag | default: 'Coming soon' }}</div>
               </div>
             {% endif %}
@@ -321,8 +370,23 @@
 
             {% if offer_collection != blank and displayed_products_count > 0 %}
               <div class="circle-slider-wrapper" data-slider>
-                <button type="button" class="circle-arrow circle-arrow-prev" data-arrow="prev" aria-label="Previous" disabled>
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <button
+                  type="button"
+                  class="circle-arrow circle-arrow-prev"
+                  data-arrow="prev"
+                  aria-label="Previous"
+                  disabled
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>
                 </button>
@@ -369,7 +433,9 @@
                                 <s data-product-compare-price-display>{{ product.price_min | money }}</s>
                               {% endif %}
                             </div>
-                            <div class="circle-prod-status">{% if active_discount > 0 %}{{ active_discount }}% off{% else %}Available{% endif %}</div>
+                            <div class="circle-prod-status">
+                              {% if active_discount > 0 %}{{ active_discount }}% off{% else %}Available{% endif %}
+                            </div>
                           {% else %}
                             <div class="circle-prod-status sold-label">Sold out</div>
                           {% endif %}
@@ -380,7 +446,16 @@
                   </div>
                 </div>
                 <button type="button" class="circle-arrow circle-arrow-next" data-arrow="next" aria-label="Next">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </button>
@@ -401,13 +476,21 @@
             <div class="circle-countdown-wrap">
               <div class="circle-countdown-label">Phase ends in</div>
               <div class="circle-countdown">
-                <div class="circle-t-block"><span class="circle-t-num" data-days>00</span><span class="circle-t-lbl">Days</span></div>
+                <div class="circle-t-block">
+                  <span class="circle-t-num" data-days>00</span><span class="circle-t-lbl">Days</span>
+                </div>
                 <span class="circle-t-sep">:</span>
-                <div class="circle-t-block"><span class="circle-t-num" data-hours>00</span><span class="circle-t-lbl">Hrs</span></div>
+                <div class="circle-t-block">
+                  <span class="circle-t-num" data-hours>00</span><span class="circle-t-lbl">Hrs</span>
+                </div>
                 <span class="circle-t-sep">:</span>
-                <div class="circle-t-block"><span class="circle-t-num" data-minutes>00</span><span class="circle-t-lbl">Min</span></div>
+                <div class="circle-t-block">
+                  <span class="circle-t-num" data-minutes>00</span><span class="circle-t-lbl">Min</span>
+                </div>
                 <span class="circle-t-sep">:</span>
-                <div class="circle-t-block"><span class="circle-t-num" data-seconds>00</span><span class="circle-t-lbl">Sec</span></div>
+                <div class="circle-t-block">
+                  <span class="circle-t-num" data-seconds>00</span><span class="circle-t-lbl">Sec</span>
+                </div>
               </div>
             </div>
 
@@ -433,7 +516,19 @@
                 <em class="circle-preview-savings" data-preview-savings></em>
               </div>
               <button type="button" class="circle-view-details-btn" data-view-details aria-label="View product details">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v6M8 11h6"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8"/><path d="M11 8v6M8 11h6"/>
+                </svg>
                 Details
               </button>
             </div>
@@ -450,48 +545,102 @@
           </div>
 
           <!-- NEXT PHASE / NOTIFY CARD -->
-          <div class="circle-locked-row">
-            <div class="circle-locked-left">
-              <div class="circle-locked-eyebrow">
-                {% if active_phase == 1 %}Drop 2 — Opens after Drop 1
-                {% elsif active_phase == 2 and section.settings.enable_phase_3 %}Drop 3 — Opens after Drop 2
-                {% else %}Final phase{% endif %}
-              </div>
-              <div class="circle-locked-title">
-                {% if active_phase == 1 %}{{ section.settings.phase_2_title }}
-                {% elsif active_phase == 2 and section.settings.enable_phase_3 %}{{ section.settings.phase_3_title }}
-                {% else %}{{ section.settings.ended_heading }}{% endif %}
-              </div>
-            </div>
-            <div class="circle-locked-right">
-              <div class="circle-locked-price" data-locked-price>
-                {% if active_phase == 1 %}
-                  {% if ref_product_price > 0 and p2_d > 0 %}
-                    <span data-locked-price-amount>{{ p2_price_display | money }}</span>
-                    <span class="circle-locked-badge" data-locked-badge>{{ p2_d }}% off</span>
-                  {% elsif ref_product_price > 0 %}
-                    <span data-locked-price-amount>{{ ref_product_price | money }}</span>
-                    <span class="circle-locked-badge" data-locked-badge>Full price</span>
-                  {% else %}
-                    <span data-locked-price-amount>{{ p2_d }}% off</span>
-                  {% endif %}
-                {% elsif active_phase == 2 and section.settings.enable_phase_3 %}
-                  {% if ref_product_price > 0 and p3_d > 0 %}
-                    <span data-locked-price-amount>{{ p3_price_display | money }}</span>
-                    <span class="circle-locked-badge" data-locked-badge>{{ p3_d }}% off</span>
-                  {% elsif ref_product_price > 0 %}
-                    <span data-locked-price-amount>{{ ref_product_price | money }}</span>
-                    <span class="circle-locked-badge" data-locked-badge>Full price</span>
-                  {% else %}
-                    <span data-locked-price-amount>{% if p3_d > 0 %}{{ p3_d }}% off{% else %}Full price{% endif %}</span>
-                  {% endif %}
-                {% else %}
-                  <span data-locked-price-amount>Closed</span>
-                {% endif %}
-              </div>
-              <div class="locked-when">Ships in ~30–40 days</div>
+<div class="circle-locked-row">
+  <div class="circle-locked-left">
+    <div class="circle-locked-eyebrow">
+      {% if active_phase == 1 %}
+        Next drops — Drops 2 & 3
+      {% elsif active_phase == 2 %}
+        {% if section.settings.enable_phase_3 %}
+          Next drop — Drop 3
+        {% else %}
+          Public Release — Coming soon
+        {% endif %}
+      {% elsif active_phase == 3 %}
+        Final phase — Offer ended
+      {% else %}
+        Final phase
+      {% endif %}
+    </div>
+    <div class="circle-locked-title">
+      {% if active_phase == 1 %}
+        Upcoming releases
+      {% elsif active_phase == 2 %}
+        {% if section.settings.enable_phase_3 %}
+          {{ section.settings.phase_3_title }}
+        {% else %}
+          {{ section.settings.public_release_eyebrow | default: 'Public Release' }}
+        {% endif %}
+      {% elsif active_phase == 3 %}
+        {{ section.settings.ended_heading | default: 'Offer ended' }}
+      {% else %}
+        {{ section.settings.ended_heading }}
+      {% endif %}
+    </div>
+  </div>
+  <div class="circle-locked-right">
+    <div class="circle-locked-price" data-locked-price>
+      {% if active_phase == 1 %}
+        {% comment %}Show both Drop 2 and Drop 3{% endcomment %}
+        <div class="circle-locked-drop-group">
+          <div class="circle-locked-drop-item">
+            <div class="circle-locked-drop-name">Drop 2</div>
+            <span class="circle-locked-price-amount" data-locked-price-amount-2 data-phase-discount="{{ p2_d }}">—</span>
+            <span class="circle-locked-badge" data-locked-badge-2></span>
+            <div class="locked-when" data-locked-when-2>
+              {{ section.settings.phase_2_ships_note | default: 'Ships in ~30 days' }}
             </div>
           </div>
+          {% if section.settings.enable_phase_3 %}
+            <div class="circle-locked-drop-item">
+              <div class="circle-locked-drop-name">Drop 3</div>
+              <span class="circle-locked-price-amount" data-locked-price-amount-3 data-phase-discount="{{ p3_d }}">—</span>
+              <span class="circle-locked-badge" data-locked-badge-3></span>
+              <div class="locked-when" data-locked-when-3>
+                {{ section.settings.phase_3_ships_note | default: 'Ships in ~40 days' }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        
+      {% elsif active_phase == 2 and section.settings.enable_phase_3 %}
+        {% comment %}Show Phase 3 (next drop){% endcomment %}
+        <div class="circle-locked-drop-item">
+          <div class="circle-locked-drop-name">Drop 3</div>
+          <span class="circle-locked-price-amount" data-locked-price-amount data-phase-discount="{{ p3_d }}">—</span>
+          <span class="circle-locked-badge" data-locked-badge></span>
+          <div class="locked-when" data-locked-when>
+            {{ section.settings.phase_3_ships_note | default: 'Ships in ~30–40 days' }}
+          </div>
+        </div>
+        
+      {% elsif active_phase == 2 and section.settings.enable_phase_3 == false %}
+        {% comment %}Phase 2 active with no Phase 3 - show public release (no discount){% endcomment %}
+        <div class="circle-locked-drop-item">
+          <div class="circle-locked-drop-name">Public Release</div>
+          <span class="circle-locked-price-amount" data-locked-price-amount data-phase-discount="0">—</span>
+          <span class="circle-locked-badge" data-locked-badge>Full price</span>
+          <div class="locked-when" data-locked-when>
+            {{ section.settings.public_release_tag | default: 'Coming soon' }}
+          </div>
+        </div>
+        
+      {% elsif active_phase == 3 %}
+        {% comment %}Phase 3 active - all drops finished, show ended state{% endcomment %}
+        <div class="circle-locked-drop-item">
+          <span class="circle-locked-price-amount" data-locked-price-amount>Closed</span>
+          <div class="locked-when" data-locked-when>Offer ended</div>
+        </div>
+        
+      {% else %}
+        <div class="circle-locked-drop-item">
+          <span class="circle-locked-price-amount" data-locked-price-amount>Closed</span>
+          <div class="locked-when" data-locked-when>Not available</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 
           {% if section.blocks.size > 0 %}
             <div class="circle-social">
@@ -502,7 +651,12 @@
                     <div class="circle-social-top">
                       <div class="circle-avatar">{{ block.settings.avatar_text }}</div>
                       <div>
-                        <div class="circle-social-name">{{ block.settings.name }}{% if block.settings.verified %}<span>✓</span>{% endif %}</div>
+                        <div class="circle-social-name">
+                          {{ block.settings.name -}}
+                          {%- if block.settings.verified -%}
+                            <span>✓</span>
+                          {%- endif %}
+                        </div>
                         <div class="circle-handle">{{ block.settings.handle }}</div>
                       </div>
                     </div>
@@ -528,22 +682,46 @@
             {% else %}
               {% form 'customer', class: 'circle-waitlist-form ended' %}
                 <input type="hidden" name="contact[tags]" value="circle-waitlist">
-                <input type="email" name="contact[email]" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="Email address" required>
+                <input
+                  type="email"
+                  name="contact[email]"
+                  value="{% if customer %}{{ customer.email }}{% endif %}"
+                  placeholder="Email address"
+                  required
+                >
                 <button type="submit" class="circle-main-btn">{{ section.settings.ended_button_text }}</button>
               {% endform %}
             {% endif %}
           </div>
         {% endif %}
-
-      </div><!-- /.circle-offer-content -->
-
-    </div><!-- /.circle-shell -->
+      </div>
+      <!-- /.circle-offer-content -->
+    </div>
+    <!-- /.circle-shell -->
 
     <!-- ═══ PRODUCT DETAILS MODAL ═══ -->
-    <div class="circle-modal-overlay" id="circle-product-modal-{{ sid }}" style="display:none;" role="dialog" aria-modal="true" aria-label="Product details">
+    <div
+      class="circle-modal-overlay"
+      id="circle-product-modal-{{ sid }}"
+      style="display:none;"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Product details"
+    >
       <div class="circle-modal">
         <button type="button" class="circle-modal-close" id="circle-modal-close-{{ sid }}" aria-label="Close">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
 
         <!-- Image slider -->
@@ -551,11 +729,45 @@
           <div class="circle-modal-img-track" data-modal-img-track>
             <!-- images injected by JS -->
           </div>
-          <button type="button" class="circle-modal-img-prev" data-modal-img-prev aria-label="Previous image" style="display:none;">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <button
+            type="button"
+            class="circle-modal-img-prev"
+            data-modal-img-prev
+            aria-label="Previous image"
+            style="display:none;"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
           </button>
-          <button type="button" class="circle-modal-img-next" data-modal-img-next aria-label="Next image" style="display:none;">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <button
+            type="button"
+            class="circle-modal-img-next"
+            data-modal-img-next
+            aria-label="Next image"
+            style="display:none;"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </button>
           <div class="circle-modal-img-dots" data-modal-img-dots></div>
         </div>
@@ -574,13 +786,33 @@
     </div>
 
     <!-- ═══ SIZE GUIDE MODAL ═══ -->
-    <div class="circle-modal-overlay" id="circle-size-modal-{{ sid }}" style="display:none;" role="dialog" aria-modal="true" aria-label="Size guide">
+    <div
+      class="circle-modal-overlay"
+      id="circle-size-modal-{{ sid }}"
+      style="display:none;"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Size guide"
+    >
       <div class="circle-modal circle-size-modal">
         <button type="button" class="circle-modal-close" id="circle-size-close-{{ sid }}" aria-label="Close">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
         <div class="circle-modal-body">
-          <div class="circle-modal-title" style="margin-bottom:20px;">{{ section.settings.size_guide_title | default: 'Size Guide' }}</div>
+          <div class="circle-modal-title" style="margin-bottom:20px;">
+            {{ section.settings.size_guide_title | default: 'Size Guide' }}
+          </div>
           <div class="circle-size-guide-content">
             {{ section.settings.size_guide_content }}
           </div>
@@ -639,325 +871,388 @@
 </section>
 
 <style>
-
-  :root {
-  --bg: #f0efeb;
-  --ink: #0e0e0d;
-  --forest: #1a3a2a;
-  --forest-mid: #2d5c42;
-  --forest-tint: #eaf2ed;
-  --stone: #e2dfd9;
-  --muted: #9a9792;
-  --faint: #c4c1bc;
-  --card: #faf9f7;
-  --serif: 'Cormorant Garamond', serif;
-  --mono: 'DM Mono', monospace;
-}
-
-.hero-sub {
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.03em;
-  line-height: 1.85;
-  max-width: 380px;
-  padding-left: 16px;
-  border-left: 1.5px solid var(--forest);
-}
-
-
-.locked-when {
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  color: var(--faint);
-}
-
-
-/* ── BASE ── */
-  .circle-{{ sid }} {
-    background: {{ section.settings.bg_color | default: '#f0efeb' }};
-    color: {{ section.settings.text_color | default: '#0e0e0d' }};
-    padding: {{ section.settings.section_padding_top }}px 16px {{ section.settings.section_padding_bottom }}px;
-    font-family: "DM Mono", monospace;
-    -webkit-font-smoothing: antialiased;
+    :root {
+    --bg: #f0efeb;
+    --ink: #0e0e0d;
+    --forest: #1a3a2a;
+    --forest-mid: #2d5c42;
+    --forest-tint: #eaf2ed;
+    --stone: #e2dfd9;
+    --muted: #9a9792;
+    --faint: #c4c1bc;
+    --card: #faf9f7;
+    --serif: 'Cormorant Garamond', serif;
+    --mono: 'DM Mono', monospace;
   }
-  .circle-{{ sid }} * { box-sizing: border-box; }
-  .circle-{{ sid }} .circle-shell { max-width: {{ section.settings.max_width | default: 580 }}px; margin: 0 auto; }
 
-  /* ── NAV ── */
-  .circle-{{ sid }} .circle-nav { display: flex; justify-content: flex-end; align-items: center; gap: 16px; padding: 26px 0 28px; }
-  .circle-{{ sid }} .circle-logo { font-family: "Cormorant Garamond", serif; font-weight: 300; font-size: 13px; letter-spacing: .4em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-right: auto; }
-  .circle-{{ sid }} .circle-nav-right { display: flex; align-items: center; gap: 16px; }
-  .circle-{{ sid }} .circle-member-pill { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.accent_color }}; border: 0.5px solid rgba(26,58,42,0.28); padding: 5px 14px; border-radius: 99px; }
-  .circle-{{ sid }} .circle-signout { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-decoration: none; transition: color .15s; }
-  .circle-{{ sid }} .circle-signout:hover { color: {{ section.settings.text_color }}; }
+  .hero-sub {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    line-height: 1.85;
+    max-width: 380px;
+    padding-left: 16px;
+    border-left: 1.5px solid var(--forest);
+  }
 
-  /* ── HERO ── */
-  .circle-{{ sid }} .circle-hero { padding: 8px 0 48px; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 40px; }
-  .circle-{{ sid }} .circle-live-line { display: flex; align-items: center; gap: 8px; font-size: 9px; letter-spacing: .26em; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 20px; }
-  .circle-{{ sid }} .circle-live-dot { width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }}; animation: circlePulse-{{ sid }} 2.2s ease-in-out infinite; flex-shrink: 0; }
-  @keyframes circlePulse-{{ sid }} { 0%,100%{opacity:1;} 50%{opacity:.2;} }
-  .circle-{{ sid }} h1 { font-family: "Cormorant Garamond", serif; font-weight: 300; font-size: clamp(40px,9vw,52px); line-height: 1.06; letter-spacing: .015em; margin: 0 0 18px; }
-  .circle-{{ sid }} h1 em { color: {{ section.settings.accent_color }}; font-style: italic; }
-  .circle-{{ sid }} .circle-hero-sub { font-size: 12px; color: {{ section.settings.muted_color }}; letter-spacing: .03em; line-height: 1.85; padding-left: 16px; border-left: 1.5px solid {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-hero-sub span { color: {{ section.settings.accent_color }}; }
 
-  /* ── DROP STRIP ── */
-  .circle-{{ sid }} .circle-drop-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: {{ section.settings.border_color }}; border-radius: 14px; overflow: hidden; margin-bottom: 36px; }
-  .circle-{{ sid }} .circle-drop-cell { background: {{ section.settings.card_color }}; padding: 22px 16px 20px; text-align: center; transition: background .15s; }
-  .circle-{{ sid }} .circle-drop-cell.active-drop { background: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-drop-cell.locked { background: #f4f3f0; }
-  .circle-{{ sid }} .circle-drop-cell.public-release { background: #e8e5e0; padding: 28px 16px; }
-  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-num { color: #999; }
-  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-price { color: #555; font-size: 32px; }
-  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-label { color: #888; }
-  .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-tag { background: #ddd; color: #999; }
-  .circle-{{ sid }} .circle-drop-ships { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 10px; }
-  .circle-{{ sid }} .circle-drop-num { font-size: 8px; letter-spacing: .24em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 8px; }
-  .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-num { color: rgba(255,255,255,.45); }
-  .circle-{{ sid }} .circle-drop-cell.locked .circle-drop-num { color: #ccc; }
-  .circle-{{ sid }} .circle-drop-price { font-family: "Cormorant Garamond", serif; font-size: 26px; font-weight: 600; line-height: 1; margin-bottom: 4px; color: {{ section.settings.text_color }}; }
-  .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-price { color: #fff; font-size: 30px; }
-  .circle-{{ sid }} .circle-drop-cell.locked .circle-drop-price { color: {{ section.settings.muted_color }}; font-size: 20px; }
-  .circle-{{ sid }} .circle-drop-label { font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 10px; }
-  .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-label { color: rgba(255,255,255,.55); }
-  .circle-{{ sid }} .circle-drop-tag { display: inline-block; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; background: rgba(255,255,255,.14); color: rgba(255,255,255,.8); }
-  .circle-{{ sid }} .circle-drop-cell:not(.active-drop) .circle-drop-tag { background: {{ section.settings.bg_color | default: '#f0efeb' }}; color: {{ section.settings.muted_color }}; }
+  .locked-when {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+  }
 
-  /* ── CARDS ── */
-  .circle-{{ sid }} .circle-card {padding: 22px; margin-bottom: 18px;}
-  .circle-{{ sid }} .circle-login-card { background: {{ section.settings.card_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 12px; padding: 22px; margin-bottom: 18px; }
-  .circle-{{ sid }} .circle-login-card { text-align: center; max-width: 560px; margin: 60px auto; }
-  .circle-{{ sid }} .circle-login-card p { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; margin: 14px auto 22px; max-width: 420px; }
-  .circle-{{ sid }} .circle-card-label { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 16px; }
-  .circle-{{ sid }} .circle-login-eyebrow { font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 10px; }
 
-  /* ── CODE GATE ── */
-  .circle-{{ sid }} .circle-code-card { padding: 40px 32px; }
-  .circle-{{ sid }} .circle-gate-email { font-size: 10px; letter-spacing: .1em; color: {{ section.settings.muted_color }}; margin: -10px auto 20px; }
-  .circle-{{ sid }} .circle-gate-email span { color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-code-input-wrap { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-  .circle-{{ sid }} .circle-code-input { width: 100%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 999px; padding: 14px 20px; font: inherit; font-size: 14px; letter-spacing: .12em; text-align: center; text-transform: uppercase; outline: none; transition: border-color .15s; }
-  .circle-{{ sid }} .circle-code-input:focus { border-color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-code-input.error { border-color: {{ section.settings.warning_color }}; animation: circleShake-{{ sid }} .35s ease; }
-  @keyframes circleShake-{{ sid }} { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
-  .circle-{{ sid }} .circle-code-error { font-size: 11px; color: {{ section.settings.warning_color }}; margin-bottom: 16px; line-height: 1.5; }
-  .circle-{{ sid }} .circle-code-hint { font-size: 10px; color: {{ section.settings.muted_color }}; margin: 0 auto 20px; line-height: 1.6; }
-  .circle-{{ sid }} .circle-gate-waitlist { max-width: 400px; margin: 0 auto; }
 
-  /* ── SLIDER ── */
-  .circle-{{ sid }} .circle-slider-wrapper { position: relative; display: flex; align-items: center; gap: 8px; width: 100%; }
-  .circle-{{ sid }} .circle-slider-viewport { overflow: hidden; width: 100%; flex: 1; }
-  .circle-{{ sid }} .circle-slider-track { display: flex; gap: 10px; transition: transform .38s cubic-bezier(.25,1,.5,1); will-change: transform; margin-bottom: 10px; }
-  .circle-{{ sid }} .circle-arrow { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s ease; padding: 0; z-index: 2; }
-  .circle-{{ sid }} .circle-arrow:hover:not(:disabled) { border-color: {{ section.settings.accent_color }}; color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-arrow:disabled { opacity: .25; cursor: not-allowed; }
-  .circle-{{ sid }} .circle-slider-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
-  .circle-{{ sid }} .circle-slider-dot { width: 5px; height: 5px; border-radius: 50%; background: {{ section.settings.border_color }}; cursor: pointer; border: none; padding: 0; transition: all .2s ease; }
-  .circle-{{ sid }} .circle-slider-dot.active { background: {{ section.settings.accent_color }}; width: 16px; border-radius: 3px; }
-
-  /* ── PRODUCT CARDS ── */
-  .circle-{{ sid }} .circle-prod { flex: 0 0 calc(25% - 8px); width: calc(25% - 8px); border: 1px solid transparent; border-radius: 10px; overflow: hidden; background: {{ section.settings.card_color }}; cursor: pointer; transition: all .18s ease; position: relative; }
-  .circle-{{ sid }} .circle-prod:hover:not(.sold) { border-color: {{ section.settings.border_color }}; }
-  .circle-{{ sid }} .circle-prod.active { border-color: {{ section.settings.accent_color }}; background: #fff; box-shadow: 0 2px 16px rgba(26,58,42,.08); }
-  .circle-{{ sid }} .circle-prod.sold { opacity: .38; cursor: default; }
-  .circle-{{ sid }} .circle-prod-img { width: 100%; aspect-ratio: 1 / 1; background: {{ section.settings.image_bg_color }}; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-  .circle-{{ sid }} .circle-prod-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
-  .circle-{{ sid }} .circle-prod:hover:not(.sold) .circle-prod-img img { transform: scale(1.03); }
-  .circle-{{ sid }} .circle-prod-dot { position: absolute; top: 8px; right: 8px; z-index: 2; width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.border_color }}; transition: background .15s; }
-  .circle-{{ sid }} .circle-prod.active .circle-prod-dot { background: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-prod-icon { font-size: 28px; opacity: .25; }
-  .circle-{{ sid }} .circle-prod-info { padding: 10px 10px 12px; }
-  .circle-{{ sid }} .circle-prod-name { font-family: "Cormorant Garamond", serif; font-size: 14px; color: {{ section.settings.text_color }}; margin-bottom: 3px; line-height: 1.2; }
-  .circle-{{ sid }} .circle-prod-pricing { display: flex; gap: 6px; align-items: center; }
-  .circle-{{ sid }} .circle-prod-pricing span { font-size: 12px; color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-prod-pricing s { font-size: 10px; color: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-prod-status { font-size: 8px; letter-spacing: .1em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-top: 3px; }
-  .circle-{{ sid }} .circle-prod.active .circle-prod-status { color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-prod-status.sold-label { color: {{ section.settings.warning_color }}; }
-
-  /* ── VARIANT OPTIONS ── */
-  .circle-{{ sid }} .circle-inline-options-container { margin-bottom: 18px; }
-  .circle-{{ sid }} .circle-inline-options-container:empty { display: none; }
-  .circle-{{ sid }} .circle-options-inner { padding: 22px; }
-  .circle-{{ sid }} .circle-options-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
-  .circle-{{ sid }} .circle-options-product-title { font-family: "Cormorant Garamond", serif; font-size: 18px; color: {{ section.settings.text_color }}; }
-  .circle-{{ sid }} .circle-size-guide-link { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: {{ section.settings.muted_color }}; cursor: pointer; border-bottom: 0.5px solid {{ section.settings.muted_color }}; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; padding: 0; transition: color .15s; }
-  .circle-{{ sid }} .circle-size-guide-link:hover { color: {{ section.settings.accent_color }}; border-bottom-color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-option-group { margin-bottom: 18px; }
-  .circle-{{ sid }} .circle-option-group-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .circle-{{ sid }} .circle-option-group-label strong { color: {{ section.settings.accent_color }}; font-size: 10px; }
-  .circle-{{ sid }} .circle-option-values { display: flex; gap: 8px; flex-wrap: wrap; }
-  .circle-{{ sid }} .circle-sz { width: 50px; height: 50px; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; font-family: inherit; font-size: 12px; cursor: pointer; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: all .14s; }
-  .circle-{{ sid }} .circle-sz:hover:not(.sold-out) { border-color: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-sz.active { border: 1.5px solid {{ section.settings.accent_color }}; background: #eaf2ed; color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-sz.sold-out { color: {{ section.settings.border_color }}; cursor: default; text-decoration: line-through; background: transparent; }
-  .circle-{{ sid }} .circle-sz.last-unit { border-color: {{ section.settings.warning_color }}; }
-  .circle-{{ sid }} .circle-sz-dot { width: 4px; height: 4px; border-radius: 50%; }
-  .circle-{{ sid }} .circle-sz.active .circle-sz-dot { background: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-sz.last-unit .circle-sz-dot { background: {{ section.settings.warning_color }}; }
-  .circle-{{ sid }} .circle-sz.sold-out .circle-sz-dot { background: {{ section.settings.border_color }}; }
-  .circle-{{ sid }} .circle-option-value-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; height: 44px; padding: 0 16px; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 8px; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; font: inherit; font-size: 11px; cursor: pointer; transition: all .15s ease; }
-  .circle-{{ sid }} .circle-option-value-btn:hover:not(.sold-out):not(.active) { border-color: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-option-value-btn.active { border: 1.5px solid {{ section.settings.accent_color }}; background: #eaf2ed; color: {{ section.settings.accent_color }}; font-weight: bold; }
-  .circle-{{ sid }} .circle-option-value-btn.sold-out { opacity: .32; text-decoration: line-through; cursor: not-allowed; }
-  .circle-{{ sid }} .circle-option-value-btn.last-unit { border-color: {{ section.settings.warning_color }}; }
-  .circle-{{ sid }} .circle-option-dot { width: 4px; height: 4px; border-radius: 50%; background: {{ section.settings.border_color }}; display: inline-block; }
-  .circle-{{ sid }} .circle-option-value-btn.active .circle-option-dot { background: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-option-value-btn.last-unit .circle-option-dot { background: {{ section.settings.warning_color }}; }
-  .circle-{{ sid }} .circle-option-value-btn.sold-out .circle-option-dot { background: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-option-value-btn.is-color { width: 44px; padding: 0; }
-  .circle-{{ sid }} .circle-color-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,.08); display: inline-block; }
-  .circle-{{ sid }} .circle-option-value-btn.active .circle-color-swatch { box-shadow: 0 0 0 2px {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-size-legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; font-size: 9px; letter-spacing: .08em; color: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-size-legend span { display: flex; align-items: center; gap: 5px; }
-  .circle-{{ sid }} .circle-legend-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
-  .circle-{{ sid }} .circle-legend-dot.selected { background: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-legend-dot.last-unit { background: {{ section.settings.warning_color }}; }
-  .circle-{{ sid }} .circle-legend-dot.sold-out { background: {{ section.settings.border_color }}; }
-
-  /* ── ACTION BLOCK (Reserve card) ── */
-  .circle-{{ sid }} .circle-action-block { background: #fff; border-radius: 16px; padding: 28px 28px 24px; margin-bottom: 18px; box-shadow: 0 1px 0 {{ section.settings.border_color }}, 0 4px 24px rgba(0,0,0,.04); }
-  .circle-{{ sid }} .circle-action-eyebrow { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 24px; }
-  .circle-{{ sid }} .circle-countdown-wrap { margin-bottom: 26px; }
-  .circle-{{ sid }} .circle-countdown-label { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-align: center; margin-bottom: 12px; }
-  .circle-{{ sid }} .circle-countdown { display: flex; align-items: flex-start; justify-content: center; gap: 4px; }
-  .circle-{{ sid }} .circle-t-block { text-align: center; }
-  .circle-{{ sid }} .circle-t-num { font-family: "Cormorant Garamond", serif; font-size: 46px; font-weight: 600; color: {{ section.settings.text_color }}; min-width: 52px; display: block; line-height: 1; }
-  .circle-{{ sid }} .circle-t-lbl { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; display: block; margin-top: 5px; }
-  .circle-{{ sid }} .circle-t-sep { font-size: 28px; color: {{ section.settings.border_color }}; padding: 8px 2px 0; line-height: 1; }
-  .circle-{{ sid }} .circle-price-block { display: flex; align-items: flex-end; justify-content: space-between; padding: 20px 0; border-top: 0.5px solid {{ section.settings.border_color }}; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 20px; }
-  .circle-{{ sid }} .circle-price-context { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 4px; }
-  .circle-{{ sid }} .circle-price-amount { font-family: "Cormorant Garamond", serif; font-size: 48px; font-weight: 600; color: {{ section.settings.accent_color }}; line-height: 1; }
-  .circle-{{ sid }} .circle-price-future { text-align: right; }
-  .circle-{{ sid }} .circle-price-was { font-family: "Cormorant Garamond", serif; font-size: 32px; font-weight: 300; color: {{ section.settings.muted_color }}; display: block; line-height: 1; }
-  .circle-{{ sid }} .circle-selected-preview { display: flex; align-items: center; gap: 14px; background: {{ section.settings.soft_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; padding: 12px; margin-bottom: 20px; }
-  .circle-{{ sid }} .circle-preview-image { width: 56px; height: 56px; border-radius: 6px; background: {{ section.settings.image_bg_color }}; overflow: hidden; flex-shrink: 0; }
-  .circle-{{ sid }} .circle-preview-image img { width: 100%; height: 100%; object-fit: cover; }
-  .circle-{{ sid }} .circle-preview-details { flex-grow: 1; overflow: hidden; }
-  .circle-{{ sid }} .circle-preview-title { font-family: "Cormorant Garamond", serif; font-size: 16px; color: {{ section.settings.text_color }}; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .circle-{{ sid }} .circle-preview-variant { font-size: 9px; text-transform: uppercase; color: {{ section.settings.muted_color }}; letter-spacing: .1em; }
-  .circle-{{ sid }} .circle-preview-savings { font-style: normal; font-size: 9px; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.07); padding: 2px 7px; border-radius: 4px; margin-top: 4px; display: inline-block; }
-  .circle-{{ sid }} .circle-view-details-btn { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; font-family: inherit; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; border: 0.5px solid {{ section.settings.border_color }}; background: none; border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; transition: all .15s ease; }
-  .circle-{{ sid }} .circle-view-details-btn:hover { color: {{ section.settings.accent_color }}; border-color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-scarcity { text-align: center; font-size: 10px; letter-spacing: .06em; color: {{ section.settings.warning_color }}; margin-bottom: 12px; }
-  .circle-{{ sid }} .circle-cta-btn { display: block; width: 100%; background: {{ section.settings.accent_color }}; color: #fff; border: none; border-radius: 99px; font-family: inherit; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; padding: 18px 24px; cursor: pointer; margin-bottom: 12px; transition: background .18s, transform .1s; }
-  .circle-{{ sid }} .circle-cta-btn:hover { background: #2d5c42; }
-  .circle-{{ sid }} .circle-cta-btn:active { transform: scale(.99); }
-  .circle-{{ sid }} .circle-cta-btn:disabled { opacity: .45; cursor: not-allowed; }
-  .circle-{{ sid }} .circle-cta-meta { text-align: center; font-size: 9px; letter-spacing: .08em; color: {{ section.settings.muted_color }};
+  /* ── LOCKED / NEXT DROP ROW WITH MULTIPLE DROPS ── */
+  .circle-{{ sid }} .circle-locked-drop-group {
     display: flex;
-    justify-content: space-around;
-    max-width: 70%;
-    margin: 0 auto; }
-  /* ── PHASE PROGRESS CARD ── */
-  .circle-{{ sid }} .circle-reserve-card { }
-  .circle-{{ sid }} .circle-phase-header { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 10px; }
-  .circle-{{ sid }} .circle-phase-eye { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 4px; }
-  .circle-{{ sid }} .circle-phase-title { font-family: "Cormorant Garamond", serif; font-size: 24px; color: {{ section.settings.text_color }}; }
-  .circle-{{ sid }} .circle-badge { background: {{ section.settings.accent_color }}; color: #fff; font-family: "Cormorant Garamond", serif; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; white-space: nowrap; }
-  .circle-{{ sid }} .circle-progress-row { display: flex; justify-content: space-between; font-size: 10px; color: {{ section.settings.muted_color }}; margin-bottom: 6px; }
-  .circle-{{ sid }} .circle-progress { height: 2px; background: {{ section.settings.border_color }}; border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
-  .circle-{{ sid }} .circle-progress span { display: block; height: 100%; background: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .circle-{{ sid }} .circle-stats div { background: {{ section.settings.soft_color }}; border-radius: 8px; padding: 14px; text-align: center; }
-  .circle-{{ sid }} .circle-stats strong { display: block; font-family: "Cormorant Garamond", serif; font-size: 30px; line-height: 1; }
-  .circle-{{ sid }} .circle-stats span { display: block; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-top: 5px; }
-
-  /* ── LOCKED / NEXT DROP ROW ── */
-  .circle-{{ sid }} .circle-locked-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 20px 0; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 28px; }
-  .circle-{{ sid }} .circle-locked-eyebrow { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 5px; }
-  .circle-{{ sid }} .circle-locked-title { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-locked-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
-  .circle-{{ sid }} .circle-locked-price { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .circle-{{ sid }} .circle-locked-badge { font-family: "DM Mono", monospace; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.07); padding: 2px 7px; border-radius: 4px; font-weight: 400; }
-  .circle-{{ sid }} .circle-notify-inline { display: flex; gap: 8px; align-items: center; }
-  .circle-{{ sid }} .circle-notify-inline input { border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 99px; padding: 8px 14px; font: inherit; font-size: 10px; width: 180px; outline: none; }
-  .circle-{{ sid }} .circle-notify-inline input:focus { border-color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-notify-btn { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; background: none; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 99px; padding: 8px 14px; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all .15s; }
-  .circle-{{ sid }} .circle-notify-btn:hover { border-color: {{ section.settings.muted_color }}; color: {{ section.settings.text_color }}; }
-
-  /* ── SHARED BUTTONS ── */
-  .circle-{{ sid }} .circle-main-btn { display: block; width: 100%; border-radius: 999px; font-family: inherit; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; padding: 16px; cursor: pointer; text-align: center; text-decoration: none; background: {{ section.settings.accent_color }}; color: #fff; border: 0; }
-  .circle-{{ sid }} .circle-ghost-btn { display: block; width: 100%; border-radius: 999px; font-family: inherit; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; padding: 16px; cursor: pointer; text-align: center; background: transparent; color: {{ section.settings.muted_color }}; border: 0.5px solid {{ section.settings.border_color }}; }
-  .circle-{{ sid }} .circle-waitlist-form { display: grid; gap: 10px; }
-  .circle-{{ sid }} .circle-waitlist-form input { width: 100%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 999px; padding: 14px 16px; font: inherit; font-size: 11px; outline: none; }
-  .circle-{{ sid }} .circle-waitlist-form input:focus { border-color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-already-subscribed { background: {{ section.settings.soft_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; padding: 16px; margin-top: 12px; font-size: 12px; line-height: 1.7; }
-
-  /* ── SOCIAL ── */
-  .circle-{{ sid }} .circle-social { margin-bottom: 18px; }
-  .circle-{{ sid }} .circle-social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .circle-{{ sid }} .circle-social-card { background: {{ section.settings.card_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 12px; padding: 14px; }
-  .circle-{{ sid }} .circle-social-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .circle-{{ sid }} .circle-avatar { width: 40px; height: 40px; border-radius: 50%; background: {{ section.settings.image_bg_color }}; display: flex; align-items: center; justify-content: center; font-family: "Cormorant Garamond", serif; flex-shrink: 0; }
-  .circle-{{ sid }} .circle-social-name { font-size: 13px; }
-  .circle-{{ sid }} .circle-social-name span { color: #3b82f6; }
-  .circle-{{ sid }} .circle-handle { font-size: 10px; color: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-stars { display: flex; gap: 3px; margin-bottom: 7px; }
-  .circle-{{ sid }} .circle-stars i { width: 12px; height: 12px; border-radius: 2px; background: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-quote { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 14px; color: {{ section.settings.body_color }}; line-height: 1.45; }
-  .circle-{{ sid }} .circle-empty { font-size: 12px; color: {{ section.settings.muted_color }}; line-height: 1.7; }
-
-  /* ══ MODALS ══ */
-  .circle-{{ sid }} .circle-modal-overlay { position: fixed; inset: 0; background: rgba(14,14,13,.55); z-index: 9999; display: flex; align-items: flex-end; justify-content: center; padding: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-  @media (min-width: 600px) {
-    .circle-{{ sid }} .circle-modal-overlay { align-items: center; padding: 24px; }
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-end;
   }
-  .circle-{{ sid }} .circle-modal { position: relative; background: {{ section.settings.card_color | default: '#faf9f7' }}; width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto; border-radius: 20px 20px 0 0; animation: circleModalIn-{{ sid }} .28s cubic-bezier(.25,1,.5,1); }
-  @media (min-width: 600px) {
-    .circle-{{ sid }} .circle-modal { border-radius: 16px; max-height: 88vh; }
-  }
-  @keyframes circleModalIn-{{ sid }} { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .circle-{{ sid }} .circle-modal-close { position: absolute; top: 16px; right: 16px; z-index: 10; width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color | default: '#f0efeb' }}; color: {{ section.settings.muted_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
-  .circle-{{ sid }} .circle-modal-close:hover { background: {{ section.settings.border_color }}; color: {{ section.settings.text_color }}; }
-  .circle-{{ sid }} .circle-modal-gallery { position: relative; width: 100%; aspect-ratio: 1 / 1; background: {{ section.settings.image_bg_color }}; overflow: hidden; border-radius: 20px 20px 0 0; }
-  @media (min-width: 600px) {
-    .circle-{{ sid }} .circle-modal-gallery { border-radius: 16px 16px 0 0; }
-  }
-  .circle-{{ sid }} .circle-modal-img-track { display: flex; height: 100%; transition: transform .35s cubic-bezier(.25,1,.5,1); }
-  .circle-{{ sid }} .circle-modal-img-track img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; display: block; }
-  .circle-{{ sid }} .circle-modal-img-prev,
-  .circle-{{ sid }} .circle-modal-img-next { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; border: 0.5px solid rgba(255,255,255,.3); background: rgba(255,255,255,.85); color: {{ section.settings.text_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 3; transition: all .15s; }
-  .circle-{{ sid }} .circle-modal-img-prev { left: 12px; }
-  .circle-{{ sid }} .circle-modal-img-next { right: 12px; }
-  .circle-{{ sid }} .circle-modal-img-prev:hover,
-  .circle-{{ sid }} .circle-modal-img-next:hover { background: #fff; }
-  .circle-{{ sid }} .circle-modal-img-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
-  .circle-{{ sid }} .circle-modal-img-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); border: none; cursor: pointer; padding: 0; transition: all .2s; }
-  .circle-{{ sid }} .circle-modal-img-dot.active { background: #fff; width: 14px; border-radius: 3px; }
-  .circle-{{ sid }} .circle-modal-body { padding: 22px 24px 28px; }
-  .circle-{{ sid }} .circle-modal-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 6px; }
-  .circle-{{ sid }} .circle-modal-title { font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 300; color: {{ section.settings.text_color }}; margin-bottom: 10px; }
-  .circle-{{ sid }} .circle-modal-price-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
-  .circle-{{ sid }} .circle-modal-sale { font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 600; color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-modal-was { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; }
-  .circle-{{ sid }} .circle-modal-save { font-style: normal; font-size: 9px; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.08); padding: 3px 8px; border-radius: 5px; }
-  .circle-{{ sid }} .circle-modal-desc { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; margin-bottom: 20px; }
-  .circle-{{ sid }} .circle-modal-link { display: inline-flex; align-items: center; gap: 6px; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-decoration: none; border-bottom: 0.5px solid {{ section.settings.border_color }}; padding-bottom: 1px; transition: all .15s; }
-  .circle-{{ sid }} .circle-modal-link:hover { color: {{ section.settings.accent_color }}; border-bottom-color: {{ section.settings.accent_color }}; }
-  .circle-{{ sid }} .circle-size-modal { }
-  .circle-{{ sid }} .circle-size-guide-content { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; }
-  .circle-{{ sid }} .circle-size-guide-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-  .circle-{{ sid }} .circle-size-guide-content th, .circle-{{ sid }} .circle-size-guide-content td { border: 0.5px solid {{ section.settings.border_color }}; padding: 10px 12px; font-size: 11px; text-align: left; }
-  .circle-{{ sid }} .circle-size-guide-content th { background: {{ section.settings.soft_color }}; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: {{ section.settings.muted_color }}; }
 
-  /* ── RESPONSIVE ── */
+  .circle-{{ sid }} .circle-locked-drop-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+  }
+
+  .circle-{{ sid }} .circle-locked-drop-name {
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: {{ section.settings.muted_color }};
+    margin-bottom: 2px;
+  }
+
+  .circle-{{ sid }} .circle-locked-price-amount {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: {{ section.settings.accent_color }};
+    white-space: nowrap;
+  }
+
+  .circle-{{ sid }} .circle-locked-drop-item .circle-locked-badge {
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    background: rgba(26,58,42,.07);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 400;
+    display: inline-block;
+    margin-left: 8px;
+  }
+
+  .circle-{{ sid }} .circle-locked-drop-item .locked-when {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: {{ section.settings.faint | default: '#c4c1bc' }};
+  }
+
   @media (max-width: 480px) {
-    .circle-{{ sid }} .circle-prod { flex: 0 0 calc(50% - 5px); width: calc(50% - 5px); }
-    .circle-{{ sid }} .circle-social-grid { grid-template-columns: 1fr; }
-    .circle-{{ sid }} .circle-card, .circle-{{ sid }} .circle-login-card { padding: 18px; }
-    .circle-{{ sid }} .circle-code-card { padding: 28px 18px; }
-    .circle-{{ sid }} .circle-action-block { padding: 22px 20px 20px; }
-    .circle-{{ sid }} .circle-t-num { min-width: 40px; font-size: 36px; }
-    .circle-{{ sid }} .circle-price-amount { font-size: 38px; }
-    .circle-{{ sid }} .circle-drop-price { font-size: 22px; }
-    .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-price { font-size: 26px; }
-    .circle-{{ sid }} .circle-locked-row { flex-direction: column; gap: 14px; }
-    .circle-{{ sid }} .circle-locked-right { align-items: flex-start; width: 100%; }
-    .circle-{{ sid }} .circle-notify-inline { width: 100%; }
-    .circle-{{ sid }} .circle-notify-inline input { flex: 1; width: auto; }
-    .circle-{{ sid }} .circle-selected-preview { flex-wrap: wrap; }
+    .circle-{{ sid }} .circle-locked-drop-group {
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .circle-{{ sid }} .circle-locked-drop-item {
+      align-items: flex-start;
+      width: 100%;
+    }
   }
+
+  /* ── BASE ── */
+    .circle-{{ sid }} {
+      background: {{ section.settings.bg_color | default: '#f0efeb' }};
+      color: {{ section.settings.text_color | default: '#0e0e0d' }};
+      padding: {{ section.settings.section_padding_top }}px 16px {{ section.settings.section_padding_bottom }}px;
+      font-family: "DM Mono", monospace;
+      -webkit-font-smoothing: antialiased;
+    }
+    .circle-{{ sid }} * { box-sizing: border-box; }
+    .circle-{{ sid }} .circle-shell { max-width: {{ section.settings.max_width | default: 580 }}px; margin: 0 auto; }
+
+    /* ── NAV ── */
+    .circle-{{ sid }} .circle-nav { display: flex; justify-content: flex-end; align-items: center; gap: 16px; padding: 26px 0 28px; }
+    .circle-{{ sid }} .circle-logo { font-family: "Cormorant Garamond", serif; font-weight: 300; font-size: 13px; letter-spacing: .4em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-right: auto; }
+    .circle-{{ sid }} .circle-nav-right { display: flex; align-items: center; gap: 16px; }
+    .circle-{{ sid }} .circle-member-pill { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.accent_color }}; border: 0.5px solid rgba(26,58,42,0.28); padding: 5px 14px; border-radius: 99px; }
+    .circle-{{ sid }} .circle-signout { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-decoration: none; transition: color .15s; }
+    .circle-{{ sid }} .circle-signout:hover { color: {{ section.settings.text_color }}; }
+
+    /* ── HERO ── */
+    .circle-{{ sid }} .circle-hero { padding: 8px 0 48px; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 40px; }
+    .circle-{{ sid }} .circle-live-line { display: flex; align-items: center; gap: 8px; font-size: 9px; letter-spacing: .26em; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 20px; }
+    .circle-{{ sid }} .circle-live-dot { width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }}; animation: circlePulse-{{ sid }} 2.2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes circlePulse-{{ sid }} { 0%,100%{opacity:1;} 50%{opacity:.2;} }
+    .circle-{{ sid }} h1 { font-family: "Cormorant Garamond", serif; font-weight: 300; font-size: clamp(40px,9vw,52px); line-height: 1.06; letter-spacing: .015em; margin: 0 0 18px; }
+    .circle-{{ sid }} h1 em { color: {{ section.settings.accent_color }}; font-style: italic; }
+    .circle-{{ sid }} .circle-hero-sub { font-size: 12px; color: {{ section.settings.muted_color }}; letter-spacing: .03em; line-height: 1.85; padding-left: 16px; border-left: 1.5px solid {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-hero-sub span { color: {{ section.settings.accent_color }}; }
+
+    /* ── DROP STRIP ── */
+    .circle-{{ sid }} .circle-drop-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: {{ section.settings.border_color }}; border-radius: 14px; overflow: hidden; margin-bottom: 36px; }
+    .circle-{{ sid }} .circle-drop-cell { background: {{ section.settings.card_color }}; padding: 22px 16px 20px; text-align: center; transition: background .15s; }
+    .circle-{{ sid }} .circle-drop-cell.active-drop { background: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-drop-cell.locked { background: #f4f3f0; }
+    .circle-{{ sid }} .circle-drop-cell.public-release { background: #e8e5e0; padding: 28px 16px; }
+    .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-num { color: #999; }
+    .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-price { color: #555; font-size: 32px; }
+    .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-label { color: #888; }
+    .circle-{{ sid }} .circle-drop-cell.public-release .circle-drop-tag { background: #ddd; color: #999; }
+    .circle-{{ sid }} .circle-drop-ships { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 10px; }
+    .circle-{{ sid }} .circle-drop-num { font-size: 8px; letter-spacing: .24em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 8px; }
+    .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-num { color: rgba(255,255,255,.45); }
+    .circle-{{ sid }} .circle-drop-cell.locked .circle-drop-num { color: #ccc; }
+    .circle-{{ sid }} .circle-drop-price { font-family: "Cormorant Garamond", serif; font-size: 26px; font-weight: 600; line-height: 1; margin-bottom: 4px; color: {{ section.settings.text_color }}; }
+    .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-price { color: #fff; font-size: 30px; }
+    .circle-{{ sid }} .circle-drop-cell.locked .circle-drop-price { color: {{ section.settings.muted_color }}; font-size: 20px; }
+    .circle-{{ sid }} .circle-drop-label { font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 10px; }
+    .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-label { color: rgba(255,255,255,.55); }
+    .circle-{{ sid }} .circle-drop-tag { display: inline-block; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; background: rgba(255,255,255,.14); color: rgba(255,255,255,.8); }
+    .circle-{{ sid }} .circle-drop-cell:not(.active-drop) .circle-drop-tag { background: {{ section.settings.bg_color | default: '#f0efeb' }}; color: {{ section.settings.muted_color }}; }
+
+    /* ── CARDS ── */
+    .circle-{{ sid }} .circle-card {padding: 22px; margin-bottom: 18px;}
+    .circle-{{ sid }} .circle-login-card { background: {{ section.settings.card_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 12px; padding: 22px; margin-bottom: 18px; }
+    .circle-{{ sid }} .circle-login-card { text-align: center; max-width: 560px; margin: 60px auto; }
+    .circle-{{ sid }} .circle-login-card p { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; margin: 14px auto 22px; max-width: 420px; }
+    .circle-{{ sid }} .circle-card-label { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 16px; }
+    .circle-{{ sid }} .circle-login-eyebrow { font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 10px; }
+
+    /* ── CODE GATE ── */
+    .circle-{{ sid }} .circle-code-card { padding: 40px 32px; }
+    .circle-{{ sid }} .circle-gate-email { font-size: 10px; letter-spacing: .1em; color: {{ section.settings.muted_color }}; margin: -10px auto 20px; }
+    .circle-{{ sid }} .circle-gate-email span { color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-code-input-wrap { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .circle-{{ sid }} .circle-code-input { width: 100%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 999px; padding: 14px 20px; font: inherit; font-size: 14px; letter-spacing: .12em; text-align: center; text-transform: uppercase; outline: none; transition: border-color .15s; }
+    .circle-{{ sid }} .circle-code-input:focus { border-color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-code-input.error { border-color: {{ section.settings.warning_color }}; animation: circleShake-{{ sid }} .35s ease; }
+    @keyframes circleShake-{{ sid }} { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+    .circle-{{ sid }} .circle-code-error { font-size: 11px; color: {{ section.settings.warning_color }}; margin-bottom: 16px; line-height: 1.5; }
+    .circle-{{ sid }} .circle-code-hint { font-size: 10px; color: {{ section.settings.muted_color }}; margin: 0 auto 20px; line-height: 1.6; }
+    .circle-{{ sid }} .circle-gate-waitlist { max-width: 400px; margin: 0 auto; }
+
+    /* ── SLIDER ── */
+    .circle-{{ sid }} .circle-slider-wrapper { position: relative; display: flex; align-items: center; gap: 8px; width: 100%; }
+    .circle-{{ sid }} .circle-slider-viewport { overflow: hidden; width: 100%; flex: 1; }
+    .circle-{{ sid }} .circle-slider-track { display: flex; gap: 10px; transition: transform .38s cubic-bezier(.25,1,.5,1); will-change: transform; margin-bottom: 10px; }
+    .circle-{{ sid }} .circle-arrow { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s ease; padding: 0; z-index: 2; }
+    .circle-{{ sid }} .circle-arrow:hover:not(:disabled) { border-color: {{ section.settings.accent_color }}; color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-arrow:disabled { opacity: .25; cursor: not-allowed; }
+    .circle-{{ sid }} .circle-slider-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .circle-{{ sid }} .circle-slider-dot { width: 5px; height: 5px; border-radius: 50%; background: {{ section.settings.border_color }}; cursor: pointer; border: none; padding: 0; transition: all .2s ease; }
+    .circle-{{ sid }} .circle-slider-dot.active { background: {{ section.settings.accent_color }}; width: 16px; border-radius: 3px; }
+
+    /* ── PRODUCT CARDS ── */
+    .circle-{{ sid }} .circle-prod { flex: 0 0 calc(25% - 8px); width: calc(25% - 8px); border: 1px solid transparent; border-radius: 10px; overflow: hidden; background: {{ section.settings.card_color }}; cursor: pointer; transition: all .18s ease; position: relative; }
+    .circle-{{ sid }} .circle-prod:hover:not(.sold) { border-color: {{ section.settings.border_color }}; }
+    .circle-{{ sid }} .circle-prod.active { border-color: {{ section.settings.accent_color }}; background: #fff; box-shadow: 0 2px 16px rgba(26,58,42,.08); }
+    .circle-{{ sid }} .circle-prod.sold { opacity: .38; cursor: default; }
+    .circle-{{ sid }} .circle-prod-img { width: 100%; aspect-ratio: 1 / 1; background: {{ section.settings.image_bg_color }}; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .circle-{{ sid }} .circle-prod-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+    .circle-{{ sid }} .circle-prod:hover:not(.sold) .circle-prod-img img { transform: scale(1.03); }
+    .circle-{{ sid }} .circle-prod-dot { position: absolute; top: 8px; right: 8px; z-index: 2; width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.border_color }}; transition: background .15s; }
+    .circle-{{ sid }} .circle-prod.active .circle-prod-dot { background: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-prod-icon { font-size: 28px; opacity: .25; }
+    .circle-{{ sid }} .circle-prod-info { padding: 10px 10px 12px; }
+    .circle-{{ sid }} .circle-prod-name { font-family: "Cormorant Garamond", serif; font-size: 14px; color: {{ section.settings.text_color }}; margin-bottom: 3px; line-height: 1.2; }
+    .circle-{{ sid }} .circle-prod-pricing { display: flex; gap: 6px; align-items: center; }
+    .circle-{{ sid }} .circle-prod-pricing span { font-size: 12px; color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-prod-pricing s { font-size: 10px; color: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-prod-status { font-size: 8px; letter-spacing: .1em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-top: 3px; }
+    .circle-{{ sid }} .circle-prod.active .circle-prod-status { color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-prod-status.sold-label { color: {{ section.settings.warning_color }}; }
+
+    /* ── VARIANT OPTIONS ── */
+    .circle-{{ sid }} .circle-inline-options-container { margin-bottom: 18px; }
+    .circle-{{ sid }} .circle-inline-options-container:empty { display: none; }
+    .circle-{{ sid }} .circle-options-inner { padding: 22px; }
+    .circle-{{ sid }} .circle-options-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+    .circle-{{ sid }} .circle-options-product-title { font-family: "Cormorant Garamond", serif; font-size: 18px; color: {{ section.settings.text_color }}; }
+    .circle-{{ sid }} .circle-size-guide-link { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: {{ section.settings.muted_color }}; cursor: pointer; border-bottom: 0.5px solid {{ section.settings.muted_color }}; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; padding: 0; transition: color .15s; }
+    .circle-{{ sid }} .circle-size-guide-link:hover { color: {{ section.settings.accent_color }}; border-bottom-color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-option-group { margin-bottom: 18px; }
+    .circle-{{ sid }} .circle-option-group-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .circle-{{ sid }} .circle-option-group-label strong { color: {{ section.settings.accent_color }}; font-size: 10px; }
+    .circle-{{ sid }} .circle-option-values { display: flex; gap: 8px; flex-wrap: wrap; }
+    .circle-{{ sid }} .circle-sz { width: 50px; height: 50px; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; font-family: inherit; font-size: 12px; cursor: pointer; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: all .14s; }
+    .circle-{{ sid }} .circle-sz:hover:not(.sold-out) { border-color: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-sz.active { border: 1.5px solid {{ section.settings.accent_color }}; background: #eaf2ed; color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-sz.sold-out { color: {{ section.settings.border_color }}; cursor: default; text-decoration: line-through; background: transparent; }
+    .circle-{{ sid }} .circle-sz.last-unit { border-color: {{ section.settings.warning_color }}; }
+    .circle-{{ sid }} .circle-sz-dot { width: 4px; height: 4px; border-radius: 50%; }
+    .circle-{{ sid }} .circle-sz.active .circle-sz-dot { background: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-sz.last-unit .circle-sz-dot { background: {{ section.settings.warning_color }}; }
+    .circle-{{ sid }} .circle-sz.sold-out .circle-sz-dot { background: {{ section.settings.border_color }}; }
+    .circle-{{ sid }} .circle-option-value-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; height: 44px; padding: 0 16px; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 8px; background: {{ section.settings.card_color }}; color: {{ section.settings.text_color }}; font: inherit; font-size: 11px; cursor: pointer; transition: all .15s ease; }
+    .circle-{{ sid }} .circle-option-value-btn:hover:not(.sold-out):not(.active) { border-color: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-option-value-btn.active { border: 1.5px solid {{ section.settings.accent_color }}; background: #eaf2ed; color: {{ section.settings.accent_color }}; font-weight: bold; }
+    .circle-{{ sid }} .circle-option-value-btn.sold-out { opacity: .32; text-decoration: line-through; cursor: not-allowed; }
+    .circle-{{ sid }} .circle-option-value-btn.last-unit { border-color: {{ section.settings.warning_color }}; }
+    .circle-{{ sid }} .circle-option-dot { width: 4px; height: 4px; border-radius: 50%; background: {{ section.settings.border_color }}; display: inline-block; }
+    .circle-{{ sid }} .circle-option-value-btn.active .circle-option-dot { background: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-option-value-btn.last-unit .circle-option-dot { background: {{ section.settings.warning_color }}; }
+    .circle-{{ sid }} .circle-option-value-btn.sold-out .circle-option-dot { background: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-option-value-btn.is-color { width: 44px; padding: 0; }
+    .circle-{{ sid }} .circle-color-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,.08); display: inline-block; }
+    .circle-{{ sid }} .circle-option-value-btn.active .circle-color-swatch { box-shadow: 0 0 0 2px {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-size-legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; font-size: 9px; letter-spacing: .08em; color: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-size-legend span { display: flex; align-items: center; gap: 5px; }
+    .circle-{{ sid }} .circle-legend-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+    .circle-{{ sid }} .circle-legend-dot.selected { background: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-legend-dot.last-unit { background: {{ section.settings.warning_color }}; }
+    .circle-{{ sid }} .circle-legend-dot.sold-out { background: {{ section.settings.border_color }}; }
+
+    /* ── ACTION BLOCK (Reserve card) ── */
+    .circle-{{ sid }} .circle-action-block { background: #fff; border-radius: 16px; padding: 28px 28px 24px; margin-bottom: 18px; box-shadow: 0 1px 0 {{ section.settings.border_color }}, 0 4px 24px rgba(0,0,0,.04); }
+    .circle-{{ sid }} .circle-action-eyebrow { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 24px; }
+    .circle-{{ sid }} .circle-countdown-wrap { margin-bottom: 26px; }
+    .circle-{{ sid }} .circle-countdown-label { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-align: center; margin-bottom: 12px; }
+    .circle-{{ sid }} .circle-countdown { display: flex; align-items: flex-start; justify-content: center; gap: 4px; }
+    .circle-{{ sid }} .circle-t-block { text-align: center; }
+    .circle-{{ sid }} .circle-t-num { font-family: "Cormorant Garamond", serif; font-size: 46px; font-weight: 600; color: {{ section.settings.text_color }}; min-width: 52px; display: block; line-height: 1; }
+    .circle-{{ sid }} .circle-t-lbl { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; display: block; margin-top: 5px; }
+    .circle-{{ sid }} .circle-t-sep { font-size: 28px; color: {{ section.settings.border_color }}; padding: 8px 2px 0; line-height: 1; }
+    .circle-{{ sid }} .circle-price-block { display: flex; align-items: flex-end; justify-content: space-between; padding: 20px 0; border-top: 0.5px solid {{ section.settings.border_color }}; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 20px; }
+    .circle-{{ sid }} .circle-price-context { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 4px; }
+    .circle-{{ sid }} .circle-price-amount { font-family: "Cormorant Garamond", serif; font-size: 48px; font-weight: 600; color: {{ section.settings.accent_color }}; line-height: 1; }
+    .circle-{{ sid }} .circle-price-future { text-align: right; }
+    .circle-{{ sid }} .circle-price-was { font-family: "Cormorant Garamond", serif; font-size: 32px; font-weight: 300; color: {{ section.settings.muted_color }}; display: block; line-height: 1; }
+    .circle-{{ sid }} .circle-selected-preview { display: flex; align-items: center; gap: 14px; background: {{ section.settings.soft_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; padding: 12px; margin-bottom: 20px; }
+    .circle-{{ sid }} .circle-preview-image { width: 56px; height: 56px; border-radius: 6px; background: {{ section.settings.image_bg_color }}; overflow: hidden; flex-shrink: 0; }
+    .circle-{{ sid }} .circle-preview-image img { width: 100%; height: 100%; object-fit: cover; }
+    .circle-{{ sid }} .circle-preview-details { flex-grow: 1; overflow: hidden; }
+    .circle-{{ sid }} .circle-preview-title { font-family: "Cormorant Garamond", serif; font-size: 16px; color: {{ section.settings.text_color }}; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .circle-{{ sid }} .circle-preview-variant { font-size: 9px; text-transform: uppercase; color: {{ section.settings.muted_color }}; letter-spacing: .1em; }
+    .circle-{{ sid }} .circle-preview-savings { font-style: normal; font-size: 9px; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.07); padding: 2px 7px; border-radius: 4px; margin-top: 4px; display: inline-block; }
+    .circle-{{ sid }} .circle-view-details-btn { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; font-family: inherit; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; border: 0.5px solid {{ section.settings.border_color }}; background: none; border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; transition: all .15s ease; }
+    .circle-{{ sid }} .circle-view-details-btn:hover { color: {{ section.settings.accent_color }}; border-color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-scarcity { text-align: center; font-size: 10px; letter-spacing: .06em; color: {{ section.settings.warning_color }}; margin-bottom: 12px; }
+    .circle-{{ sid }} .circle-cta-btn { display: block; width: 100%; background: {{ section.settings.accent_color }}; color: #fff; border: none; border-radius: 99px; font-family: inherit; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; padding: 18px 24px; cursor: pointer; margin-bottom: 12px; transition: background .18s, transform .1s; }
+    .circle-{{ sid }} .circle-cta-btn:hover { background: #2d5c42; }
+    .circle-{{ sid }} .circle-cta-btn:active { transform: scale(.99); }
+    .circle-{{ sid }} .circle-cta-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .circle-{{ sid }} .circle-cta-meta { text-align: center; font-size: 9px; letter-spacing: .08em; color: {{ section.settings.muted_color }};
+      display: flex;
+      justify-content: space-around;
+      max-width: 70%;
+      margin: 0 auto; }
+    /* ── PHASE PROGRESS CARD ── */
+    .circle-{{ sid }} .circle-reserve-card { }
+    .circle-{{ sid }} .circle-phase-header { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 10px; }
+    .circle-{{ sid }} .circle-phase-eye { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 4px; }
+    .circle-{{ sid }} .circle-phase-title { font-family: "Cormorant Garamond", serif; font-size: 24px; color: {{ section.settings.text_color }}; }
+    .circle-{{ sid }} .circle-badge { background: {{ section.settings.accent_color }}; color: #fff; font-family: "Cormorant Garamond", serif; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; white-space: nowrap; }
+    .circle-{{ sid }} .circle-progress-row { display: flex; justify-content: space-between; font-size: 10px; color: {{ section.settings.muted_color }}; margin-bottom: 6px; }
+    .circle-{{ sid }} .circle-progress { height: 2px; background: {{ section.settings.border_color }}; border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+    .circle-{{ sid }} .circle-progress span { display: block; height: 100%; background: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .circle-{{ sid }} .circle-stats div { background: {{ section.settings.soft_color }}; border-radius: 8px; padding: 14px; text-align: center; }
+    .circle-{{ sid }} .circle-stats strong { display: block; font-family: "Cormorant Garamond", serif; font-size: 30px; line-height: 1; }
+    .circle-{{ sid }} .circle-stats span { display: block; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-top: 5px; }
+
+    /* ── LOCKED / NEXT DROP ROW ── */
+    .circle-{{ sid }} .circle-locked-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 20px 0; border-bottom: 0.5px solid {{ section.settings.border_color }}; margin-bottom: 28px; }
+    .circle-{{ sid }} .circle-locked-eyebrow { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 5px; }
+    .circle-{{ sid }} .circle-locked-title { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-locked-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+    .circle-{{ sid }} .circle-locked-price { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .circle-{{ sid }} .circle-locked-badge { font-family: "DM Mono", monospace; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.07); padding: 2px 7px; border-radius: 4px; font-weight: 400; }
+    .circle-{{ sid }} .circle-notify-inline { display: flex; gap: 8px; align-items: center; }
+    .circle-{{ sid }} .circle-notify-inline input { border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 99px; padding: 8px 14px; font: inherit; font-size: 10px; width: 180px; outline: none; }
+    .circle-{{ sid }} .circle-notify-inline input:focus { border-color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-notify-btn { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; background: none; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 99px; padding: 8px 14px; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all .15s; }
+    .circle-{{ sid }} .circle-notify-btn:hover { border-color: {{ section.settings.muted_color }}; color: {{ section.settings.text_color }}; }
+
+    /* ── SHARED BUTTONS ── */
+    .circle-{{ sid }} .circle-main-btn { display: block; width: 100%; border-radius: 999px; font-family: inherit; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; padding: 16px; cursor: pointer; text-align: center; text-decoration: none; background: {{ section.settings.accent_color }}; color: #fff; border: 0; }
+    .circle-{{ sid }} .circle-ghost-btn { display: block; width: 100%; border-radius: 999px; font-family: inherit; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; padding: 16px; cursor: pointer; text-align: center; background: transparent; color: {{ section.settings.muted_color }}; border: 0.5px solid {{ section.settings.border_color }}; }
+    .circle-{{ sid }} .circle-waitlist-form { display: grid; gap: 10px; }
+    .circle-{{ sid }} .circle-waitlist-form input { width: 100%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color }}; color: {{ section.settings.text_color }}; border-radius: 999px; padding: 14px 16px; font: inherit; font-size: 11px; outline: none; }
+    .circle-{{ sid }} .circle-waitlist-form input:focus { border-color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-already-subscribed { background: {{ section.settings.soft_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 10px; padding: 16px; margin-top: 12px; font-size: 12px; line-height: 1.7; }
+
+    /* ── SOCIAL ── */
+    .circle-{{ sid }} .circle-social { margin-bottom: 18px; }
+    .circle-{{ sid }} .circle-social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .circle-{{ sid }} .circle-social-card { background: {{ section.settings.card_color }}; border: 0.5px solid {{ section.settings.border_color }}; border-radius: 12px; padding: 14px; }
+    .circle-{{ sid }} .circle-social-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .circle-{{ sid }} .circle-avatar { width: 40px; height: 40px; border-radius: 50%; background: {{ section.settings.image_bg_color }}; display: flex; align-items: center; justify-content: center; font-family: "Cormorant Garamond", serif; flex-shrink: 0; }
+    .circle-{{ sid }} .circle-social-name { font-size: 13px; }
+    .circle-{{ sid }} .circle-social-name span { color: #3b82f6; }
+    .circle-{{ sid }} .circle-handle { font-size: 10px; color: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-stars { display: flex; gap: 3px; margin-bottom: 7px; }
+    .circle-{{ sid }} .circle-stars i { width: 12px; height: 12px; border-radius: 2px; background: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-quote { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 14px; color: {{ section.settings.body_color }}; line-height: 1.45; }
+    .circle-{{ sid }} .circle-empty { font-size: 12px; color: {{ section.settings.muted_color }}; line-height: 1.7; }
+
+    /* ══ MODALS ══ */
+    .circle-{{ sid }} .circle-modal-overlay { position: fixed; inset: 0; background: rgba(14,14,13,.55); z-index: 9999; display: flex; align-items: flex-end; justify-content: center; padding: 0; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+    @media (min-width: 600px) {
+      .circle-{{ sid }} .circle-modal-overlay { align-items: center; padding: 24px; }
+    }
+    .circle-{{ sid }} .circle-modal { position: relative; background: {{ section.settings.card_color | default: '#faf9f7' }}; width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto; border-radius: 20px 20px 0 0; animation: circleModalIn-{{ sid }} .28s cubic-bezier(.25,1,.5,1); }
+    @media (min-width: 600px) {
+      .circle-{{ sid }} .circle-modal { border-radius: 16px; max-height: 88vh; }
+    }
+    @keyframes circleModalIn-{{ sid }} { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .circle-{{ sid }} .circle-modal-close { position: absolute; top: 16px; right: 16px; z-index: 10; width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid {{ section.settings.border_color }}; background: {{ section.settings.soft_color | default: '#f0efeb' }}; color: {{ section.settings.muted_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+    .circle-{{ sid }} .circle-modal-close:hover { background: {{ section.settings.border_color }}; color: {{ section.settings.text_color }}; }
+    .circle-{{ sid }} .circle-modal-gallery { position: relative; width: 100%; aspect-ratio: 1 / 1; background: {{ section.settings.image_bg_color }}; overflow: hidden; border-radius: 20px 20px 0 0; }
+    @media (min-width: 600px) {
+      .circle-{{ sid }} .circle-modal-gallery { border-radius: 16px 16px 0 0; }
+    }
+    .circle-{{ sid }} .circle-modal-img-track { display: flex; height: 100%; transition: transform .35s cubic-bezier(.25,1,.5,1); }
+    .circle-{{ sid }} .circle-modal-img-track img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .circle-{{ sid }} .circle-modal-img-prev,
+    .circle-{{ sid }} .circle-modal-img-next { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; border: 0.5px solid rgba(255,255,255,.3); background: rgba(255,255,255,.85); color: {{ section.settings.text_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 3; transition: all .15s; }
+    .circle-{{ sid }} .circle-modal-img-prev { left: 12px; }
+    .circle-{{ sid }} .circle-modal-img-next { right: 12px; }
+    .circle-{{ sid }} .circle-modal-img-prev:hover,
+    .circle-{{ sid }} .circle-modal-img-next:hover { background: #fff; }
+    .circle-{{ sid }} .circle-modal-img-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
+    .circle-{{ sid }} .circle-modal-img-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); border: none; cursor: pointer; padding: 0; transition: all .2s; }
+    .circle-{{ sid }} .circle-modal-img-dot.active { background: #fff; width: 14px; border-radius: 3px; }
+    .circle-{{ sid }} .circle-modal-body { padding: 22px 24px 28px; }
+    .circle-{{ sid }} .circle-modal-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: {{ section.settings.muted_color }}; margin-bottom: 6px; }
+    .circle-{{ sid }} .circle-modal-title { font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 300; color: {{ section.settings.text_color }}; margin-bottom: 10px; }
+    .circle-{{ sid }} .circle-modal-price-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .circle-{{ sid }} .circle-modal-sale { font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 600; color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-modal-was { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 300; color: {{ section.settings.muted_color }}; }
+    .circle-{{ sid }} .circle-modal-save { font-style: normal; font-size: 9px; color: {{ section.settings.accent_color }}; background: rgba(26,58,42,.08); padding: 3px 8px; border-radius: 5px; }
+    .circle-{{ sid }} .circle-modal-desc { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; margin-bottom: 20px; }
+    .circle-{{ sid }} .circle-modal-link { display: inline-flex; align-items: center; gap: 6px; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.muted_color }}; text-decoration: none; border-bottom: 0.5px solid {{ section.settings.border_color }}; padding-bottom: 1px; transition: all .15s; }
+    .circle-{{ sid }} .circle-modal-link:hover { color: {{ section.settings.accent_color }}; border-bottom-color: {{ section.settings.accent_color }}; }
+    .circle-{{ sid }} .circle-size-modal { }
+    .circle-{{ sid }} .circle-size-guide-content { font-size: 12px; line-height: 1.8; color: {{ section.settings.body_color }}; }
+    .circle-{{ sid }} .circle-size-guide-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    .circle-{{ sid }} .circle-size-guide-content th, .circle-{{ sid }} .circle-size-guide-content td { border: 0.5px solid {{ section.settings.border_color }}; padding: 10px 12px; font-size: 11px; text-align: left; }
+    .circle-{{ sid }} .circle-size-guide-content th { background: {{ section.settings.soft_color }}; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: {{ section.settings.muted_color }}; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .circle-{{ sid }} .circle-prod { flex: 0 0 calc(50% - 5px); width: calc(50% - 5px); }
+      .circle-{{ sid }} .circle-social-grid { grid-template-columns: 1fr; }
+      .circle-{{ sid }} .circle-card, .circle-{{ sid }} .circle-login-card { padding: 18px; }
+      .circle-{{ sid }} .circle-code-card { padding: 28px 18px; }
+      .circle-{{ sid }} .circle-action-block { padding: 22px 20px 20px; }
+      .circle-{{ sid }} .circle-t-num { min-width: 40px; font-size: 36px; }
+      .circle-{{ sid }} .circle-price-amount { font-size: 38px; }
+      .circle-{{ sid }} .circle-drop-price { font-size: 22px; }
+      .circle-{{ sid }} .circle-drop-cell.active-drop .circle-drop-price { font-size: 26px; }
+      .circle-{{ sid }} .circle-locked-row { flex-direction: column; gap: 14px; }
+      .circle-{{ sid }} .circle-locked-right { align-items: flex-start; width: 100%; }
+      .circle-{{ sid }} .circle-notify-inline { width: 100%; }
+      .circle-{{ sid }} .circle-notify-inline input { flex: 1; width: auto; }
+      .circle-{{ sid }} .circle-selected-preview { flex-wrap: wrap; }
+    }
 </style>
 
 <script>
@@ -1182,89 +1477,114 @@
     window.addEventListener('resize', () => { buildDots(); goTo(Math.min(currentSlide, maxSlide())); });
 
     // ── Update all prices based on selected variant ────────────────────────
-        // ── Update all prices based on selected variant ────────────────────────
-    function updateAllPrices() {
-      if (!selectedVariant) return;
-      
-      const basePrice = selectedVariant.price;
-      
-      // Update main price (Your price today) - uses current phase discount
-      if (previewSalePrice) {
-        const currentPrice = discountedPrice(basePrice);
-        previewSalePrice.textContent = formatMoney(currentPrice);
-      }
-      
-      // Update compare price (Public Release)
-      if (previewWas) {
-        previewWas.textContent = formatMoney(basePrice);
-      }
-      
-      // Update savings text
-      if (previewSavings) {
-        const currentPrice = discountedPrice(basePrice);
-        const savings = basePrice - currentPrice;
-        if (discountPercent > 0 && savings > 0) {
-          previewSavings.textContent = `Save ${formatMoney(savings)}`;
-          previewSavings.style.display = 'inline-block';
-        } else {
-          previewSavings.style.display = 'none';
-        }
-      }
-      
-      // Update Drop Strip Prices using data-phase-discount attribute
-      const stripCells = root.querySelectorAll('[data-strip-price]');
-      stripCells.forEach(cell => {
-        const phase = cell.getAttribute('data-strip-price');
-        if (phase === 'public') {
-          cell.textContent = formatMoney(basePrice);
-        } else {
-          const phaseDiscount = Number(cell.getAttribute('data-phase-discount') || 0);
-          if (phaseDiscount > 0) {
-            const discounted = Math.round(basePrice * (100 - phaseDiscount) / 100);
-            cell.textContent = formatMoney(discounted);
-          } else {
-            cell.textContent = formatMoney(basePrice);
-          }
-        }
-      });
-      
-      // Update Locked Row (next phase price)
-      if (lockedPriceAmount) {
-        if (activePhase === 1) {
-          // Show Phase 2 price
-          const p2Price = discountedPrice(basePrice, phase2Discount);
-          lockedPriceAmount.textContent = formatMoney(p2Price);
-          if (lockedBadge) {
-            lockedBadge.textContent = phase2Discount > 0 ? phase2Discount + '% off' : 'Full price';
-            lockedBadge.style.display = 'inline-block';
-          }
-        } else if (activePhase === 2 && enablePhase3) {
-          // Show Phase 3 price
-          const p3Price = discountedPrice(basePrice, phase3Discount);
-          lockedPriceAmount.textContent = formatMoney(p3Price);
-          if (lockedBadge) {
-            lockedBadge.textContent = phase3Discount > 0 ? phase3Discount + '% off' : 'Full price';
-            lockedBadge.style.display = 'inline-block';
-          }
-        } else if (activePhase === 3) {
-          lockedPriceAmount.textContent = 'Closed';
-          if (lockedBadge) lockedBadge.style.display = 'none';
-        }
-      }
-      
-      // Update active product card price
-      const activeCard = root.querySelector('.circle-prod.active');
-      if (activeCard) {
-        const priceSpan = activeCard.querySelector('[data-product-price-display]');
-        const compareS = activeCard.querySelector('[data-product-compare-price-display]');
-        if (priceSpan) {
-          priceSpan.textContent = formatMoney(discountedPrice(basePrice));
-        }
-        if (compareS && discountPercent > 0) {
-          compareS.textContent = formatMoney(basePrice);
-        }
+function updateAllPrices() {
+  if (!selectedVariant) return;
+  
+  const basePrice = selectedVariant.price;
+  
+  // Update main price (Your price today) - uses current phase discount
+  if (previewSalePrice) {
+    const currentPrice = discountedPrice(basePrice);
+    previewSalePrice.textContent = formatMoney(currentPrice);
+  }
+  
+  // Update compare price (Public Release)
+  if (previewWas) {
+    previewWas.textContent = formatMoney(basePrice);
+  }
+  
+  // Update savings text
+  if (previewSavings) {
+    const currentPrice = discountedPrice(basePrice);
+    const savings = basePrice - currentPrice;
+    if (discountPercent > 0 && savings > 0) {
+      previewSavings.textContent = `Save ${formatMoney(savings)}`;
+      previewSavings.style.display = 'inline-block';
+    } else {
+      previewSavings.style.display = 'none';
+    }
+  }
+  
+  // Update Drop Strip Prices (Top Phase Strip)
+  const stripCells = root.querySelectorAll('[data-strip-price]');
+  stripCells.forEach(cell => {
+    const phase = cell.getAttribute('data-strip-price');
+    if (phase === 'public') {
+      cell.textContent = formatMoney(basePrice);
+    } else {
+      const phaseDiscount = Number(cell.getAttribute('data-phase-discount') || 0);
+      if (phaseDiscount > 0) {
+        const discounted = Math.round(basePrice * (100 - phaseDiscount) / 100);
+        cell.textContent = formatMoney(discounted);
+      } else {
+        cell.textContent = formatMoney(basePrice);
       }
     }
+  });
+  
+  // Update Locked Row prices using data-phase-discount attribute
+  const lockedPriceContainer = root.querySelector('[data-locked-price]');
+  if (lockedPriceContainer) {
+    // Find all price amount elements with data-phase-discount
+    const priceElements = lockedPriceContainer.querySelectorAll('[data-locked-price-amount], [data-locked-price-amount-2], [data-locked-price-amount-3]');
+    
+    priceElements.forEach(priceEl => {
+      const phaseDiscountAttr = priceEl.getAttribute('data-phase-discount');
+      if (phaseDiscountAttr !== null && priceEl.textContent !== 'Closed') {
+        const phaseDiscount = Number(phaseDiscountAttr);
+        if (phaseDiscount > 0) {
+          const discounted = Math.round(basePrice * (100 - phaseDiscount) / 100);
+          priceEl.textContent = formatMoney(discounted);
+          
+          // Update corresponding badge
+          let badge = null;
+          if (priceEl.hasAttribute('data-locked-price-amount-2')) {
+            badge = lockedPriceContainer.querySelector('[data-locked-badge-2]');
+          } else if (priceEl.hasAttribute('data-locked-price-amount-3')) {
+            badge = lockedPriceContainer.querySelector('[data-locked-badge-3]');
+          } else if (priceEl.hasAttribute('data-locked-price-amount')) {
+            badge = lockedPriceContainer.querySelector('[data-locked-badge]');
+          }
+          
+          if (badge) {
+            badge.textContent = phaseDiscount + '% off';
+            badge.style.display = 'inline-block';
+          }
+        } else if (phaseDiscount === 0) {
+          priceEl.textContent = formatMoney(basePrice);
+          
+          // Update corresponding badge
+          let badge = null;
+          if (priceEl.hasAttribute('data-locked-price-amount-2')) {
+            badge = lockedPriceContainer.querySelector('[data-locked-badge-2]');
+          } else if (priceEl.hasAttribute('data-locked-price-amount-3')) {
+            badge = lockedPriceContainer.querySelector('[data-locked-badge-3]');
+          } else if (priceEl.hasAttribute('data-locked-price-amount')) {
+            badge = lockedPriceContainer.querySelector('[data-locked-badge]');
+          }
+          
+          if (badge) {
+            badge.textContent = 'Full price';
+            badge.style.display = 'inline-block';
+          }
+        }
+      }
+    });
+  }
+    
+  // Update active product card price
+  const activeCard = root.querySelector('.circle-prod.active');
+  if (activeCard) {
+    const priceSpan = activeCard.querySelector('[data-product-price-display]');
+    const compareS = activeCard.querySelector('[data-product-compare-price-display]');
+    if (priceSpan) {
+      priceSpan.textContent = formatMoney(discountedPrice(basePrice));
+    }
+    if (compareS && discountPercent > 0) {
+      compareS.textContent = formatMoney(basePrice);
+    }
+  }
+}
 
     // ── Product selection ──────────────────────────────────────────────────
     function selectProduct(index) {
@@ -1606,13 +1926,42 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "header", "content": "General" },
     { "type": "checkbox", "id": "offer_enabled", "label": "Enable offer", "default": true },
     { "type": "checkbox", "id": "require_login", "label": "Require login", "default": true },
-    { "type": "text", "id": "access_codes", "label": "Valid access codes (comma-separated)", "info": "e.g. CIRCLE-A1B2, CIRCLE-C3D4. Leave blank to skip the code gate." },
+    {
+      "type": "text",
+      "id": "access_codes",
+      "label": "Valid access codes (comma-separated)",
+      "info": "e.g. CIRCLE-A1B2, CIRCLE-C3D4. Leave blank to skip the code gate."
+    },
     { "type": "text", "id": "brand_name", "label": "Brand name", "default": "Jaffary" },
     { "type": "text", "id": "member_label", "label": "Member pill text", "default": "The Circle" },
     { "type": "text", "id": "signout_text", "label": "Sign out text", "default": "Sign out" },
-    { "type": "range", "id": "max_width", "label": "Max width (px)", "min": 400, "max": 1200, "step": 10, "default": 580 },
-    { "type": "range", "id": "section_padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 0 },
-    { "type": "range", "id": "section_padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 80 },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width (px)",
+      "min": 400,
+      "max": 1200,
+      "step": 10,
+      "default": 580
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    },
     { "type": "header", "content": "Login Gate" },
     { "type": "text", "id": "login_eyebrow", "label": "Login eyebrow", "default": "Members only" },
     { "type": "text", "id": "login_heading", "label": "Login heading", "default": "Sign in to access" },
@@ -1624,8 +1973,18 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "textarea", "id": "gate_text", "label": "Body text" },
     { "type": "text", "id": "gate_placeholder", "label": "Input placeholder", "default": "e.g. CIRCLE-XXXX" },
     { "type": "text", "id": "gate_button_text", "label": "Button text", "default": "Unlock access" },
-    { "type": "text", "id": "gate_error_text", "label": "Error text", "default": "Invalid code. Please check your invitation email and try again." },
-    { "type": "text", "id": "gate_hint", "label": "Hint text", "default": "Don't have a code? Join our waitlist below." },
+    {
+      "type": "text",
+      "id": "gate_error_text",
+      "label": "Error text",
+      "default": "Invalid code. Please check your invitation email and try again."
+    },
+    {
+      "type": "text",
+      "id": "gate_hint",
+      "label": "Hint text",
+      "default": "Don't have a code? Join our waitlist below."
+    },
     { "type": "header", "content": "Welcome" },
     { "type": "text", "id": "welcome_heading", "label": "Heading line 1", "default": "You're in" },
     { "type": "text", "id": "welcome_emphasis", "label": "Heading emphasis (italic)", "default": "the Circle." },
@@ -1640,7 +1999,12 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "text", "id": "phase_1_subtitle", "label": "Progress subtitle" },
     { "type": "text", "id": "phase_1_shipping_note1", "label": "Shipping note left side" },
     { "type": "text", "id": "phase_1_shipping_note2", "label": "Shipping note right side" },
-    { "type": "text", "id": "phase_1_ships_note", "label": "Ships-in note (shown in strip)", "default": "Ships in ~14 days" },
+    {
+      "type": "text",
+      "id": "phase_1_ships_note",
+      "label": "Ships-in note (shown in strip)",
+      "default": "Ships in ~14 days"
+    },
     { "type": "header", "content": "Phase 2" },
     { "type": "text", "id": "phase_2_start", "label": "Start date (YYYY-MM-DD)" },
     { "type": "text", "id": "phase_2_end", "label": "End date (YYYY-MM-DD)" },
@@ -1652,12 +2016,25 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "text", "id": "phase_2_subtitle", "label": "Progress subtitle" },
     { "type": "text", "id": "phase_2_shipping_note1", "label": "Shipping note left side" },
     { "type": "text", "id": "phase_2_shipping_note2", "label": "Shipping note right side" },
-    { "type": "text", "id": "phase_2_ships_note", "label": "Ships-in note (shown in strip)", "default": "Ships in ~30 days" },
+    {
+      "type": "text",
+      "id": "phase_2_ships_note",
+      "label": "Ships-in note (shown in strip)",
+      "default": "Ships in ~30 days"
+    },
     { "type": "header", "content": "Phase 3 (Optional)" },
     { "type": "checkbox", "id": "enable_phase_3", "label": "Enable phase 3", "default": false },
     { "type": "text", "id": "phase_3_start", "label": "Start date (YYYY-MM-DD)" },
     { "type": "text", "id": "phase_3_end", "label": "End date (YYYY-MM-DD)" },
-    { "type": "range", "id": "phase_3_discount", "label": "Discount % (0 = full price)", "min": 0, "max": 80, "step": 1, "default": 0 },
+    {
+      "type": "range",
+      "id": "phase_3_discount",
+      "label": "Discount % (0 = full price)",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "default": 0
+    },
     { "type": "text", "id": "phase_3_discount_code", "label": "Shopify discount code" },
     { "type": "text", "id": "phase_3_title", "label": "Title", "default": "Public Release" },
     { "type": "text", "id": "phase_3_label", "label": "Label (eyebrow)", "default": "Drop 3 — open now" },
@@ -1675,8 +2052,22 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "text", "id": "product_heading", "label": "Section heading", "default": "Choose your piece" },
     { "type": "checkbox", "id": "hide_sold_out_products", "label": "Hide sold out products", "default": false },
     { "type": "header", "content": "Reserve Button" },
-    { "type": "text", "id": "reserve_button_text", "label": "Reserve button default text", "default": "Reserve your piece" },
-    { "type": "select", "id": "button_action", "label": "Button action", "default": "cart", "options": [{"value":"cart","label":"Add to cart"},{"value":"product","label":"Go to product page"}] },
+    {
+      "type": "text",
+      "id": "reserve_button_text",
+      "label": "Reserve button default text",
+      "default": "Reserve your piece"
+    },
+    {
+      "type": "select",
+      "id": "button_action",
+      "label": "Button action",
+      "default": "cart",
+      "options": [
+        { "value": "cart", "label": "Add to cart" },
+        { "value": "product", "label": "Go to product page" }
+      ]
+    },
     { "type": "header", "content": "Size Guide" },
     { "type": "text", "id": "size_guide_title", "label": "Modal title", "default": "Size Guide" },
     { "type": "textarea", "id": "size_guide_content", "label": "Size guide content (HTML / table supported)" },
@@ -1684,9 +2075,19 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "text", "id": "ended_eyebrow", "label": "Ended eyebrow", "default": "All phases closed" },
     { "type": "text", "id": "ended_heading", "label": "Ended heading", "default": "This offer has ended" },
     { "type": "textarea", "id": "ended_text", "label": "Ended body text" },
-    { "type": "text", "id": "ended_button_text", "label": "Ended button text", "default": "Notify me for the next drop" },
+    {
+      "type": "text",
+      "id": "ended_button_text",
+      "label": "Ended button text",
+      "default": "Notify me for the next drop"
+    },
     { "type": "text", "id": "notify_button_text", "label": "Notify button text", "default": "Notify me" },
-    { "type": "text", "id": "notify_placeholder", "label": "Notify input placeholder", "default": "Email for next drop" },
+    {
+      "type": "text",
+      "id": "notify_placeholder",
+      "label": "Notify input placeholder",
+      "default": "Email for next drop"
+    },
     { "type": "text", "id": "notify_note", "label": "Notify note" },
     { "type": "header", "content": "Social Proof" },
     { "type": "text", "id": "social_heading", "label": "Social section heading", "default": "From the community" },
@@ -1716,8 +2117,6 @@ document.addEventListener('DOMContentLoaded', function() {
       ]
     }
   ],
-  "presets": [
-    { "name": "Circle Member Offer" }
-  ]
+  "presets": [{ "name": "Circle Member Offer" }]
 }
 {% endschema %}
